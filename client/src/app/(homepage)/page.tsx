@@ -11,7 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Input } from "@/components/ui/input";
+import Testimonial from "./_components/Testimonial";
 
 export default function Home() {
   return (
@@ -133,16 +133,13 @@ export default function Home() {
         <h1 className="text-5xl font-semibold text-center">
           Kata <span className="text-primary-color">Mereka</span>
         </h1>
-        <div className="flex w-full mt-12 overflow-x-auto">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <CardReview key={index} />
-          ))}
+        <div className="mt-12 [mask-image:linear-gradient(to_right,transparent,black_25%,black_70%,transparent)] overflow-hidden">
+          <Testimonial duration={12} />
+          <Testimonial duration={10} />
         </div>
-        <div className="flex w-full mt-12 overflow-x-auto">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <CardReview key={index} />
-          ))}
-        </div>
+        {/* <div className="mt-12">
+          <Testimonial duration={8} />
+        </div> */}
       </section>
       {/* Section Review End */}
 
