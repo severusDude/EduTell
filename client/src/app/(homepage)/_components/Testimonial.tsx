@@ -22,7 +22,7 @@ const Testimonial = ({ duration }: { duration: number }) => {
         ...new Array(2).fill(0).map((_, index) => (
           <React.Fragment key={index}>
             {Array.from({ length: 7 }).map((_, index) => (
-              <CardReview />
+              <CardReview key={index} />
             ))}
           </React.Fragment>
         )),

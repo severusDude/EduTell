@@ -30,7 +30,7 @@ const ListCard = () => {
   return (
     <div className="flex items-center justify-between">
       {listData.map((item, index) => (
-        <Card text={item.text} Icon={item.Icon} />
+        <Card text={item.text} key={index} Icon={item.Icon} />
       ))}
     </div>
   );
