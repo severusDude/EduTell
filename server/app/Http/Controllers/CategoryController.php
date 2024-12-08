@@ -12,15 +12,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return response()->json(['data' => Category::all()]);
     }
 
     /**
@@ -28,23 +20,33 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'min:3',
+                'max:50',
+                'regex:/^[a-zA-Z\s\-\'\\/]+$/'
+            ],
+            'description' => 'nullable|string'
+        ], [
+            'name.regex' => 'The name field can only contain letters, spaces, hypens, apostrophes and slashes'
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
-    {
-        //
-    }
+        $category = new Category;
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
-    {
-        //
+        $category->name = $validated['name'];
+
+        if (isset($validated['description'])) {
+            $category->description = $validated['description'];
+        }
+
+        $category->save();
+
+        return response()->json([
+            'message' => 'Category successfully created',
+            'data' => $category
+        ], 200);
     }
 
     /**
@@ -52,7 +54,32 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'min:3',
+                'max:50',
+                'regex:/^[a-zA-Z\s\-\'\\/]+$/'
+            ],
+            'description' => 'nullable|string'
+        ], [
+            'name.regex' => 'The name field can only contain letters, spaces, hypens, apostrophes and slashes'
+        ]);
+
+        $category->name = $validated['name'];
+
+        if (isset($validated['description'])) {
+            $category->description = $validated['description'];
+        }
+
+        $category->save();
+
+        return response()->json([
+            'message' => 'Category successfully updated',
+            'data' => $category->fresh()
+        ], 200);
     }
 
     /**
@@ -60,6 +87,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return response()->json(null, 204);
     }
 }

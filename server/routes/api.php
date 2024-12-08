@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,3 +19,6 @@ Route::get('slug/{slug}', [UserController::class, 'isSlugAvailable']);
 
 Route::apiResource('users', UserController::class)
     ->except('store');
+
+Route::apiResource('categories', CategoryController::class)
+    ->except('show');
