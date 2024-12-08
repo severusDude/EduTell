@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\UpdateUserRequest;
@@ -15,7 +16,7 @@ class UserController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('auth:api', except: ['index', 'show', 'isSlugAvailable'])
+            // new Middleware('auth:api', only: ['update', 'destroy'])
         ];
     }
 
@@ -38,16 +39,41 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(Request $request, string $user)
     {
-        //
+
+        $user = User::where('slug', $user)->firstOrFail();
+
+        $validated = $request->validate([
+            'name' => 'required|string|alpha_dash|min:3|max:50',
+            'slug' => [
+                Rule::unique('users', 'slug')->ignore($user->id),
+                'required',
+                'string',
+                'alpha_dash',
+                'min:3',
+                'max:50'
+            ],
+            'date_of_birth' => 'nullable|date_format:d-m-Y',
+            'bio' => 'nullable|string|max:750',
+            'gender' => [Rule::in(['male', 'female', 'prefer not to say'])],
+        ]);
+
+        $user->fill($validated);
+        $user->save();
+
+        return new UserResource($user->fresh());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(string $user)
     {
+        $user = User::where('slug', $user)->firstOrFail();
+        $user->delete();
+
+        return response()->json(['message' => 'User has been deleted successfully'], 204);
     }
 
     public function isSlugAvailable(string $slug)
