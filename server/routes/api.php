@@ -14,4 +14,7 @@ Route::middleware('api')->prefix('auth')
         Route::get('/me', 'me');
     });
 
-Route::apiResource('users', UserController::class, ['middleware' => 'api']);
+Route::get('slug/{slug}', [UserController::class, 'isSlugAvailable']);
+
+Route::apiResource('users', UserController::class)
+    ->except('store');
