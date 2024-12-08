@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import {
   ChartNoAxesColumnIncreasingIcon,
   Clock,
@@ -27,12 +30,41 @@ const listData = [
 ];
 
 const ListCard = () => {
+  const repeatedData = [...listData, ...listData]; // Duplikasi data untuk menghindari jeda
+
   return (
-    <div className="flex items-center justify-between">
-      {listData.map((item, index) => (
-        <Card text={item.text} key={index} Icon={item.Icon} />
-      ))}
-    </div>
+    <>
+      <div className="items-center justify-between hidden lg:flex">
+        {listData.map((item, index) => (
+          <Card text={item.text} key={`static-${index}`} Icon={item.Icon} />
+        ))}
+      </div>
+
+      <motion.div
+        className="relative overflow-hidden lg:hidden"
+        style={{ width: "100%" }}
+      >
+        <motion.div
+          className="flex items-center gap-4"
+          animate={{
+            translateX: "-100%", // Bergerak sepanjang lebar kontainer
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          style={{
+            display: "flex",
+            gap: "16px", // Sesuaikan gap agar elemen menyambung
+          }}
+        >
+          {repeatedData.map((item, index) => (
+            <Card text={item.text} key={`moving-${index}`} Icon={item.Icon} />
+          ))}
+        </motion.div>
+      </motion.div>
+    </>
   );
 };
 
