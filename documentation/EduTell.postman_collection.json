@@ -12,11 +12,20 @@
 				{
 					"name": "Register",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"{{name}}1\",\r\n    \"email\": \"user1@example.com\",\r\n    \"password\": \"{{password}}1\"\r\n}",
+							"raw": "{\r\n    \"name\": \"student1\",\r\n    \"slug\": \"student1\",\r\n    \"email\": \"student1@example.com\",\r\n    \"password\": \"{{password}}1\",\r\n    \"c_password\": \"{{password}}1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -44,7 +53,7 @@
 							"script": {
 								"exec": [
 									"let jsonResponse = pm.response.json();\r",
-									"pm.environment.set(\"access_token\", jsonResponse.access_token);"
+									"pm.environment.set(\"access_token\", jsonResponse.token);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -52,8 +61,17 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
@@ -78,6 +96,9 @@
 				},
 				{
 					"name": "Logout",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -89,8 +110,14 @@
 								}
 							]
 						},
-						"method": "POST",
-						"header": [],
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "formdata",
 							"formdata": []
@@ -109,41 +136,10 @@
 					"response": []
 				},
 				{
-					"name": "Refresh",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
-						"url": {
-							"raw": "{{server}}/{{auth_route}}/refresh",
-							"host": [
-								"{{server}}"
-							],
-							"path": [
-								"{{auth_route}}",
-								"refresh"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Me",
+					"name": "User",
 					"protocolProfileBehavior": {
-						"disableBodyPruning": true
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
 					},
 					"request": {
 						"auth": {
@@ -157,23 +153,209 @@
 							]
 						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
-							"mode": "formdata",
-							"formdata": []
+							"mode": "raw",
+							"raw": ""
 						},
 						"url": {
-							"raw": "{{server}}/{{auth_route}}/me",
+							"raw": "{{server}}/{{auth_route}}/user",
 							"host": [
 								"{{server}}"
 							],
 							"path": [
 								"{{auth_route}}",
-								"me"
+								"user"
 							]
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{users_route}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{users_route}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{users_route}}/student",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{users_route}}",
+								"student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Username",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{users_route}}/slug/student",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{users_route}}",
+								"slug",
+								"student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"student\",\r\n    \"slug\": \"student\",\r\n    \"date_of_birth\": \"27-07-2005\",\r\n    \"bio\": \"some text added with a bit of sprinkler\",\r\n    \"gender\": \"male\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{users_route}}/student",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{users_route}}",
+								"student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{users_route}}/student",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{users_route}}",
+								"student"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		}
