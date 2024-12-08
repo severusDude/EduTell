@@ -37,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
-        <div className="px-[64px] py-[34px]">
+        <div className="lg:px-[64px] lg:py-[34px]">
           <Navigation />
           {children}
         </div>

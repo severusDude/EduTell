@@ -4,9 +4,9 @@ import React from "react";
 
 const CardCourse = () => {
   return (
-    <div className="w-[400px] rounded-md shadow-xl cursor-pointer hover:opacity-95">
+    <div className="lg:w-[400px] w-full rounded-md shadow-xl cursor-pointer hover:opacity-95">
       <Image
-        className="rounded-t-md"
+        className="w-full rounded-t-md"
         src={"/image/image-placeholder.png"}
         alt="image-placeholder"
         width={424}

@@ -8,7 +8,7 @@ const Testimonial = ({ duration }: { duration: number }) => {
   return (
     <motion.div
       animate={{
-        translateX: "-50%",
+        translateX: "-100%",
       }}
       transition={{
         duration: duration || 10,
