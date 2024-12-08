@@ -4,15 +4,15 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('api')->prefix('auth')
-    ->controller(AuthController::class)
-    ->group(function () {
-        Route::post('/register', 'register');
-        Route::post('/login', 'login');
-        Route::post('/logout', 'logout');
-        Route::post('/refresh', 'refresh');
-        Route::get('/me', 'me');
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+
+    Route::middleware('jwt')->group(function () {
+        Route::get('/logout', [AuthController::class, 'logout']);
+        Route::get('/user', [AuthController::class, 'user']);
     });
+});
 
 Route::get('slug/{slug}', [UserController::class, 'isSlugAvailable']);
 
