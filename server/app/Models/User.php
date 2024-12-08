@@ -58,6 +58,20 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    public function scopeTeacher($query)
+    {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', 'teacher');
+        });
+    }
+
+    public function scopeStudent($query)
+    {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', 'student');
+        });
+    }
+
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
