@@ -18,12 +18,14 @@ class UserSeeder extends Seeder
         $users = [
             [
                 'name' => 'student',
+                'slug' => 'student',
                 'email' => 'student@example.com',
                 'password' => 'student',
                 'role' => 'student'
             ],
             [
                 'name' => 'teacher',
+                'slug' => 'teacher',
                 'email' => 'teacher@example.com',
                 'password' => 'teacher',
                 'role' => 'teacher'
@@ -34,6 +36,7 @@ class UserSeeder extends Seeder
         foreach ($users as $user) {
             $createdUser = User::create([
                 'name' => $user['name'],
+                'slug' => $user['slug'],
                 'email' => $user['email'],
                 'password' => Hash::make($user['password'])
             ]);
