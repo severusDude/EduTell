@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
-const poppins = Poppins({
+const poppins = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
   variable: "--font-poppins",
 });
 
