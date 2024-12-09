@@ -6,6 +6,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.transparent-background {
+  background-color: rgba(238, 236, 238, 0.6);
+  backdrop-filter: blur(50px);
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -14,6 +19,8 @@ body {
 
 @layer base {
   :root {
+    --primary-color: 171 100% 33%;
+    --text-color: 0 0% 35%;
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
