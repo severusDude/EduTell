@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CourseResource;
+use App\Models\User;
 use App\Models\Course;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 
 class CourseController extends Controller
 {
@@ -12,15 +15,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return CourseResource::collection(Course::paginate(15));
     }
 
     /**
@@ -35,14 +30,6 @@ class CourseController extends Controller
      * Display the specified resource.
      */
     public function show(Course $course)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Course $course)
     {
         //
     }
