@@ -29,7 +29,7 @@ const Overview = () => {
             Belajar <span className="text-primary-color">Modern</span>, Hasil{" "}
             <span className="text-primary-color">Maksimal</span>
           </h2>
-          <p className="text-base text-justify  lg:text-xl text-text-primary">
+          <p className="text-base text-justify lg:text-xl text-text-primary">
             Dapatkan pengalaman belajar online terbaik dengan modul lengkap,
             pelatihan interaktif, dan sertifikat resmi.
           </p>
