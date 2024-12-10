@@ -19,6 +19,7 @@ class CourseController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
+            new Middleware('auth:api', except: ['index', 'show']),
             new Middleware('role:teacher', except: ['index', 'show'])
         ];
     }
@@ -50,8 +51,8 @@ class CourseController extends Controller implements HasMiddleware
         $course = new Course;
         $course->fill($validated);
 
-        $auth = new AuthController();
-        $course->user_id = $auth->user()->original->id;
+        $course->user_id = $request->user()->id;
+
 
         $course->save();
 
@@ -73,6 +74,10 @@ class CourseController extends Controller implements HasMiddleware
     {
         $course = Course::where('slug', $course)->firstOrFail();
 
+        if ($course->user_id !== $request->user()->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s\-\'\\/]+$/',
             'description' => 'required|string|regex:/^[a-zA-Z\s\-\'\\/]+$/',
@@ -93,9 +98,14 @@ class CourseController extends Controller implements HasMiddleware
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $course)
+    public function destroy(Request $request, string $course)
     {
         $course = Course::where('slug', $course)->firstOrFail();
+
+        if ($course->user_id !== $request->user()->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         $course->delete();
 
         return response()->json(['message' => 'Course has been deleted succesfully'], 204);
