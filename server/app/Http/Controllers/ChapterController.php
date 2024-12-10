@@ -6,9 +6,20 @@ use App\Http\Resources\ChapterResource;
 use App\Models\Chapter;
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class ChapterController extends Controller
+class ChapterController extends Controller implements HasMiddleware
 {
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth:api', except: ['index', 'show']),
+            new Middleware('role:teacher', except: ['index', 'show'])
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -25,6 +36,10 @@ class ChapterController extends Controller
     public function store(Request $request, string $course)
     {
         $course = Course::where('slug', $course)->firstOrFail();
+
+        if ($course->user_id !== $request->user()->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
 
         $validated = $request->validate([
             'title' => 'required|string',
@@ -59,6 +74,11 @@ class ChapterController extends Controller
     public function update(Request $request, string $course, string $chapter)
     {
         $course = Course::where('slug', $course)->firstOrFail();
+
+        if ($course->user_id !== $request->user()->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         $chapter = $course->chapters->findOrFail($chapter);
 
         $validated = $request->validate([
@@ -76,9 +96,14 @@ class ChapterController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $course, string $chapter)
+    public function destroy(Request $request, string $course, string $chapter)
     {
         $course = Course::where('slug', $course)->firstOrFail();
+
+        if ($course->user_id !== $request->user()->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         $chapter = $course->chapters->findOrFail($chapter);
 
         $chapter->delete();
