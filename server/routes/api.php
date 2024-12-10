@@ -26,4 +26,4 @@ Route::apiResource('categories', CategoryController::class)
     ->except('show');
 
 Route::apiResource('courses', CourseController::class);
-Route::apiResource('courses.chapter', ChapterController::class);
+Route::apiResource('courses.chapters', ChapterController::class);
