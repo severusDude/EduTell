@@ -30,6 +30,18 @@ class Course extends Model
     {
         static::creating(function ($model) {
             $model->id = Str::uuid();
+            $base_slug = Str::slug($model->title);
+            $slug = $base_slug;
+            $counter = 1;
+
+            if (Course::where('slug', $base_slug)->exists()) {
+                while (Course::where('slug', $slug)->exists()) {
+                    $slug = $base_slug . $counter;
+                    $counter++;
+                }
+            }
+
+            $model->slug = $slug;
         });
     }
 }
