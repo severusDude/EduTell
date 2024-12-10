@@ -37,6 +37,11 @@ class Course extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function chapters()
+    {
+        return $this->hasMany(Chapter::class);
+    }
+
     public static function booted(): void
     {
         static::creating(function ($model) {

@@ -9,4 +9,15 @@ class Chapter extends Model
 {
     /** @use HasFactory<\Database\Factories\ChapterFactory> */
     use HasFactory;
+
+    public function chapter()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    protected $fillable = [
+        'title',
+        'description',
+        'is_published'
+    ];
 }

@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('chapters', function (Blueprint $table) {
             $table->id();
+            $table->foreignUuid('course_id')->constrained();
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->boolean('is_published')->default(false);
             $table->timestamps();
         });
     }
