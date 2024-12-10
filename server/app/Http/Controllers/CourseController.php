@@ -51,24 +51,43 @@ class CourseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Course $course)
+    public function show(string $course)
     {
-        //
+        return new CourseResource(Course::where('slug', $course)->firstOrFail());
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Course $course)
+    public function update(Request $request, string $course)
     {
-        //
+        $course = Course::where('slug', $course)->firstOrFail();
+
+        $validated = $request->validate([
+            'title' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s\-\'\\/]+$/',
+            'description' => 'required|string|regex:/^[a-zA-Z\s\-\'\\/]+$/',
+            'category_id' => 'required|exists:categories,id',
+            'image_url' => 'required|string',
+            'price' => 'required|numeric',
+            'difficulty' => ['required', 'string', Rule::in(['Beginner', 'Intermediate', 'Advanced'])],
+            'duration' => 'required|numeric',
+            'is_published' => 'required|boolean'
+        ]);
+
+        $course->fill($validated);
+        $course->save();
+
+        return new CourseResource($course->fresh());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Course $course)
+    public function destroy(string $course)
     {
-        //
+        $course = Course::where('slug', $course)->firstOrFail();
+        $course->delete();
+
+        return response()->json(['message' => 'Course has been deleted succesfully'], 204);
     }
 }
