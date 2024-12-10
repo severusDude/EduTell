@@ -12,15 +12,8 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
 
-class AuthController extends Controller implements HasMiddleware
+class AuthController extends Controller
 {
-
-    public static function middleware(): array
-    {
-        return [
-            new Middleware('auth:api', except: ['register', 'login'])
-        ];
-    }
 
     public function register(Request $request)
     {
@@ -44,7 +37,8 @@ class AuthController extends Controller implements HasMiddleware
 
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'Invalid credentials'], 401);
+                return response()->json($request);
+                // return response()->json(['error' => 'Invalid credentials'], 401);
             }
 
             // Get the authenticated user.
@@ -75,7 +69,7 @@ class AuthController extends Controller implements HasMiddleware
             return response()->json(['error' => 'Invalid token'], 400);
         }
 
-        return new UserResource($user);
+        return response()->json($user);
     }
 
     /**
