@@ -1,40 +1,93 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuthRegister } from "@/hooks/useAuthRegister";
+import { slugify } from "@/utils/createSlug";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 const RegisterPage = () => {
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [c_password, setC_password] = useState<string>("");
+
+  const { mutate: handleRegister } = useAuthRegister(
+    {
+      c_password,
+      username,
+      password,
+      email,
+      slug: slugify(username),
+    },
+    {
+      setUsername,
+      setC_password,
+      setEmail,
+      setPassword,
+    }
+  );
+
   return (
     <main className="flex lg:flex-row flex-col items-center justify-center lg:justify-between min-h-screen w-[95%] lg:w-[80%] mx-auto gap-8">
       <div className="w-full lg:w-1/2">
         <div className="mb-6">
-          <h1 className="text-4xl font-semibold lg:text-5xl text-primary-color">EduTell</h1>
+          <h1 className="text-4xl font-semibold lg:text-5xl text-primary-color">
+            EduTell
+          </h1>
           <h4 className="text-xl font-semibold lg:text-3xl text-text-primary">
             Bergabunglah Bersama Kami!
           </h4>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-2 lg:space-y-4">
           <div>
-            <Label id="name">Nama Lengkap</Label>
-            <Input name="name" placeholder="Masukan Nama Lengkap Anda" />
+            <Label id="name">Username</Label>
+            <Input
+              name="name"
+              value={username}
+              placeholder="Masukan Nama Lengkap Anda"
+              onChange={(e) => setUsername(e.target.value)}
+            />
           </div>
           <div>
             <Label id="email">Email</Label>
-            <Input name="email" placeholder="Masukan Alamat Email" />
+            <Input
+              name="email"
+              value={email}
+              placeholder="Masukan Alamat Email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div>
             <Label id="password">Password</Label>
             <Input
+              value={password}
               name="password"
               type="password"
               placeholder="Masukan Password"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
           <div>
-            <Button className="w-full bg-primary-color hover:bg-primary-color/80">
+            <Label id="c_password">Confirm Password</Label>
+            <Input
+              value={c_password}
+              name="c_password"
+              type="password"
+              placeholder="Masukan Password"
+              onChange={(e) => setC_password(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <Button
+              onClick={() => handleRegister()}
+              className="w-full bg-primary-color hover:bg-primary-color/80"
+            >
               Register
             </Button>
 

@@ -12,15 +12,8 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
 
-class AuthController extends Controller implements HasMiddleware
+class AuthController extends Controller
 {
-
-    public static function middleware(): array
-    {
-        return [
-            new Middleware('auth:api', except: ['register', 'login'])
-        ];
-    }
 
     public function register(Request $request)
     {
