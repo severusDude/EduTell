@@ -9,10 +9,20 @@ use Illuminate\Validation\Rule;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\CourseResource;
 use App\Http\Controllers\AuthController;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 
-class CourseController extends Controller
+class CourseController extends Controller implements HasMiddleware
 {
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('role:teacher', except: ['index', 'show'])
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
