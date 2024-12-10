@@ -4,20 +4,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthLogin } from "@/hooks/useAuthLogin";
-import axios from "axios";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const { mutate: handleLogin, isPending } = useAuthLogin(
-    { email, password },
-    { setEmail, setPassword }
-  );
+  const {
+    mutate: handleLogin,
+    isPending,
+    error,
+  } = useAuthLogin({ email, password }, { setEmail, setPassword });
 
   return (
     <main className="flex items-center lg:flex-row flex-col justify-center lg:justify-between min-h-screen w-[95%] lg:w-[80%] mx-auto gap-8">
@@ -38,6 +38,14 @@ export default function LoginPage() {
               placeholder="Masukan Alamat Email"
               onChange={(e) => setEmail(e.target.value)}
             />
+            <p>
+              {error && (
+                <span className="text-xs text-red-600">
+                  {JSON.parse(error?.message!).email &&
+                    JSON.parse(error?.message!).email}
+                </span>
+              )}
+            </p>
           </div>
           <div>
             <Label id="password">Password</Label>
@@ -47,8 +55,24 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Masukan Password"
             />
+            <p>
+              {error && (
+                <span className="text-xs text-red-600">
+                  {JSON.parse(error?.message!).password &&
+                    JSON.parse(error?.message!).password}
+                </span>
+              )}
+            </p>
+            <p>
+              {error && (
+                <span className="text-sm text-red-600">
+                  {error?.message &&
+                    !JSON.parse(error?.message!).email &&
+                    error?.message}
+                </span>
+              )}
+            </p>
           </div>
-
           <div>
             <Button
               onClick={() => handleLogin()}

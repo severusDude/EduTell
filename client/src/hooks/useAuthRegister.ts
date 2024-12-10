@@ -2,9 +2,12 @@ import {
   registerAction,
   registerActionType,
 } from "@/app/(auth)/(route)/register/actions/registerAction";
+import { ValidationAuthShcema } from "@/validation/auth.validate";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React from "react";
+import toast from "react-hot-toast";
+import { ZodError } from "zod";
 
 type funcRegisterAction = {
   setUsername: React.Dispatch<React.SetStateAction<string>>;
@@ -21,9 +24,27 @@ export const useAuthRegister = (
 
   return useMutation({
     mutationKey: ["register-action"],
-    mutationFn: () => registerAction(requestUser),
+    mutationFn: () => {
+      try {
+        ValidationAuthShcema.REGISTERSCHEME.parse(requestUser);
+      } catch (error) {
+        if (error instanceof ZodError) {
+          const formattedErrors: Record<string, string> = {};
+
+          error.errors.forEach((err) => {
+            const field = err.path.join(".");
+            formattedErrors[field] = err.message;
+          });
+          throw new ZodError(JSON.parse(JSON.stringify(formattedErrors)));
+        } else {
+          throw error;
+        }
+      }
+
+      return registerAction(requestUser);
+    },
     onError: ({ message }) => {
-      console.log("Error ", message);
+      toast.error("Gagal Melakukan Register");
     },
     onSuccess: () => {
       func.setC_password("");
@@ -31,6 +52,7 @@ export const useAuthRegister = (
       func.setUsername("");
       func.setEmail("");
       router.push("/login");
+      toast.success("Berhasil Melakukan Register");
     },
   });
 };

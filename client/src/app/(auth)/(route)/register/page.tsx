@@ -15,7 +15,7 @@ const RegisterPage = () => {
   const [email, setEmail] = useState<string>("");
   const [c_password, setC_password] = useState<string>("");
 
-  const { mutate: handleRegister } = useAuthRegister(
+  const { mutate: handleRegister, error } = useAuthRegister(
     {
       c_password,
       username,
@@ -51,6 +51,12 @@ const RegisterPage = () => {
               placeholder="Masukan Nama Lengkap Anda"
               onChange={(e) => setUsername(e.target.value)}
             />
+            {error && (
+              <span className="text-xs text-red-600">
+                {JSON.parse(error?.message!).username &&
+                  JSON.parse(error?.message!).username}
+              </span>
+            )}
           </div>
           <div>
             <Label id="email">Email</Label>
@@ -60,6 +66,12 @@ const RegisterPage = () => {
               placeholder="Masukan Alamat Email"
               onChange={(e) => setEmail(e.target.value)}
             />
+            {error && (
+              <span className="text-xs text-red-600">
+                {JSON.parse(error?.message!).email &&
+                  JSON.parse(error?.message!).email}
+              </span>
+            )}
           </div>
           <div>
             <Label id="password">Password</Label>
@@ -70,6 +82,12 @@ const RegisterPage = () => {
               placeholder="Masukan Password"
               onChange={(e) => setPassword(e.target.value)}
             />
+            {error && (
+              <span className="text-xs text-red-600">
+                {JSON.parse(error?.message!).password &&
+                  JSON.parse(error?.message!).password}
+              </span>
+            )}
           </div>
 
           <div>
@@ -81,6 +99,12 @@ const RegisterPage = () => {
               placeholder="Masukan Password"
               onChange={(e) => setC_password(e.target.value)}
             />
+            {error && (
+              <span className="text-xs text-red-600">
+                {JSON.parse(error?.message!).c_password &&
+                  JSON.parse(error?.message!).c_password}
+              </span>
+            )}
           </div>
 
           <div>
