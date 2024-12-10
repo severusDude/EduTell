@@ -75,7 +75,7 @@ class AuthController extends Controller implements HasMiddleware
             return response()->json(['error' => 'Invalid token'], 400);
         }
 
-        return new UserResource($user);
+        return response()->json($user);
     }
 
     /**
