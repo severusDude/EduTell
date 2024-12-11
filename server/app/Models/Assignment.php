@@ -26,6 +26,13 @@ class Assignment extends Model
         return $this->belongsTo(Subchapter::class);
     }
 
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean'
+        ];
+    }
+
     public static function booted(): void
     {
         static::creating(function ($model) {
