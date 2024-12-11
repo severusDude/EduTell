@@ -30,4 +30,4 @@ Route::apiResource('categories', CategoryController::class)
 Route::apiResource('courses', CourseController::class);
 Route::apiResource('courses.chapters', ChapterController::class);
 Route::apiResource('courses.chapters.subchapters', SubchapterController::class);
-Route::apiResource('assignments', AssignmentController::class);
+Route::apiResource('courses.chapters.subchapters.assignments', AssignmentController::class);
