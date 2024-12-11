@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\SubchapterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,3 +28,4 @@ Route::apiResource('categories', CategoryController::class)
 
 Route::apiResource('courses', CourseController::class);
 Route::apiResource('courses.chapters', ChapterController::class);
+Route::apiResource('courses.chapters.subchapters', SubchapterController::class);

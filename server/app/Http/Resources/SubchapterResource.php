@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ChapterResource extends JsonResource
+class SubchapterResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,9 +17,9 @@ class ChapterResource extends JsonResource
         return [
             'title' => $this->title,
             'description' => $this->description,
-            'position' => $this->position,
+            'content' => $this->content,
             'is_published' => $this->is_published,
-            'subchapters' => SubchapterResource::collection($this->subchapters)
+            'position' => $this->position
         ];
     }
 }

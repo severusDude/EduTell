@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ChapterResource;
-use App\Models\Chapter;
 use App\Models\Course;
+use App\Models\Chapter;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Validation\Rule;
+use Illuminate\Database\Query\Builder;
+use App\Http\Resources\ChapterResource;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
 class ChapterController extends Controller implements HasMiddleware
 {
@@ -44,7 +46,13 @@ class ChapterController extends Controller implements HasMiddleware
         $validated = $request->validate([
             'title' => 'required|string',
             'description' => 'string|present|nullable',
-            'is_published' => 'required|boolean'
+            'is_published' => 'required|boolean',
+            'position' => [
+                'required',
+                'numeric',
+                Rule::unique('chapters')->where(fn(Builder $query) =>
+                $query->where('course_id', $course->id))
+            ]
         ]);
 
         $chapter = new Chapter;
@@ -63,7 +71,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function show(string $course, string $chapter)
     {
         $course = Course::where('slug', $course)->firstOrFail();
-        $chapter = $course->chapters->findOrFail($chapter);
+        $chapter = $course->chapters()->where('position', $chapter)->firstOrFail();
 
         return new ChapterResource($chapter);
     }
@@ -79,12 +87,20 @@ class ChapterController extends Controller implements HasMiddleware
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $chapter = $course->chapters->findOrFail($chapter);
+        $chapter = $course->chapters()->where('position', $chapter)->firstOrFail();
 
         $validated = $request->validate([
             'title' => 'required|string',
             'description' => 'string|present|nullable',
-            'is_published' => 'required|boolean'
+            'is_published' => 'required|boolean',
+            'position' => [
+                'required',
+                'numeric',
+                Rule::unique('chapters')
+                    ->ignore($chapter)
+                    ->where(fn(Builder $query) =>
+                    $query->where('course_id', $course->id))
+            ]
         ]);
 
         $chapter->fill($validated);
@@ -104,7 +120,7 @@ class ChapterController extends Controller implements HasMiddleware
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $chapter = $course->chapters->findOrFail($chapter);
+        $chapter = $course->chapters()->where('position', $chapter)->firstOrFail();
 
         $chapter->delete();
 

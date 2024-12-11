@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use App\Models\Course;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Chapter extends Model
+class Subchapter extends Model
 {
-    /** @use HasFactory<\Database\Factories\ChapterFactory> */
+    /** @use HasFactory<\Database\Factories\SubchapterFactory> */
     use HasFactory;
 
     public $incrementing = false;
@@ -17,18 +16,14 @@ class Chapter extends Model
     protected $fillable = [
         'title',
         'description',
+        'content',
         'is_published',
         'position'
     ];
 
-    public function course()
+    public function chapter()
     {
-        return $this->belongsTo(Course::class);
-    }
-
-    public function subchapters()
-    {
-        return $this->hasMany(Subchapter::class);
+        return $this->belongsTo(Chapter::class);
     }
 
     protected function casts(): array
@@ -44,11 +39,11 @@ class Chapter extends Model
             $model->id = Str::uuid();
 
             if (empty($model->position)) {
-                $last_chapter = self::where('course_id', $model->course_id)
+                $last_subchapter = self::where('chapter_id', $model->chapter_id)
                     ->orderByDesc('position')
                     ->first();
 
-                $model->position = $last_chapter ? $last_chapter->position + 1 : 1;
+                $model->position = $last_subchapter ? $last_subchapter->position + 1 : 1;
             }
         });
     }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chapters', function (Blueprint $table) {
+        Schema::create('subchapters', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('course_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('chapter_id')->constrained()->cascadeOnDelete();
             $table->string('title');
-            $table->text('description')->nullable();
-            $table->boolean('is_published')->default(false);
+            $table->text('description');
+            $table->text('content');
+            $table->boolean('is_published');
             $table->unsignedTinyInteger('position');
             $table->timestamps();
 
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('chapters');
+        Schema::dropIfExists('subchapters');
     }
 };
