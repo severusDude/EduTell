@@ -26,6 +26,13 @@ class Subchapter extends Model
         return $this->belongsTo(Chapter::class);
     }
 
+    protected function casts(): array
+    {
+        return [
+            'is_published' => 'boolean'
+        ];
+    }
+
     public static function booted(): void
     {
         static::creating(function ($model) {
