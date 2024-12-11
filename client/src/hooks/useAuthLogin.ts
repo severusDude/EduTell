@@ -9,6 +9,7 @@ import { loginActionType } from "@/types/authTypes";
 
 export interface jwtPayload extends JwtPayload {
   slug: string;
+  name: string
 }
 
 type funcLoginActionType = {

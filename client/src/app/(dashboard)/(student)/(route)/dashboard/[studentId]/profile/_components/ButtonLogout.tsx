@@ -25,11 +25,7 @@ const ButtonLogout = ({ token }: { token: string }) => {
     }
   };
 
-  return (
-    <Button onClick={handleLogout} variant={"destructive"}>
-      Logout
-    </Button>
-  );
+  return <p onClick={handleLogout}>Logout</p>;
 };
 
 export default ButtonLogout;
