@@ -26,9 +26,7 @@ export default function Home() {
       {/* hero section end */}
 
       {/* list section start */}
-      <div className="mt-24 lg:block">
         <ListCard />
-      </div>
       {/* list section end */}
 
       {/* Section 2 start */}
