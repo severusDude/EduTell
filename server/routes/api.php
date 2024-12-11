@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChapterController;
@@ -29,3 +30,4 @@ Route::apiResource('categories', CategoryController::class)
 Route::apiResource('courses', CourseController::class);
 Route::apiResource('courses.chapters', ChapterController::class);
 Route::apiResource('courses.chapters.subchapters', SubchapterController::class);
+Route::apiResource('assignments', AssignmentController::class);
