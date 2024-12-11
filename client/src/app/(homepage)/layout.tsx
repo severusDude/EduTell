@@ -5,10 +5,8 @@ import React from "react";
 const HomePageLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
-      <div className="lg:px-[64px] lg:py-[34px]">
-        <Navigation />
-        {children}
-      </div>
+      <Navigation />
+      <div className="lg:px-[64px] lg:py-[34px]">{children}</div>
       <Footer />
     </div>
   );
