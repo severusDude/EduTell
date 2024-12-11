@@ -12,14 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chapters', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
+            $table->uuid('id')->primary();
             $table->foreignUuid('course_id')->constrained()->cascadeOnDelete();
             $table->string('title');
             $table->text('description')->nullable();
             $table->boolean('is_published')->default(false);
+            $table->unsignedTinyInteger('position');
             $table->timestamps();
 
-            $table->unique(['id', 'course_id']);
+            $table->unique(['id', 'position']);
         });
     }
 

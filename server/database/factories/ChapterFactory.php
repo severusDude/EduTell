@@ -19,9 +19,8 @@ class ChapterFactory extends Factory
     {
         return [
             'title' => fake()->sentence(6),
-            'description' => fake()->text(),
+            'description' => fake()->realText(150),
             'is_published' => true,
-            'course_id' => Course::pluck('id')->random(),
         ];
     }
 }

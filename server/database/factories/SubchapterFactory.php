@@ -17,7 +17,10 @@ class SubchapterFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => fake()->sentence(4),
+            'description' => fake()->realTextBetween(100, 200),
+            'content' => fake()->realTextBetween(100, 500),
+            'is_published' => true
         ];
     }
 }
