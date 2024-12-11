@@ -1,13 +1,15 @@
-import {
-  loginAction,
-  loginActionType,
-} from "@/app/(auth)/(route)/login/actions/loginAction";
+import { loginAction } from "@/app/(auth)/(route)/login/actions/loginAction";
 import { ValidationAuthShcema } from "@/validation/auth.validate";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { ZodError } from "zod";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 import { useRouter } from "next/navigation";
+import { loginActionType } from "@/types/authTypes";
+
+export interface jwtPayload extends JwtPayload {
+  slug: string;
+}
 
 type funcLoginActionType = {
   setEmail: React.Dispatch<React.SetStateAction<string>>;
@@ -47,9 +49,10 @@ export const useAuthLogin = (
     },
     onSuccess: (data) => {
       document.cookie = `accessToken=${data.data.token}; path=/; max-age=3600; secure`;
-      const decode = jwtDecode(data.data.token);
-      router.push(`/dashboard/${decode.sub}`);
-      toast.success("Berhasil Melakukan Register");
+      const decode = jwtDecode<jwtPayload>(data.data.token);
+      toast.success("Berhasil Melakukan Login");
+      router.refresh()
+      router.push(`/dashboard/${decode.slug}`);
     },
   });
 };

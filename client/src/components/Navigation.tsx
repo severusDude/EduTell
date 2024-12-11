@@ -17,11 +17,12 @@ const itemNavbar = [
 ];
 
 const Navigation = () => {
-  
   return (
     <>
-      <NavigationDekstop itemNavbar={itemNavbar} />
-      <NavigationMobile itemNavbar={itemNavbar} />
+      <div className="sticky top-0 z-20">
+        <NavigationDekstop itemNavbar={itemNavbar} />
+        <NavigationMobile itemNavbar={itemNavbar} />
+      </div>
     </>
   );
 };
