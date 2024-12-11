@@ -14,7 +14,7 @@ export const loginAction = async ({ email, password }: loginActionType) => {
     },
     {
       headers: {
-        "Content-Type": "applicaiton/json",
+        "Content-Type": "application/json",
       },
     }
   );
