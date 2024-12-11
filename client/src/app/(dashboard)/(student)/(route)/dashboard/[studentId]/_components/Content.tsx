@@ -1,24 +1,17 @@
-import { getSession, getSessionName, getSlug } from "@/lib/session";
 import {
   BookOpenText,
   ChartColumnIncreasingIcon,
   ListChecks,
 } from "lucide-react";
-import React, { JSXElementConstructor } from "react";
+import React from "react";
 import Chart from "./Chart";
 
-const Content = async () => {
-  const username = await getSlug();
-
-  if (!username) {
-    console.log("Tidak Ada");
-  }
-
+const Content = ({ sessionName }: { sessionName: string }) => {
   return (
     <div className="border-[0.3px] shadow-md rounded-md p-4 min-h-[428px] space-y-4">
       <div className="p-4 space-y-2 rounded-md bg-primary-color">
         <h1 className="text-2xl font-semibold text-white">
-          Selamat Datang {username}
+          Selamat Datang {sessionName}
         </h1>
         <p className="text-white">
           Senang melihat Anda kembali. Yuk, lanjutkan perjalanan belajar Anda!
