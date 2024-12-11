@@ -71,7 +71,7 @@ class ChapterController extends Controller implements HasMiddleware
     public function show(string $course, string $chapter)
     {
         $course = Course::where('slug', $course)->firstOrFail();
-        $chapter = $course->chapters->findOrFail($chapter);
+        $chapter = $course->chapters()->where('position', $chapter)->firstOrFail();
 
         return new ChapterResource($chapter);
     }
@@ -87,12 +87,20 @@ class ChapterController extends Controller implements HasMiddleware
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $chapter = $course->chapters->findOrFail($chapter);
+        $chapter = $course->chapters()->where('position', $chapter)->firstOrFail();
 
         $validated = $request->validate([
             'title' => 'required|string',
             'description' => 'string|present|nullable',
-            'is_published' => 'required|boolean'
+            'is_published' => 'required|boolean',
+            'position' => [
+                'required',
+                'numeric',
+                Rule::unique('chapters')
+                    ->ignore($chapter)
+                    ->where(fn(Builder $query) =>
+                    $query->where('course_id', $course->id))
+            ]
         ]);
 
         $chapter->fill($validated);
@@ -112,7 +120,7 @@ class ChapterController extends Controller implements HasMiddleware
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $chapter = $course->chapters->findOrFail($chapter);
+        $chapter = $course->chapters()->where('position', $chapter)->firstOrFail();
 
         $chapter->delete();
 
