@@ -19,8 +19,7 @@ class SubchapterController extends Controller
     public function index(string $course, string $chapter)
     {
         $course = Course::where('slug', $course)->firstOrFail();
-        // $chapter = $course->chapters()->where('position', $chapter)->firstOrFail();
-        $chapter = $course->chapters->findOrFail($chapter);
+        $chapter = $course->chapters()->where('position', $chapter)->firstOrFail();
 
         return SubchapterResource::collection($chapter->subchapters()->orderBy('position')->get());
     }
@@ -31,8 +30,7 @@ class SubchapterController extends Controller
     public function store(Request $request, string $course, string $chapter)
     {
         $course = Course::where('slug', $course)->firstOrFail();
-        // $chapter = $course->chapters->where('position', $chapter)->firstOrFail();
-        $chapter = $course->chapters->findOrFail($chapter);
+        $chapter = $course->chapters->where('position', $chapter)->firstOrFail();
 
         $validated = $request->validate([
             'title' => 'required|string',
@@ -60,9 +58,13 @@ class SubchapterController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Subchapter $subchapter)
+    public function show(string $course, string $chapter, string $subchapter)
     {
-        //
+        $course = Course::where('slug', $course)->firstOrFail();
+        $chapter = $course->chapters->where('position', $chapter)->firstOrFail();
+        $subchapter = $chapter->subchapters->where('position', $subchapter)->firstOrFail();
+
+        return response()->json($subchapter);
     }
 
     /**
