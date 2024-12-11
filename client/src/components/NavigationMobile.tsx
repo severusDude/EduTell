@@ -5,13 +5,12 @@ import Link from "next/link";
 import React from "react";
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
 
 type NavigationMobileProps = {
@@ -32,28 +31,30 @@ const NavigationMobile = ({ itemNavbar }: NavigationMobileProps) => {
         </Link>
       </div>
       <div>
-        <DropdownMenu>
-          <DropdownMenuTrigger>
+        <Sheet>
+          <SheetTrigger>
             <Menu
               size={44}
               className="p-1 transition-all ease-in-out border rounded-md hover:ring-2 hover:ring-primary-color"
             />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="translate-x-[-20px] w-48">
-            {/* <DropdownMenuLabel>My Account</DropdownMenuLabel> */}
-            <DropdownMenuSeparator />
-            {itemNavbar.map((item, index) => (
-              <DropdownMenuItem
-                key={index}
-                className={`${
-                  pathname === item.href ? "bg-primary-color text-white" : ""
-                }`}
-              >
-                <Link href={item.href}>{item.name}</Link>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>EduTell</SheetTitle>
+              {itemNavbar.map((item, index) => (
+                <Link
+                  href={item.href}
+                  key={index}
+                  className={`${
+                    pathname === item.href ? "bg-primary-color text-white" : ""
+                  } w-full rounded-md py-2 hover:bg-primary-color/40 transition-all ease-in-out`}
+                >
+                  <p>{item.name}</p>
+                </Link>
+              ))}
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
       </div>
     </nav>
   );

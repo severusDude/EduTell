@@ -34,7 +34,7 @@ const ListCard = () => {
 
   return (
     <>
-      <div className="items-center justify-between hidden lg:flex">
+      <div className="items-center justify-between hidden mt-24 lg:flex">
         {listData.map((item, index) => (
           <Card text={item.text} key={`static-${index}`} Icon={item.Icon} />
         ))}

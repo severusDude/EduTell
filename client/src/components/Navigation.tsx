@@ -8,7 +8,7 @@ const itemNavbar = [
   },
   {
     name: "Course",
-    href: "/courses",
+    href: "/course",
   },
   {
     name: "Tentang Kami",

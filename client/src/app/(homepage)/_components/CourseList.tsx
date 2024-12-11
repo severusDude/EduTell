@@ -11,7 +11,7 @@ const CourseList = () => {
           untuk <span className="text-primary-color">Anda</span>
         </h1>
 
-        <div className="grid grid-cols-1 gap-16 px-4 mt-12 lg:grid-cols-3 lg:px-0">
+        <div className="grid grid-cols-1 gap-8 px-4 mt-12 lg:grid-cols-4 lg:px-0 lg:gap-4">
           {Array.from({ length: 6 }).map((_, index) => (
             <CardCourse key={index} />
           ))}
