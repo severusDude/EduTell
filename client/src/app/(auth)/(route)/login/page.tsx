@@ -7,7 +7,7 @@ import { useAuthLogin } from "@/hooks/useAuthLogin";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");

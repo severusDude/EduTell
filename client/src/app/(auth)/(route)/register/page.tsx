@@ -15,7 +15,11 @@ const RegisterPage = () => {
   const [email, setEmail] = useState<string>("");
   const [c_password, setC_password] = useState<string>("");
 
-  const { mutate: handleRegister, error } = useAuthRegister(
+  const {
+    mutate: handleRegister,
+    error,
+    isPending,
+  } = useAuthRegister(
     {
       c_password,
       username,
@@ -110,7 +114,10 @@ const RegisterPage = () => {
           <div>
             <Button
               onClick={() => handleRegister()}
-              className="w-full bg-primary-color hover:bg-primary-color/80"
+              className={`w-full bg-primary-color flex items-center gap-1 hover:bg-primary-color/80 ${
+                isPending && "bg-primary-color/70"
+              } `}
+              disabled={isPending}
             >
               Register
             </Button>

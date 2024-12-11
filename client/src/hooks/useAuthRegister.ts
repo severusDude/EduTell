@@ -43,7 +43,7 @@ export const useAuthRegister = (
 
       return registerAction(requestUser);
     },
-    onError: ({ message }) => {
+    onError: () => {
       toast.error("Gagal Melakukan Register");
     },
     onSuccess: () => {

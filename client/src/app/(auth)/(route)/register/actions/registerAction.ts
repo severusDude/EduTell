@@ -26,7 +26,7 @@ export const registerAction = async ({
     },
     {
       headers: {
-        "Content-Type": "applicaiton/json",
+        "Content-Type": "application/json",
       },
     }
   );
