@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Subchapter extends Model
 {
@@ -13,7 +14,6 @@ class Subchapter extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id',
         'title',
         'description',
         'content',
@@ -28,12 +28,14 @@ class Subchapter extends Model
     public static function booted(): void
     {
         static::creating(function ($model) {
-            if (empty($model->id)) {
-                $last_subchapter = Subchapter::where('chapter_id', $model->chapter_id)
-                    ->orderBy('id', 'desc')
+            $model->id = Str::uuid();
+
+            if (empty($model->position)) {
+                $last_subchapter = self::where('chapter_id', $model->chapter_id)
+                    ->orderByDesc('position')
                     ->first();
 
-                $model->id = $last_subchapter ? $last_subchapter->id + 1 : 1;
+                $model->position = $last_subchapter ? $last_subchapter->position + 1 : 1;
             }
         });
     }
