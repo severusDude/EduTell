@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ChapterResource;
-use App\Models\Chapter;
 use App\Models\Course;
+use App\Models\Chapter;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Validation\Rule;
+use Illuminate\Database\Query\Builder;
+use App\Http\Resources\ChapterResource;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
 class ChapterController extends Controller implements HasMiddleware
 {
@@ -44,7 +46,13 @@ class ChapterController extends Controller implements HasMiddleware
         $validated = $request->validate([
             'title' => 'required|string',
             'description' => 'string|present|nullable',
-            'is_published' => 'required|boolean'
+            'is_published' => 'required|boolean',
+            'position' => [
+                'required',
+                'numeric',
+                Rule::unique('chapters')->where(fn(Builder $query) =>
+                $query->where('course_id', $course->id))
+            ]
         ]);
 
         $chapter = new Chapter;
