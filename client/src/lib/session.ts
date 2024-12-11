@@ -12,10 +12,20 @@ export const getSession = async () => {
   return token;
 };
 
+export const getSessionName = async () => {
+  const token = await getSession();
+  if (!token) {
+    return;
+  }
+  const decode = jwtDecode<jwtPayload>(token);
+  console.log(decode)
+  return decode.name;
+};
+
 export const getSlug = async () => {
   const token = await getSession();
   if (!token) {
-    return null
+    return null;
   }
   const decode = jwtDecode<jwtPayload>(token);
   return decode.slug;
