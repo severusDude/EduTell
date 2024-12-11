@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Course;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -32,11 +33,15 @@ class Chapter extends Model
     public static function booted(): void
     {
         static::creating(function ($model) {
-            $last_chapter = Chapter::where('course_id', $model->course_id)
-                ->orderBy('id', 'desc')
-                ->first();
+            $model->id = Str::uuid();
 
-            $model->id = $last_chapter ? $last_chapter->id + 1 : 1;
+            if (empty($model->position)) {
+                $last_chapter = self::where('course_id', $model->course_id)
+                    ->orderByDesc('position')
+                    ->first();
+
+                $model->position = $last_chapter ? $last_chapter->position + 1 : 1;
+            }
         });
     }
 }

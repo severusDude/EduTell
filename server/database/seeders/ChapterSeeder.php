@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Chapter;
+use App\Models\Course;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,6 +14,10 @@ class ChapterSeeder extends Seeder
      */
     public function run(): void
     {
-        Chapter::factory(100)->create();
+        Course::all()->each(function ($model) {
+            Chapter::factory(4)->create([
+                'course_id' => $model->id
+            ]);
+        });
     }
 }
