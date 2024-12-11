@@ -33,7 +33,10 @@ class AuthController extends Controller
     // User login
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string'
+        ]);
 
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
@@ -45,7 +48,10 @@ class AuthController extends Controller
             $user = Auth::user();
 
             // (optional) Attach the role to the token.
-            $token = JWTAuth::claims(['role' => $user->role])->fromUser($user);
+            $token = JWTAuth::claims([
+                'role' => $user->roles[0]['name'],
+                'slug' => $user->slug
+            ])->fromUser($user);
 
             return response()->json(compact('token'));
             // return $this->respondWithToken($token);
