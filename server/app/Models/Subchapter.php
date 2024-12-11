@@ -17,7 +17,8 @@ class Subchapter extends Model
         'title',
         'description',
         'content',
-        'is_published'
+        'is_published',
+        'position'
     ];
 
     public function chapter()

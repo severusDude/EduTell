@@ -2,25 +2,59 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chapter;
 use App\Models\Subchapter;
 use Illuminate\Http\Request;
+use App\Http\Resources\SubchapterResource;
+use App\Models\Course;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class SubchapterController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $course, string $chapter)
     {
-        //
+        $course = Course::where('slug', $course)->firstOrFail();
+        // $chapter = $course->chapters()->where('position', $chapter)->firstOrFail();
+        $chapter = $course->chapters->findOrFail($chapter);
+
+        return SubchapterResource::collection($chapter->subchapters()->orderBy('position')->get());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, string $course, string $chapter)
     {
-        //
+        $course = Course::where('slug', $course)->firstOrFail();
+        // $chapter = $course->chapters->where('position', $chapter)->firstOrFail();
+        $chapter = $course->chapters->findOrFail($chapter);
+
+        $validated = $request->validate([
+            'title' => 'required|string',
+            'description' => 'present|string',
+            'content' => 'required|string',
+            'is_published' => 'required|boolean',
+            'position' => [
+                'required',
+                'numeric',
+                Rule::unique('subchapters')->where(fn(Builder $query) =>
+                $query->where('chapter_id', $chapter->id))
+            ]
+        ]);
+
+        $subchapter = new Subchapter();
+
+        $subchapter->fill($validated);
+        $subchapter->chapter_id = $chapter->id;
+
+        $subchapter->save();
+
+        return new SubchapterResource($subchapter);
     }
 
     /**
