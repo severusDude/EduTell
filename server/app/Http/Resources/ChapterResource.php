@@ -19,7 +19,11 @@ class ChapterResource extends JsonResource
             'description' => $this->description,
             'position' => $this->position,
             'is_published' => $this->is_published,
-            'subchapters' => SubchapterResource::collection($this->subchapters)
+            'subchapters' => SubchapterResource::collection(
+                $this->subchapters()
+                    ->orderBy('position')
+                    ->get()
+            )
         ];
     }
 }

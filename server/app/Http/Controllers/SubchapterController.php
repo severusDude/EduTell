@@ -31,8 +31,12 @@ class SubchapterController extends Controller implements HasMiddleware
     {
         $course = Course::where('slug', $course)->firstOrFail();
         $chapter = $course->chapters()->where('position', $chapter)->firstOrFail();
+        $subchapters = $chapter->subchapters()
+            ->with('assignments')
+            ->orderBy('position')
+            ->get();
 
-        return SubchapterResource::collection($chapter->subchapters()->orderBy('position')->get());
+        return SubchapterResource::collection($subchapters);
     }
 
     /**
@@ -78,7 +82,10 @@ class SubchapterController extends Controller implements HasMiddleware
     {
         $course = Course::where('slug', $course)->firstOrFail();
         $chapter = $course->chapters->where('position', $chapter)->firstOrFail();
-        $subchapter = $chapter->subchapters->where('position', $subchapter)->firstOrFail();
+        $subchapter = $chapter->subchapters()
+            ->where('position', $subchapter)
+            ->with('assignments')
+            ->firstOrFail();
 
         return new SubchapterResource($subchapter);
     }
