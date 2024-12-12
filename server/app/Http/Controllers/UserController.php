@@ -88,8 +88,10 @@ class UserController extends Controller implements HasMiddleware
         return CourseResource::collection($request->user()->teaches()->paginate(15));
     }
 
-    public function courses(Request $request, string $user)
+    public function courses(string $user)
     {
-        return CourseResource::collection($request->user()->courses()->paginate(15));
+        $user = User::where('slug', $user)->firstOrFail();
+
+        return CourseResource::collection($user->courses()->paginate(15));
     }
 }
