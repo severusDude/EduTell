@@ -10,22 +10,19 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import NavigationItem from "./NavigationItem";
-import { getSlug } from "@/lib/session";
 
 type NavigationMobileProps = {
   itemNavbar: {
     name: string;
     href: string;
   }[];
+  slug?: string;
 };
 
-const NavigationMobile = async ({ itemNavbar }: NavigationMobileProps) => {
-  const session = await getSlug();
-
-  if (!session) {
-    console.log(session);
-  }
-
+const NavigationMobile = ({
+  itemNavbar,
+  slug: session,
+}: NavigationMobileProps) => {
   return (
     <nav className="sticky top-0 z-10 flex items-center justify-between px-4 py-4 transparent-background lg:hidden ">
       <div>
@@ -44,7 +41,11 @@ const NavigationMobile = async ({ itemNavbar }: NavigationMobileProps) => {
           <SheetContent>
             <SheetHeader>
               <SheetTitle>EduTell</SheetTitle>
-              <NavigationItem itemNavbar={itemNavbar} session={session} />
+              <NavigationItem
+                itemNavbar={itemNavbar}
+                session={session}
+                slug={session}
+              />
             </SheetHeader>
           </SheetContent>
         </Sheet>

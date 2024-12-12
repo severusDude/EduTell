@@ -1,3 +1,4 @@
+import { getSlug } from "@/lib/session";
 import NavigationDekstop from "./NavigationDekstop";
 import NavigationMobile from "./NavigationMobile";
 
@@ -16,15 +17,15 @@ const itemNavbar = [
   },
 ];
 
-const Navigation = () => {
+const NavigationWrapper = ({ slug }: { slug?: string }) => {
   return (
     <>
       <div className="sticky top-0 z-20">
-        <NavigationDekstop itemNavbar={itemNavbar} />
-        <NavigationMobile itemNavbar={itemNavbar} />
+        <NavigationDekstop itemNavbar={itemNavbar} slug={slug} />
+        <NavigationMobile itemNavbar={itemNavbar} slug={slug} />
       </div>
     </>
   );
 };
 
-export default Navigation;
+export default NavigationWrapper;

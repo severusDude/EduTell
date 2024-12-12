@@ -3,17 +3,13 @@ import React from "react";
 import { Input } from "./ui/input";
 import { Search, User } from "lucide-react";
 import NavigationItem from "./NavigationItem";
-import { getSlug } from "@/lib/session";
 import { Button } from "./ui/button";
 import { NavigationDekstopProps } from "@/types/NavigationTypes";
 
-const NavigationDekstop = async ({ itemNavbar }: NavigationDekstopProps) => {
-  const session = await getSlug();
-
-  if (!session) {
-    console.log(session);
-  }
-
+const NavigationDekstop = ({
+  itemNavbar,
+  slug: session,
+}: NavigationDekstopProps) => {
   return (
     <nav className="lg:px-[64px] lg:py-[34px] z-20 items-center justify-between hidden gap-2 lg:flex transparent-background">
       <div>
@@ -24,7 +20,11 @@ const NavigationDekstop = async ({ itemNavbar }: NavigationDekstopProps) => {
           Edutell
         </Link>
       </div>
-      <NavigationItem itemNavbar={itemNavbar} session={session} />
+      <NavigationItem
+        itemNavbar={itemNavbar}
+        session={session}
+        slug={session}
+      />
       <div className="relative">
         <Input className="pl-12 py-2 border-primary-color w-[445px]" />
         <Search
@@ -36,14 +36,6 @@ const NavigationDekstop = async ({ itemNavbar }: NavigationDekstopProps) => {
 
       {session ? (
         <div className="space-x-4">
-          {/* <Link
-            href={`/dashboard/${session}/profile`}
-            className={`text-[16px] transition-all ease-in-out`}
-          >
-            <Button className="transition-all ease-in-out bg-primary-color hover:bg-primary-color/80">
-              Profile
-            </Button>
-          </Link> */}
           <Link
             href={`/dashboard/${session}`}
             className={`text-[16px] transition-all ease-in-out`}

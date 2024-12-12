@@ -1,21 +1,17 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { CartesianGrid, Legend, Line, LineChart, XAxis } from "recharts";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
@@ -43,8 +39,6 @@ export default function Chart() {
   return (
     <Card>
       <CardHeader>
-        {/* <CardTitle>Line Chart - Multiple</CardTitle>
-        <CardDescription>January - June 2024</CardDescription> */}
         <CardTitle>kursus Diikuti dan Selesai</CardTitle>
         <CardDescription>Rata-Rata Perbulan</CardDescription>
       </CardHeader>
@@ -67,7 +61,16 @@ export default function Chart() {
               tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <Legend layout="horizontal" verticalAlign="bottom" align="center" />
+            <Legend
+            margin={{
+              top: 12
+            }}
+              iconType="circle"
+              iconSize={8}
+              layout="horizontal"
+              verticalAlign="bottom"
+              align="center"
+            />
             <Line
               dataKey="Kelas Diikuti"
               type="monotone"
