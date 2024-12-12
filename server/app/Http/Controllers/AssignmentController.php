@@ -82,6 +82,8 @@ class AssignmentController extends Controller implements HasMiddleware
     public function show(
         Request $request,
         string $course,
+        string $chapter,
+        string $subchapter,
         string $assignment
     ) {
         $course = Course::where('slug', $course)->firstOrFail();
@@ -101,6 +103,8 @@ class AssignmentController extends Controller implements HasMiddleware
     public function update(
         Request $request,
         string $course,
+        string $chapter,
+        string $subchapter,
         string $assignment
     ) {
         $course = Course::where('slug', $course)->firstOrFail();
@@ -130,6 +134,8 @@ class AssignmentController extends Controller implements HasMiddleware
     public function destroy(
         Request $request,
         string $course,
+        string $chapter,
+        string $subchapter,
         string $assignment
     ) {
         $course = Course::where('slug', $course)->firstOrFail();
