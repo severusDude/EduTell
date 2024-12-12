@@ -1,11 +1,7 @@
 <?php
 
-use App\Models\User;
-use App\Models\Course;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Resources\CourseResource;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
@@ -48,17 +44,5 @@ Route::prefix('users')->group(function () {
 Route::prefix('courses')->group(function () {
     Route::get('{course}/teacher', [CourseController::class, 'teacher']);
     Route::get('{course}/students', [CourseController::class, 'students']);
-
-    Route::post('{course}/purchase', function (Request $request, string $course) {
-        $course = Course::where('slug', $course)->firstOrFail();
-
-        $request->user()
-            ->courses()
-            ->attach($course->id, [
-                'id' => Str::uuid(),
-                'purchased_at' => now()
-            ]);
-
-        return response()->json($request->user()->courses);
-    });
+    Route::post('{course}/purchase', [CourseController::class, 'purchase']);
 });
