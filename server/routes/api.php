@@ -35,26 +35,19 @@ Route::apiResource('courses', CourseController::class);
 Route::apiResource('courses.chapters', ChapterController::class);
 Route::apiResource('courses.chapters.subchapters', SubchapterController::class);
 
-Route::get('users/{user}/teaches', function (Request $request) {
-    return response()->json($request->user()->teaches);
-});
+Route::prefix('users')->group(function () {
+    Route::get('{user}/teaches', function (Request $request) {
+        return response()->json($request->user()->teaches);
+    });
 
-Route::get('users/{user}/purchased-courses', function (Request $request, string $user) {
-    return response()->json($request->user()->courses);
+    Route::get('{user}/purchased-courses', function (Request $request, string $user) {
+        return response()->json($request->user()->courses);
+    });
 });
 
 Route::prefix('courses')->group(function () {
-    Route::get('{course}/teacher', function (string $course) {
-        $course = Course::where('slug', $course)->firstOrFail();
-
-        return response()->json($course->user);
-    });
-
-    Route::get('{course}/students', function (string $course) {
-        $course = Course::where('slug', $course)->firstOrFail();
-
-        return response()->json($course->students);
-    });
+    Route::get('{course}/teacher', [CourseController::class, 'teacher']);
+    Route::get('{course}/students', [CourseController::class, 'students']);
 
     Route::post('{course}/purchase', function (Request $request, string $course) {
         $course = Course::where('slug', $course)->firstOrFail();

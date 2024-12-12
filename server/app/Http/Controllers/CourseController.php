@@ -19,8 +19,8 @@ class CourseController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('auth:api', except: ['index', 'show']),
-            new Middleware('role:teacher', except: ['index', 'show'])
+            new Middleware('auth:api', except: ['index', 'show', 'teacher', 'students']),
+            new Middleware('role:teacher', except: ['index', 'show', 'teacher', 'students'])
         ];
     }
 
@@ -109,5 +109,19 @@ class CourseController extends Controller implements HasMiddleware
         $course->delete();
 
         return response()->json(['message' => 'Course has been deleted succesfully'], 204);
+    }
+
+    public function teacher(string $course)
+    {
+        $course = Course::where('slug', $course)->firstOrFail();
+
+        return new UserResource($course->teacher);
+    }
+
+    public function students(string $course)
+    {
+        $course = Course::where('slug', $course)->firstOrFail();
+
+        return UserResource::collection($course->students);
     }
 }
