@@ -58,6 +58,7 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    //role scope
     public function scopeTeacher($query)
     {
         return $query->whereHas('roles', function ($query) {
@@ -70,6 +71,23 @@ class User extends Authenticatable implements JWTSubject
         return $query->whereHas('roles', function ($query) {
             $query->where('name', 'student');
         });
+    }
+
+    public function teaches()
+    {
+        return $this->hasMany(Course::class, 'user_id');
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'purchases')
+            ->withPivot('purchased_at')
+            ->withTimestamps();
+    }
+
+    public function hasPurchased(Course $course): bool
+    {
+        return $this->courses()->where('course_id', $course->id)->exists();
     }
 
 

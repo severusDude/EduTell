@@ -17,7 +17,9 @@ class SubchapterResource extends JsonResource
         return [
             'title' => $this->title,
             'description' => $this->description,
-            'content' => $this->content,
+            'content' => $this->when($request->user()->hasPurchased($this->chapter->course), function () {
+                return $this->content;
+            }),
             'is_published' => $this->is_published,
             'position' => $this->position
         ];

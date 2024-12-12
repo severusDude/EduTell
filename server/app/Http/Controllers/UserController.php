@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Resources\UserResource;
-use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\CourseResource;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
 
@@ -81,5 +81,17 @@ class UserController extends Controller implements HasMiddleware
         $available = User::where('slug', $slug)->exists();
 
         return response()->json($available);
+    }
+
+    public function teaches(Request $request)
+    {
+        return CourseResource::collection($request->user()->teaches()->paginate(15));
+    }
+
+    public function courses(string $user)
+    {
+        $user = User::where('slug', $user)->firstOrFail();
+
+        return CourseResource::collection($user->courses()->paginate(15));
     }
 }
