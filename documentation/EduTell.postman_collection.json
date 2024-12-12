@@ -11,6 +11,19 @@
 			"item": [
 				{
 					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"user\", jsonResponse.data.slug);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -74,7 +87,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n//   \"email\": \"{{email}}\",\r\n//   \"password\": \"{{password}}\"\r\n    \"email\": \"teacher@example.com\",\r\n    \"password\": \"teacher\"\r\n}",
+							"raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n    // \"email\": \"teacher@example.com\",\r\n    // \"password\": \"teacher\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -137,6 +150,19 @@
 				},
 				{
 					"name": "User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"user\", jsonResponse.slug);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true,
 						"disabledSystemHeaders": {}
@@ -268,6 +294,20 @@
 				},
 				{
 					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"user\", jsonResponse.data.slug);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "PATCH",
 						"header": [
@@ -287,13 +327,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{server}}/{{users_route}}/student",
+							"raw": "{{server}}/{{users_route}}/{{user}}",
 							"host": [
 								"{{server}}"
 							],
 							"path": [
 								"{{users_route}}",
-								"student"
+								"{{user}}"
 							]
 						}
 					},
@@ -320,13 +360,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{server}}/{{users_route}}/student",
+							"raw": "{{server}}/{{users_route}}/{{user}}",
 							"host": [
 								"{{server}}"
 							],
 							"path": [
 								"{{users_route}}",
-								"student"
+								"{{user}}"
 							]
 						}
 					},
@@ -334,7 +374,14 @@
 				}
 			],
 			"auth": {
-				"type": "noauth"
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
 			},
 			"event": [
 				{
@@ -1129,6 +1176,447 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "Assignment",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"assignment\", jsonResponse.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Install program\",\r\n    \"description\": \"Install program PHP versi 8.1, Composer versi 2, dan Laravel versi 11\",\r\n    \"due_date\": \"12-12-2024\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"assignment\", jsonResponse.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Install program\",\r\n    \"description\": \"Install program PHP versi 8.1, Composer versi 2, dan Laravel versi 11\",\r\n    \"due_date\": \"13-12-2024\",\r\n    \"is_active\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Grade",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						]
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Purchase",
+			"item": [
+				{
+					"name": "Teached Courses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{users_route}}/{{user}}/teaches",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{users_route}}",
+								"{{user}}",
+								"teaches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Purchased Courses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{users_route}}/{{user}}/courses",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{users_route}}",
+								"{{user}}",
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Purchase Course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/purchase",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"purchase"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Course Teacher",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/teacher",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"teacher"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Course Students",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/students",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"students"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
 		}
 	],
 	"variable": [
@@ -1142,6 +1630,14 @@
 		},
 		{
 			"key": "subchapter",
+			"value": ""
+		},
+		{
+			"key": "assignment",
+			"value": ""
+		},
+		{
+			"key": "user",
 			"value": ""
 		}
 	]
