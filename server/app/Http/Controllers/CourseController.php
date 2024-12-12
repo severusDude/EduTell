@@ -129,7 +129,7 @@ class CourseController extends Controller implements HasMiddleware
     {
         $course = Course::where('slug', $course)->firstOrFail();
 
-        return UserResource::collection($course->students);
+        return UserResource::collection($course->students()->paginate(15));
     }
 
     public function purchase(Request $request, string $course)
@@ -148,6 +148,6 @@ class CourseController extends Controller implements HasMiddleware
                 'purchased_at' => now()
             ]);
 
-        return CourseResource::collection($request->user()->courses);
+        return CourseResource::collection($request->user()->courses()->paginate(15));
     }
 }
