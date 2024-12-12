@@ -32,6 +32,13 @@ class Course extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'purchases')
+            ->withPivot('purchased_at')
+            ->withTimestamps();
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
