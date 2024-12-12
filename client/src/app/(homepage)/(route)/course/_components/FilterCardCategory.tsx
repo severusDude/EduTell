@@ -1,13 +1,21 @@
+"use client";
+
 import CardCourse from "@/components/CardCourse";
 import { Checkbox } from "@/components/ui/checkbox";
 import React from "react";
 import { PaginationComponents } from "./Pagination";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { CourseType } from "@/types/course";
+import Loading from "@/components/Loading";
 
 const FilterCardCategory = () => {
-  // const { data: courseData } = await axios.get(
-  //   "http://localhost:8000/api/courses"
-  // );
+  const { data: dataCourse, isLoading } = useQuery({
+    queryKey: ["courses"],
+    queryFn: async () => {
+      return (await axios.get("http://localhost:8000/api/courses")).data;
+    },
+  });
 
   return (
     <div className="mt-12">
@@ -108,12 +116,20 @@ const FilterCardCategory = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap justify-between w-full gap-4 lg:w-3/4 ">
-          {Array.from({ length: 9 }).map((_, index) => (
-            <div className="w-full lg:w-[280px] border-[0.3px] rounded-md">
-              <CardCourse key={index} />
-            </div>
-          ))}
+        <div className="flex flex-wrap justify-between w-full gap-4 lg:w-3/4">
+          {isLoading ? (
+            <Loading />
+          ) : (
+            dataCourse &&
+            dataCourse?.data.map((item: CourseType, index: number) => (
+              <div
+                key={index}
+                className="w-full lg:w-[280px] border-[0.3px] rounded-md"
+              >
+                <CardCourse key={index} courseData={item} />
+              </div>
+            ))
+          )}
           <div className="w-full">
             <PaginationComponents />
           </div>
