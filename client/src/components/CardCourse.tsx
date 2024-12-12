@@ -1,10 +1,15 @@
 import { ChartNoAxesColumnIncreasing, Clock, Star } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const CardCourse = () => {
   return (
-    <div className="w-full rounded-md shadow-xl cursor-pointer lg:w-auto hover:opacity-95">
+    <Link
+      scroll={true}
+      href={`/course/web`}
+      className="w-full rounded-md shadow-xl cursor-pointer lg:w-auto hover:opacity-95"
+    >
       <Image
         className="w-full rounded-t-md"
         src={"/image/image-placeholder.png"}
@@ -36,7 +41,7 @@ const CardCourse = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

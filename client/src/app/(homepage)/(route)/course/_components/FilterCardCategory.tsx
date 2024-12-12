@@ -4,10 +4,10 @@ import React from "react";
 import { PaginationComponents } from "./Pagination";
 import axios from "axios";
 
-const FilterCardCategory = async () => {
-  const { data: courseData } = await axios.get(
-    "http://localhost:8000/api/courses"
-  );
+const FilterCardCategory = () => {
+  // const { data: courseData } = await axios.get(
+  //   "http://localhost:8000/api/courses"
+  // );
 
   return (
     <div className="mt-12">

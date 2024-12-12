@@ -20,7 +20,7 @@ const itemNavbar = [
 const NavigationWrapper = ({ slug }: { slug?: string }) => {
   return (
     <>
-      <div className="">
+      <div className="sticky top-0 z-20">
         <NavigationDekstop itemNavbar={itemNavbar} slug={slug} />
         <NavigationMobile itemNavbar={itemNavbar} slug={slug} />
       </div>

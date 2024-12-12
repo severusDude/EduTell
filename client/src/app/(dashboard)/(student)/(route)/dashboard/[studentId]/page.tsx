@@ -17,7 +17,7 @@ export default async function DashboardPage({
   }
 
   return (
-    <main>
+    <main className="px-4 lg:px-0">
       <Root session={session} sessionName={sessionName} />
     </main>
   );
