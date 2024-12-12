@@ -2,8 +2,13 @@ import CardCourse from "@/components/CardCourse";
 import { Checkbox } from "@/components/ui/checkbox";
 import React from "react";
 import { PaginationComponents } from "./Pagination";
+import axios from "axios";
 
-const FilterCardCategory = () => {
+const FilterCardCategory = async () => {
+  const { data: courseData } = await axios.get(
+    "http://localhost:8000/api/courses"
+  );
+
   return (
     <div className="mt-12">
       <div className="flex flex-col items-start gap-4 lg:flex-row">

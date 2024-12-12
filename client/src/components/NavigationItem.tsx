@@ -47,16 +47,6 @@ const NavigationItem = ({ itemNavbar, session }: NavigationItemProps) => {
           >
             Dashboard
           </Link>
-          {/* <Link
-            href={`/dashboard/${session}/profile`}
-            className={`${
-              pathname === `/dashboard/${session}/profile`
-                ? "bg-primary-color text-white"
-                : ""
-            } w-full rounded-md py-2 hover:bg-primary-color/40 transition-all ease-in-out lg:hidden`}
-          >
-            Profile
-          </Link> */}
         </div>
       ) : (
         <div className="flex flex-col gap-2">

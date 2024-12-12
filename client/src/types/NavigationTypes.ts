@@ -3,6 +3,7 @@ export type NavigationDekstopProps = {
     name: string;
     href: string;
   }[];
+  slug?: string
 };
 
 export interface NavigationItemProps extends NavigationDekstopProps{

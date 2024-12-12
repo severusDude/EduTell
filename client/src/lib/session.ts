@@ -18,7 +18,6 @@ export const getSessionName = async () => {
     return;
   }
   const decode = jwtDecode<jwtPayload>(token);
-  console.log(decode)
   return decode.name;
 };
 
