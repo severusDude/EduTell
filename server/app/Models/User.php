@@ -85,6 +85,11 @@ class User extends Authenticatable implements JWTSubject
             ->withTimestamps();
     }
 
+    public function hasPurchased(Course $course): bool
+    {
+        return $this->courses()->where('course_id', $course->id)->exists();
+    }
+
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
