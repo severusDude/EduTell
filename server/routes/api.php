@@ -24,22 +24,17 @@ Route::get('slug/{slug}', [UserController::class, 'isSlugAvailable']);
 Route::apiResource('users', UserController::class)
     ->except('store');
 
+Route::prefix('users')->group(function () {
+    Route::get('{user}/teaches', [UserController::class, 'teaches']);
+    Route::get('{user}/courses', [UserController::class, 'courses']);
+});
+
 Route::apiResource('categories', CategoryController::class)
     ->except('show');
 
 Route::apiResource('courses', CourseController::class);
 Route::apiResource('courses.chapters', ChapterController::class);
 Route::apiResource('courses.chapters.subchapters', SubchapterController::class);
-
-Route::prefix('users')->group(function () {
-    Route::get('{user}/teaches', function (Request $request) {
-        return response()->json($request->user()->teaches);
-    });
-
-    Route::get('{user}/purchased-courses', function (Request $request, string $user) {
-        return response()->json($request->user()->courses);
-    });
-});
 
 Route::prefix('courses')->group(function () {
     Route::get('{course}/teacher', [CourseController::class, 'teacher']);
