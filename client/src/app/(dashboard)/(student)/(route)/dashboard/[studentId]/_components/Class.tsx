@@ -12,7 +12,7 @@ const Class = () => {
       </div>
       <div className="flex flex-wrap justify-between gap-4 mt-12">
         {Array.from({ length: 9 }).map((_, index) => (
-          <div className="w-full lg:w-[260px]">
+          <div className="w-full lg:w-[260px] border-[0.3px] rounded-md">
             <CardCourse key={index} />
           </div>
         ))}

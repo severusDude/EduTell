@@ -110,7 +110,7 @@ const FilterCardCategory = () => {
         </div>
         <div className="flex flex-wrap justify-between w-full gap-4 lg:w-3/4 ">
           {Array.from({ length: 9 }).map((_, index) => (
-            <div className="w-full lg:w-[280px]">
+            <div className="w-full lg:w-[280px] border-[0.3px] rounded-md">
               <CardCourse key={index} />
             </div>
           ))}

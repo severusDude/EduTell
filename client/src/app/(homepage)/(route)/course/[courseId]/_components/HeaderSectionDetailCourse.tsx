@@ -1,24 +1,36 @@
-import { ChartColumnIncreasing, Star } from "lucide-react";
+import {
+  ChartColumnIncreasing,
+  GraduationCap,
+  Star,
+  UsersIcon,
+} from "lucide-react";
 import React from "react";
 
 const HeaderSectionDetailCourse = () => {
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-4xl font-semibold text-center">Web Development</h1>
-      <div className="flex items-center w-full justify-evenly text-text-primary">
-        <div className="flex flex-col items-center justify-center gap-2">
-          <h3 className="text-2xl font-bold">Peserta</h3>
-          <p className="text-xl font-semibold">100 Peserta</p>
+      <h1 className="text-4xl font-semibold text-start lg:text-center">
+        Web Development
+      </h1>
+
+      <div className="flex flex-col w-full gap-2 lg:flex-row lg:items-center lg:justify-evenly text-text-primary lg:gap-0">
+        <div className="flex flex-row items-center gap-2 lg:justify-center lg:flex-col">
+          <h3 className="hidden text-2xl font-bold lg:block">Peserta</h3>
+          <UsersIcon className="lg:hidden" size={24} />
+          <p className="text-base font-semibold lg:text-xl">100 Peserta</p>
         </div>
-        <div className="flex flex-col items-center justify-center gap-2">
-          <h3 className="text-2xl font-bold">Level</h3>
+        <div className="flex flex-row gap-2 lg:justify-center lg:flex-col lg:items-center">
+          <h3 className="hidden text-2xl font-bold lg:block">Level</h3>
           <div className="flex items-center gap-2">
-            <ChartColumnIncreasing size={32} />
-            <p className="text-xl font-semibold">Beginer</p>
+            <ChartColumnIncreasing
+              size={32}
+              className="w-6 h-6 lg:w-8 lg:h-8"
+            />
+            <p className="text-base font-semibold lg:text-xl">Beginer</p>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center gap-2">
-          <h3 className="text-2xl font-bold">Rating</h3>
+        <div className="flex flex-row gap-2 lg:justify-center lg:flex-col lg:items-center">
+          <h3 className="hidden text-2xl font-bold lg:block">Rating</h3>
           <div className="flex items-center gap-2">
             <Star className="text-[#FFEA28]" fill="#FFEA28" size={24} />
             <Star className="text-[#FFEA28]" fill="#FFEA28" size={24} />
@@ -27,9 +39,14 @@ const HeaderSectionDetailCourse = () => {
             <Star size={24} />
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center gap-2">
-          <h3 className="text-2xl font-bold">Mentor</h3>
-          <p className="text-xl font-semibold">Agus Budiman</p>
+        <div className="flex flex-col items-start lg:gap-2 lg:items-center lg:justify-center">
+          <h3 className="hidden text-base font-bold lg:text-2xl lg:block">
+            Mentor
+          </h3>
+          <div className="flex items-center gap-2">
+            <GraduationCap className="lg:hidden" />
+            <p className="text-base font-semibold lg:text-xl">Agus Budiman</p>
+          </div>
         </div>
       </div>
     </div>

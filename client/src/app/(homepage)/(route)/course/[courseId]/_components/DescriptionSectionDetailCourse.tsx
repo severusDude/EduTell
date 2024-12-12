@@ -8,7 +8,7 @@ import React from "react";
 
 const DescriptionSectionDetailCourse = () => {
   return (
-    <div className="w-3/4">
+    <div className="w-full lg:w-3/4">
       {/* deskripsi */}
       <div className="space-y-2">
         <h2 className="text-2xl font-semibold">Deskripsi</h2>
@@ -50,7 +50,7 @@ const DescriptionSectionDetailCourse = () => {
       {/* silabus */}
       <div className="mt-12 space-y-2">
         <h2 className="text-2xl font-semibold">Silabus</h2>
-        <div className="space-y-2">
+        <div className="space-y-4">
           {Array.from({ length: 4 }).map((_, index) => (
             <Accordion type="single" collapsible key={index}>
               <AccordionItem value="item-1" className="px-6 shadow-md">

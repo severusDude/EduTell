@@ -19,7 +19,7 @@ const Content = ({ sessionName }: { sessionName: string }) => {
       </div>
       <div className="grid grid-cols-3 gap-1 lg:gap-12">
         <div className="border-[0.3px] p-3 rounded-md mt-auto">
-          <div className="flex items-center gap-2 lg:gap-4">
+          <div className="flex flex-col gap-0 lg:items-center lg:flex-row lg:gap-4">
             <BookOpenText
               size={48}
               className="w-8 h-8 text-primary-color lg:w-12 lg:h-12"
@@ -33,7 +33,7 @@ const Content = ({ sessionName }: { sessionName: string }) => {
           </h2>
         </div>
         <div className="border-[0.3px] p-3 rounded-md mt-auto">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-0 lg:items-center lg:flex-row lg:gap-4">
             <ChartColumnIncreasingIcon
               size={48}
               className="w-8 h-8 text-primary-color lg:w-12 lg:h-12"
@@ -47,7 +47,7 @@ const Content = ({ sessionName }: { sessionName: string }) => {
           </h2>
         </div>
         <div className="border-[0.3px] p-3 rounded-md mt-auto">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-0 lg:items-center lg:flex-row lg:gap-4">
             <ListChecks
               size={48}
               className="w-8 h-8 text-primary-color lg:w-12 lg:h-12"
