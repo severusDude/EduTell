@@ -19,23 +19,23 @@ class SubmissionController extends Controller implements HasMiddleware
         return [
             new Middleware('auth:api'),
             // new Middleware('role:teacher', only: ['index', 'show']),
-            // new Middleware('role:student', except: ['index', 'show']),
+            function (Request $request, Closure $next) {
+                // get course slug from url
+                $course_slug = $request->route('course');
 
-            // function (Request $request, Closure $next) {
-            //     // get course slug from url
-            //     $course_slug = $request->route('course');
+                $course = Course::where('slug', $course_slug)->firstOrFail();
 
-            //     $course = Course::where('slug', $course_slug)->firstOrFail();
+                if (
+                    !($request->user()->hasPurchased($course))
+                ) {
+                    return response()->json(['error' => 'Unauthorized'], 403);
+                }
 
-            //     if (
-            //         !$request->user()->hasPurchased($course) ||
-            //         $course->teacher === $request->user()->id
-            //     ) {
-            //         return response()->json(['error' => 'Unauthorized'], 403);
-            //     }
+                return $next($request);
+            },
 
-            //     return $next($request);
-            // }
+            new Middleware('role:student', except: ['index', 'show']),
+
         ];
     }
 
