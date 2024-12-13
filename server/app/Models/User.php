@@ -87,7 +87,8 @@ class User extends Authenticatable implements JWTSubject
 
     public function hasPurchased(Course $course): bool
     {
-        return $this->courses()->where('course_id', $course->id)->exists();
+        return $this->courses()->where('course_id', $course->id)->exists() ||
+            $course->teacher->id === $this->id;
     }
 
     public function submissions()
