@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Course;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\CourseResource;
 use App\Http\Controllers\AuthController;
-use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
 class CourseController extends Controller implements HasMiddleware
 {
@@ -19,8 +20,14 @@ class CourseController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('auth:api', except: ['index', 'show']),
-            new Middleware('role:teacher', except: ['index', 'show'])
+            new Middleware('auth:api', except: ['index', 'show', 'teacher', 'students']),
+            new Middleware('role:teacher', except: [
+                'index',
+                'show',
+                'teacher',
+                'students',
+                'purchase'
+            ])
         ];
     }
 
@@ -109,5 +116,38 @@ class CourseController extends Controller implements HasMiddleware
         $course->delete();
 
         return response()->json(['message' => 'Course has been deleted succesfully'], 204);
+    }
+
+    public function teacher(string $course)
+    {
+        $course = Course::where('slug', $course)->firstOrFail();
+
+        return new UserResource($course->teacher);
+    }
+
+    public function students(string $course)
+    {
+        $course = Course::where('slug', $course)->firstOrFail();
+
+        return UserResource::collection($course->students()->paginate(15));
+    }
+
+    public function purchase(Request $request, string $course)
+    {
+        $course = Course::where('slug', $course)->firstOrFail();
+
+        if ($request->user()->hasPurchased($course)) {
+            return response()->json(['message' => 'User has already purchased this course'], 400);
+        }
+
+        // initiate purchase
+        $request->user()
+            ->courses()
+            ->attach($course->id, [
+                'id' => Str::uuid(),
+                'purchased_at' => now()
+            ]);
+
+        return CourseResource::collection($request->user()->courses()->paginate(15));
     }
 }

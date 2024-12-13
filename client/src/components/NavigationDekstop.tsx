@@ -1,43 +1,30 @@
-"use client";
-
 import Link from "next/link";
 import React from "react";
 import { Input } from "./ui/input";
 import { Search, User } from "lucide-react";
-import { usePathname } from "next/navigation";
+import NavigationItem from "./NavigationItem";
+import { Button } from "./ui/button";
+import { NavigationDekstopProps } from "@/types/NavigationTypes";
 
-type NavigationDekstopProps = {
-  itemNavbar: {
-    name: string;
-    href: string;
-  }[];
-};
-
-const NavigationDekstop = ({ itemNavbar }: NavigationDekstopProps) => {
-  const pathname = usePathname();
-
+const NavigationDekstop = ({
+  itemNavbar,
+  slug: session,
+}: NavigationDekstopProps) => {
   return (
-    <nav className="items-center justify-between hidden gap-2 lg:flex">
+    <nav className="lg:px-[64px] lg:py-[34px] z-20 items-center justify-between hidden gap-2 lg:flex transparent-background">
       <div>
-        <h1 className="text-primary-color text-[20px] font-semibold">
+        <Link
+          href={"/"}
+          className="text-primary-color text-[20px] font-semibold"
+        >
           Edutell
-        </h1>
+        </Link>
       </div>
-      <div className="flex gap-6">
-        {itemNavbar.map((item, index) => (
-          <Link
-            key={index}
-            href={item.href}
-            className={`text-[16px] transition-all ease-in-out ${
-              pathname === item.href
-                ? "text-primary-color hover:text-primary-color/80"
-                : "text-text-primary hover:text-primary-color/80"
-            }`}
-          >
-            {item.name}
-          </Link>
-        ))}
-      </div>
+      <NavigationItem
+        itemNavbar={itemNavbar}
+        session={session}
+        slug={session}
+      />
       <div className="relative">
         <Input className="pl-12 py-2 border-primary-color w-[445px]" />
         <Search
@@ -47,27 +34,38 @@ const NavigationDekstop = ({ itemNavbar }: NavigationDekstopProps) => {
         <p className="text-primary-color absolute top-1.5 right-4">Search</p>
       </div>
 
-      <div className="flex items-center gap-2">
-        <User
-          size={28}
-          className="transition-all ease-in-out text-text-primary hover:text-text-primary/80"
-        />
-        <div className="flex text-text-primary">
+      {session ? (
+        <div className="space-x-4">
           <Link
-            href={"/login"}
-            className="hover:text-primary-color transition-all ease-in-out text-[16px]"
+            href={`/dashboard/${session}`}
+            className={`text-[16px] transition-all ease-in-out`}
           >
-            Login
-          </Link>
-          <p className="text-[16px] text-text-primary">/</p>
-          <Link
-            href={"/register"}
-            className="hover:text-primary-color transition-all ease-in-out text-[16px]"
-          >
-            Register
+            <Button variant={"outline"}>Dashboard</Button>
           </Link>
         </div>
-      </div>
+      ) : (
+        <div className="flex items-center gap-2">
+          <User
+            size={28}
+            className="transition-all ease-in-out text-text-primary hover:text-text-primary/80"
+          />
+          <div className="flex text-text-primary">
+            <Link
+              href={"/login"}
+              className="hover:text-primary-color transition-all ease-in-out text-[16px]"
+            >
+              Login
+            </Link>
+            <p className="text-[16px] text-text-primary">/</p>
+            <Link
+              href={"/register"}
+              className="hover:text-primary-color transition-all ease-in-out text-[16px]"
+            >
+              Register
+            </Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

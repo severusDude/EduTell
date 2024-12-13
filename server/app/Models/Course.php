@@ -27,9 +27,16 @@ class Course extends Model
     ];
 
     //Relationships
-    public function user()
+    public function teacher()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'purchases')
+            ->withPivot('purchased_at')
+            ->withTimestamps();
     }
 
     public function category()

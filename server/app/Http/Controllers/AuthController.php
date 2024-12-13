@@ -50,6 +50,7 @@ class AuthController extends Controller
             // (optional) Attach the role to the token.
             $token = JWTAuth::claims([
                 'role' => $user->roles[0]['name'],
+                'name' => $user->name,
                 'slug' => $user->slug
             ])->fromUser($user);
 

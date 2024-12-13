@@ -1,9 +1,5 @@
+import { loginActionType } from "@/types/authTypes";
 import axios from "axios";
-
-export type loginActionType = {
-  email: string;
-  password: string;
-};
 
 export const loginAction = async ({ email, password }: loginActionType) => {
   const response = await axios.post(
