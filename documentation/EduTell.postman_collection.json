@@ -87,7 +87,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n    // \"email\": \"teacher@example.com\",\r\n    // \"password\": \"teacher\"\r\n}",
+							"raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n    // \"email\": \"teacher@example.com\",\r\n    // \"password\": \"teacher\"\r\n    // \"email\": \"raihan@example.com\",\r\n    // \"password\": \"{{password}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1265,7 +1265,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Install program\",\r\n    \"description\": \"Install program PHP versi 8.1, Composer versi 2, dan Laravel versi 11\",\r\n    \"due_date\": \"12-12-2024\"\r\n}",
+							"raw": "{\r\n    \"title\": \"Install program\",\r\n    \"description\": \"Install program PHP versi 8.1, Composer versi 2, dan Laravel versi 11\",\r\n    \"due_date\": \"14-12-2024\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1366,6 +1366,243 @@
 								"{{subchapter}}",
 								"assignments",
 								"{{assignment}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Submission",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}/submissions",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}",
+								"submissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}/submissions/{{submission}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}",
+								"submissions",
+								"{{submission}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"submission\", jsonResponse.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"Selesai\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}/submissions",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}",
+								"submissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"Selesai updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}/submissions/{{submission}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}",
+								"submissions",
+								"{{submission}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}/submissions/{{submission}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}",
+								"submissions",
+								"{{submission}}"
 							]
 						}
 					},
@@ -1638,6 +1875,10 @@
 		},
 		{
 			"key": "user",
+			"value": ""
+		},
+		{
+			"key": "submission",
 			"value": ""
 		}
 	]

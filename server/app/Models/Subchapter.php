@@ -26,6 +26,11 @@ class Subchapter extends Model
         return $this->belongsTo(Chapter::class);
     }
 
+    public function assignments()
+    {
+        return $this->hasMany(Assignment::class);
+    }
+
     protected function casts(): array
     {
         return [
