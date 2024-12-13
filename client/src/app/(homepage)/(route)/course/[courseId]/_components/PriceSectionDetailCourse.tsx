@@ -4,8 +4,8 @@ import React from "react";
 
 const PriceSectionDetailCourse = () => {
   return (
-    <div>
-      <div className="w-1/4 border-[0.3px] rounded-md p-4 space-y-4 hidden lg:block">
+    <>
+      <div className="w-1/4 border-[0.3px] rounded-md p-4 space-y-4">
         <div className="space-y-2 text-center">
           <h3 className="text-base font-semibold text-text-primary">
             Web Development
@@ -39,9 +39,11 @@ const PriceSectionDetailCourse = () => {
       </div>
 
       <div className="fixed bottom-0 left-0 z-20 flex justify-end w-full px-4 py-2 bg-white border-t border-gray-300 shadow-md lg:hidden">
-        <Button className="tracking-widest rounded-sm bg-primary-color hover:bg-primary-color/80 border-[0.3px] border-text-primary/70">Daftar Kelas</Button>
+        <Button className="tracking-widest rounded-sm bg-primary-color hover:bg-primary-color/80 border-[0.3px] border-text-primary/70">
+          Daftar Kelas
+        </Button>
       </div>
-    </div>
+    </>
   );
 };
 
