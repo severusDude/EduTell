@@ -26,6 +26,11 @@ class Assignment extends Model
         return $this->belongsTo(Subchapter::class);
     }
 
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
+    }
+
     protected function casts(): array
     {
         return [
