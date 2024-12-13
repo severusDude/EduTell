@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AssignmentResource;
 use App\Http\Resources\SubmissionResource;
 use App\Models\Assignment;
 use App\Models\Course;
@@ -38,6 +39,11 @@ class SubmissionController extends Controller
         $course = Course::where('slug', $course)->firstOrFail();
         $assignment = Assignment::findOrFail($assignment);
 
+        //check whether user has already submitted the submission
+        // if ($request->user()->hasSubmitted($assignment)) {
+        //     return response()->json(['message' => 'User has already made submission to this assignment'], 403);
+        // }
+
         $validated = $request->validate([
             'content' => 'present|nullable|string'
         ]);
@@ -50,30 +56,65 @@ class SubmissionController extends Controller
 
         $submission->save();
 
-        return response()->json($submission);
+        return new SubmissionResource($submission);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Submission $submission)
-    {
-        //
+    public function show(
+        string $course,
+        string $chapter,
+        string $subchapter,
+        string $assignment,
+        string $submission,
+    ) {
+        $course = Course::where('slug', $course)->firstOrFail();
+        $submission = Submission::findOrFail($submission);
+
+        return new SubmissionResource($submission);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Submission $submission)
-    {
-        //
+    public function update(
+        Request $request,
+        string $course,
+        string $chapter,
+        string $subchapter,
+        string $assignment,
+        string $submission,
+    ) {
+        $course = Course::where('slug', $course)->firstOrFail();
+        $submission = Submission::findOrFail($submission);
+
+        $validated = $request->validate([
+            'content' => 'present|nullable|string'
+        ]);
+
+        $submission->fill($validated);
+
+        $submission->save();
+
+        return new SubmissionResource($submission);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Submission $submission)
-    {
-        //
+    public function destroy(
+        string $course,
+        string $chapter,
+        string $subchapter,
+        string $assignment,
+        string $submission,
+    ) {
+        $course = Course::where('slug', $course)->firstOrFail();
+        $submission = Submission::findOrFail($submission);
+
+        $submission->delete();
+
+        return response()->json(['message' => 'Submission has been deleted succesfully'], 204);
     }
 }
