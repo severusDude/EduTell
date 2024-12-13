@@ -7,6 +7,7 @@ import { CourseType } from "@/types/course";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ChevronRightIcon } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 const CourseList = () => {
@@ -37,9 +38,11 @@ const CourseList = () => {
         </div>
       )}
       <div className="w-full mt-12">
-        <Button className="flex items-center gap-3 px-8 mx-auto bg-primary-color hover:bg-primary-color/80">
-          Lihat Course Lainnya <ChevronRightIcon />
-        </Button>
+        <Link href={"/course"}>
+          <Button className="flex items-center gap-3 px-8 mx-auto bg-primary-color hover:bg-primary-color/80">
+            Lihat Course Lainnya <ChevronRightIcon />
+          </Button>
+        </Link>
       </div>
     </section>
   );

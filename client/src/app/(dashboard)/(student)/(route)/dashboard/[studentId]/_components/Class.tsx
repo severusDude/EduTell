@@ -35,7 +35,7 @@ const Class = ({
           <div className="w-full text-center text-text-primary">
             <h1 className="text-center">Tidak ada kursus yang di ikuti</h1>
             <Link
-              href={"/courses"}
+              href={"/course"}
               className="text-sm underline hover:text-primary-color/80"
             >
               Cari Course

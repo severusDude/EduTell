@@ -93,7 +93,7 @@ const Sidebar = ({
           <span className="text-sm">Pengaturan</span>
         </p>
         <p
-          className={`flex flex-col text-text-primary items-center transition-all ease-in-out hover:text-red-600`}
+          className={`flex flex-col text-text-primary items-center transition-all ease-in-out hover:text-red-600 cursor-pointer`}
         >
           <LogOutIcon />
           <ButtonLogout token={token} />
