@@ -21,8 +21,11 @@ class SubmissionController extends Controller implements HasMiddleware
             // new Middleware('role:teacher', only: ['index', 'show']),
             // new Middleware('role:student', except: ['index', 'show']),
 
-            // function (Request $request, Closure $next, string $course) {
-            //     $course = Course::where('slug', $course)->firstOrFail();
+            // function (Request $request, Closure $next) {
+            //     // get course slug from url
+            //     $course_slug = $request->route('course');
+
+            //     $course = Course::where('slug', $course_slug)->firstOrFail();
 
             //     if (
             //         !$request->user()->hasPurchased($course) ||
@@ -40,6 +43,7 @@ class SubmissionController extends Controller implements HasMiddleware
      * Display a listing of the resource.
      */
     public function index(
+        Request $request,
         string $course,
         string $chapter,
         string $subchapter,
@@ -48,7 +52,13 @@ class SubmissionController extends Controller implements HasMiddleware
         $course = Course::where('slug', $course)->firstOrFail();
         $assignment = Assignment::findOrFail($assignment);
 
-        return SubmissionResource::collection($assignment->submissions);
+        if ($request->user()->hasRole('student')) {
+            return new SubmissionResource($request->user()->submissions()
+                ->where('assignment_id', $assignment->id)
+                ->firstOrFail());
+        }
+
+        return SubmissionResource::collection($assignment->submissions()->paginate(15));
     }
 
     /**
@@ -93,6 +103,7 @@ class SubmissionController extends Controller implements HasMiddleware
      * Display the specified resource.
      */
     public function show(
+        Request $request,
         string $course,
         string $chapter,
         string $subchapter,
@@ -101,6 +112,10 @@ class SubmissionController extends Controller implements HasMiddleware
     ) {
         $course = Course::where('slug', $course)->firstOrFail();
         $submission = Submission::findOrFail($submission);
+
+        if ($submission->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
         return new SubmissionResource($submission);
     }

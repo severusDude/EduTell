@@ -16,6 +16,10 @@ class SubmissionResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user_id' => $this->when($request->user() &&
+                $request->user()->hasRole('teacher'), function () {
+                return $this->user->slug;
+            }),
             'content' => $this->content,
             'submitted_at' => (string) $this->created_at
         ];
