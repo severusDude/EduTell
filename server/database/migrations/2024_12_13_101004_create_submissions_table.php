@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignUuid('assignment_id')->constrained();
             $table->text('content')->nullable();
             $table->timestamps();
+
+            $table->unique(['user_id', 'assignment_id']);
         });
     }
 
