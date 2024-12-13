@@ -25,7 +25,7 @@ class Submission extends Model
 
     public function grade()
     {
-        return $this->hasOne(Submission::class);
+        return $this->hasOne(Grade::class);
     }
 
     public static function booted(): void
