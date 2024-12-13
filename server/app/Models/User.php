@@ -72,6 +72,11 @@ class User extends Authenticatable implements JWTSubject
         });
     }
 
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
+    }
+
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -97,6 +102,7 @@ class User extends Authenticatable implements JWTSubject
     {
         static::creating(function ($model) {
             $model->id = Str::uuid();
+            $model->assignRole('student');
         });
     }
 }
