@@ -1,16 +1,24 @@
 import { Button } from "@/components/ui/button";
+import { formatRupiah } from "@/lib/utils";
+import { CourseType } from "@/types/course";
 import { CheckCircleIcon } from "lucide-react";
 import React from "react";
 
-const PriceSectionDetailCourse = () => {
+const PriceSectionDetailCourse = ({
+  dataCourse,
+}: {
+  dataCourse: CourseType;
+}) => {
   return (
     <>
-      <div className="w-1/4 border-[0.3px] rounded-md p-4 space-y-4">
+      <div className="hidden lg:block w-1/4 border-[0.3px] rounded-md p-4 space-y-4">
         <div className="space-y-2 text-center">
           <h3 className="text-base font-semibold text-text-primary">
-            Web Development
+            {dataCourse?.title}
           </h3>
-          <h2 className="text-xl font-semibold">Rp.200.000</h2>
+          <h2 className="text-xl font-semibold">
+            {dataCourse?.price && formatRupiah(dataCourse?.price)}
+          </h2>
         </div>
         <div className="space-y-2">
           <div className="flex items-center gap-2 w-[70%] mx-auto text-text-primary">

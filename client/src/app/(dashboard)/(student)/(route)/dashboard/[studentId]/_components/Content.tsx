@@ -5,8 +5,15 @@ import {
 } from "lucide-react";
 import React from "react";
 import Chart from "./Chart";
+import { CourseType } from "@/types/course";
 
-const Content = ({ sessionName }: { sessionName: string }) => {
+const Content = ({
+  sessionName,
+  dataCourse,
+}: {
+  sessionName: string;
+  dataCourse: CourseType[];
+}) => {
   return (
     <div className="border-[0.3px] shadow-md rounded-md p-4 lg:min-h-[428px] space-y-4">
       <div className="p-4 space-y-2 rounded-md bg-primary-color">
@@ -29,7 +36,7 @@ const Content = ({ sessionName }: { sessionName: string }) => {
             </p>
           </div>
           <h2 className="mt-2 text-sm lg:text-base text-primary-color">
-            4 Kelas
+            {dataCourse?.length} Kelas
           </h2>
         </div>
         <div className="border-[0.3px] p-3 rounded-md mt-auto">
@@ -61,7 +68,7 @@ const Content = ({ sessionName }: { sessionName: string }) => {
           </h2>
         </div>
       </div>
-      <Chart />
+      <Chart dataCourse={dataCourse} />
     </div>
   );
 };

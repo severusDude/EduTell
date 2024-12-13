@@ -15,6 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { CourseType } from "@/types/course";
 const chartData = [
   { month: "January", "Kelas Diikuti": 4, "Kelas Selesai": 1 },
   { month: "February", "Kelas Diikuti": 2, "Kelas Selesai": 2 },
@@ -35,7 +36,8 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function Chart() {
+export default function Chart({ dataCourse }: { dataCourse: CourseType[] }) {
+
   return (
     <Card>
       <CardHeader>
@@ -62,9 +64,9 @@ export default function Chart() {
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Legend
-            margin={{
-              top: 12
-            }}
+              margin={{
+                top: 12,
+              }}
               iconType="circle"
               iconSize={8}
               layout="horizontal"

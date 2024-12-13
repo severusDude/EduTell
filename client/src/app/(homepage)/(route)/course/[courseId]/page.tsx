@@ -15,20 +15,19 @@ export default function CourseDetailPage({
 }: {
   params: { courseId: string };
 }) {
-  const { data, isLoading: isLoadingCourse } = useQuery({
+  const { data: dataCourse, isLoading: isLoadingCourse } = useQuery({
     queryKey: ["course-detail"],
     queryFn: async () =>
       (await axios.get(`${BASE_URL}/courses/${params.courseId}`)).data,
   });
 
-  const { data: chapter } = useQuery({
+  const { data: dataChapter } = useQuery({
     queryKey: ["chapter-courses"],
     queryFn: async () =>
       (await axios.get(`${BASE_URL}/courses/${params.courseId}/chapters`)).data,
   });
 
-  console.log(data);
-  console.log(chapter);
+  console.log("chapter ", dataChapter?.data);
 
   return (
     <section className="px-4 mt-16 lg:mt-12 lg:px-0">
@@ -36,15 +35,18 @@ export default function CourseDetailPage({
       {isLoadingCourse ? (
         <SkeletonHeaderSectionDetailCourse />
       ) : (
-        <HeaderSectionDetailCourse />
+        <HeaderSectionDetailCourse dataCourse={dataCourse.data} />
       )}
 
       {isLoadingCourse ? (
         <Loading />
       ) : (
         <div className="flex flex-col items-start gap-16 mt-12 lg:flex-row">
-          <DescriptionSectionDetailCourse />
-          <PriceSectionDetailCourse />
+          <DescriptionSectionDetailCourse
+            dataChapter={dataChapter?.data}
+            dataCourse={dataCourse?.data}
+          />
+          <PriceSectionDetailCourse dataCourse={dataCourse.data} />
         </div>
       )}
     </section>
