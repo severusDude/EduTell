@@ -1,7 +1,6 @@
 import HeaderSectionDetailCourse from "./_components/HeaderSectionDetailCourse";
 import DescriptionSectionDetailCourse from "./_components/DescriptionSectionDetailCourse";
 import PriceSectionDetailCourse from "./_components/PriceSectionDetailCourse";
-import { ArrowLeftIcon } from "lucide-react";
 import ButtonBack from "@/components/ButtonBack";
 
 export default function CourseDetailPage({
