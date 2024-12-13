@@ -23,6 +23,11 @@ class Submission extends Model
         return $this->belongsTo(Assignment::class);
     }
 
+    public function grade()
+    {
+        return $this->hasOne(Submission::class);
+    }
+
     public static function booted(): void
     {
         static::creating(function ($model) {

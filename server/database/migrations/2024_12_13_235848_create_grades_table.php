@@ -12,7 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('grades', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('submission_id')->constrained()->cascadeOnDelete();
+            $table->decimal('score', 3, 2);
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }
