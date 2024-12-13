@@ -1,4 +1,4 @@
-import { getSession, getSessionName } from "@/lib/session";
+import { getSession, getSessionName, getSlug } from "@/lib/session";
 import { redirect } from "next/navigation";
 import Sidebar from "./_components/Sidebar";
 import Content from "./_components/Content";
@@ -11,14 +11,19 @@ export default async function DashboardPage({
 }) {
   const sessionName = await getSessionName();
   const session = await getSession();
+  const sessionSlug = await getSlug();
 
-  if (!sessionName || !session) {
+  if (!sessionName || !session || !sessionSlug) {
     redirect("/login");
   }
 
   return (
     <main className="px-4 lg:px-0">
-      <Root session={session} sessionName={sessionName} />
+      <Root
+        session={session}
+        sessionName={sessionName}
+        sessionSlug={sessionSlug}
+      />
     </main>
   );
 }

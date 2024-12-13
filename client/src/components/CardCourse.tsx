@@ -21,8 +21,8 @@ const CardCourse = ({ courseData }: { courseData: CourseType }) => {
       />
       <div className="p-5 space-y-2">
         <h4 className="text-2xl font-semibold">
-          {courseData?.title.length > 30
-            ? courseData.title.slice(0, 30) + "..."
+          {courseData?.title.length > 25
+            ? courseData.title.slice(0, 25) + "..."
             : courseData?.title}
         </h4>
         <div className="flex items-center gap-2">

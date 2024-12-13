@@ -12,3 +12,18 @@ export type CourseType = {
   updated_at: string;
   user_id: string;
 };
+
+export type ChapterType = {
+  description: string;
+  is_published: boolean;
+  position: number;
+  title: string;
+  subchapters: SubChapterType[];
+};
+
+export type SubChapterType = {
+  description: string;
+  is_published: boolean;
+  position: number;
+  title: string;
+};
