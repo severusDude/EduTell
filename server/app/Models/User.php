@@ -120,7 +120,12 @@ class User extends Authenticatable implements JWTSubject
     {
         static::creating(function ($model) {
             $model->id = Str::uuid();
-            $model->assignRole('student');
+        });
+
+        static::created(function ($model) {
+            if (!$model->hasRole('teacher')) {
+                $model->syncRoles('student');
+            }
         });
     }
 }

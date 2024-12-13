@@ -41,7 +41,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make($user['password'])
             ]);
 
-            $createdUser->assignRole($user['role']);
+            $createdUser->syncRoles($user['role']);
         }
     }
 }
