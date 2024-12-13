@@ -13,6 +13,11 @@ class Submission extends Model
         'content'
     ];
 
+    public function assignment()
+    {
+        return $this->belongsTo(Assignment::class);
+    }
+
     public static function booted(): void
     {
         static::creating(function ($model) {
