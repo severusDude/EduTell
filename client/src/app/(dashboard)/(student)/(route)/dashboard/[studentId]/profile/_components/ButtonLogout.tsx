@@ -4,6 +4,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React from "react";
 import toast from "react-hot-toast";
+import Cookies from 'js-cookie';
 
 const ButtonLogout = ({ token }: { token: string }) => {
   const router = useRouter();
@@ -14,13 +15,13 @@ const ButtonLogout = ({ token }: { token: string }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      document.cookie = `accessToken=;`;
+      Cookies.remove("accessToken")
       toast.success("Berhasil Logout");
-      router.refresh();
     } catch (error) {
       toast.error("Gagal Melakukan Logout");
     } finally {
       router.push("/");
+      router.refresh()
     }
   };
 

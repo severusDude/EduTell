@@ -25,22 +25,6 @@ export const useAuthRegister = (
   return useMutation({
     mutationKey: ["register-action"],
     mutationFn: () => {
-      try {
-        ValidationAuthShcema.REGISTERSCHEME.parse(requestUser);
-      } catch (error) {
-        if (error instanceof ZodError) {
-          const formattedErrors: Record<string, string> = {};
-
-          error.errors.forEach((err) => {
-            const field = err.path.join(".");
-            formattedErrors[field] = err.message;
-          });
-          throw new ZodError(JSON.parse(JSON.stringify(formattedErrors)));
-        } else {
-          throw error;
-        }
-      }
-
       return registerAction(requestUser);
     },
     onError: () => {
