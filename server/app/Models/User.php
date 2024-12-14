@@ -91,6 +91,15 @@ class User extends Authenticatable implements JWTSubject
             $course->teacher->id === $this->id;
     }
 
+    public function subchapters()
+    {
+        return $this->belongsToMany(Subchapter::class, 'progresses')
+            ->as('progress')
+            ->withPivot('is_completed')
+            ->withTimestamps();
+    }
+
+
     public function submissions()
     {
         return $this->hasMany(Submission::class);

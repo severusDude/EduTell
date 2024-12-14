@@ -33,6 +33,14 @@ class Subchapter extends Model
         return $this->hasMany(Assignment::class);
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'progresses')
+            ->as('progress')
+            ->withPivot('is_completed')
+            ->withTimestamps();
+    }
+
     protected function casts(): array
     {
         return [
