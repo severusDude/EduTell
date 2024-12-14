@@ -1,14 +1,38 @@
 import { Button } from "@/components/ui/button";
+import { BASE_URL } from "@/constant/url";
 import { formatRupiah } from "@/lib/utils";
 import { CourseType } from "@/types/course";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import { CheckCircleIcon } from "lucide-react";
 import React from "react";
 
 const PriceSectionDetailCourse = ({
   dataCourse,
+  token,
+  courseId,
 }: {
   dataCourse: CourseType;
+  token: string;
+  courseId: string;
 }) => {
+  const { mutate: handlePurchase, data } = useMutation({
+    mutationKey: ["puchase-course"],
+    mutationFn: async () => {
+      return axios.post(
+        `${BASE_URL}/courses/${courseId}/purchase`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    },
+  });
+
+  console.log("result ", data);
+
   return (
     <>
       <div className="hidden lg:block w-1/4 border-[0.3px] rounded-md p-4 space-y-4">
@@ -46,7 +70,10 @@ const PriceSectionDetailCourse = ({
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 z-20 flex justify-end w-full px-4 py-2 bg-white border-t border-gray-300 shadow-md lg:hidden">
+      <div
+        onClick={() => handlePurchase()}
+        className="fixed bottom-0 left-0 z-20 flex justify-end w-full px-4 py-2 bg-white border-t border-gray-300 shadow-md lg:hidden"
+      >
         <Button className="tracking-widest rounded-sm bg-primary-color hover:bg-primary-color/80 border-[0.3px] border-text-primary/70">
           Daftar Kelas
         </Button>
