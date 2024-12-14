@@ -11,6 +11,8 @@ class Subchapter extends Model
     /** @use HasFactory<\Database\Factories\SubchapterFactory> */
     use HasFactory;
 
+    protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = [
