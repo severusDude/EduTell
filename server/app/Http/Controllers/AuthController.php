@@ -75,7 +75,7 @@ class AuthController extends Controller
             return response()->json(['error' => 'Invalid token'], 400);
         }
 
-        return response()->json($user);
+        return new UserResource($user);
     }
 
     /**
