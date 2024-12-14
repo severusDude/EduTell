@@ -25,8 +25,8 @@ class CourseResource extends JsonResource
             'difficulty' => $this->difficulty,
             'duration' => $this->duration,
             'is_published' => $this->is_published,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'created_at' => (string) $this->created_at,
+            'updated_at' => (string) $this->updated_at,
         ];
     }
 }
