@@ -19,7 +19,7 @@ export type CourseType = {
   title: string;
   updated_at: string;
   user_id: string;
-  chapters?: ChapterType[]
+  chapters?: any[]
 };
 
 export type CreateChapterType = {
