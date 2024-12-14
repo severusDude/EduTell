@@ -72,6 +72,7 @@ Route::prefix('v1')->group(function () {
         Route::get('logout', [AuthController::class, 'logout']);
         Route::get('teaches', [UserController::class, 'teaches']);
         Route::get('courses', [UserController::class, 'courses']);
+        Route::get('progresses', [UserController::class, 'progresses']);
     });
 
     // category routes
