@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
             $table->foreignUuid('course_id')->constrained()->cascadeOnDelete();
-            $table->timestampTz('purchased_at');
+            $table->timestamp('purchased_at');
             $table->timestamps();
 
             $table->unique(['user_id', 'course_id']);
