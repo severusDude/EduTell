@@ -1,3 +1,5 @@
+import ButtonBack from "@/components/ButtonBack";
+import { Button } from "@/components/ui/button";
 import {
   getSession,
   getSessionName,
@@ -5,6 +7,7 @@ import {
   getSlug,
 } from "@/lib/session";
 import { redirect } from "next/navigation";
+import CreateCourse from "./_components/CreateCourse";
 
 export default async function CreateCousePage({
   params,
@@ -29,8 +32,8 @@ export default async function CreateCousePage({
   }
 
   return (
-    <div>
-      <h1>Create Course</h1>
+    <div className="border-[0.3px] rounded-md p-4">
+      <CreateCourse token={session} />
     </div>
   );
 }

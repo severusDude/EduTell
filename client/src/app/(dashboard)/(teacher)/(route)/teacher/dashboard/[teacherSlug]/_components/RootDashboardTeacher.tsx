@@ -6,6 +6,7 @@ import axios from "axios";
 import SidebarDashboardTeacher from "./SidebarDashboardTeacher";
 import ContentDashboardTeacher from "./ContentDashboardTeacher";
 import ClassDashboardTeacher from "./ClassDashboardTeacher";
+import { BASE_URL } from "@/constant/url";
 
 const RootDashboardTeacher = ({
   session,
@@ -19,18 +20,14 @@ const RootDashboardTeacher = ({
   const [contentView, setContentView] = useState("content");
 
   const { data: dataCourse, isLoading } = useQuery({
-    queryKey: ["courses"],
+    queryKey: ["only-course-created"],
     queryFn: async () => {
       return (
-        await axios.get(
-          `http://localhost:8000/api/users/${sessionSlug}/courses`,
-          // `http://localhost:8000/api/v1/me/courses`,
-          {
-            headers: {
-              Authorization: `Bearer ${session}`,
-            },
-          }
-        )
+        await axios.get(`${BASE_URL}/users/${sessionSlug}/teaches`, {
+          headers: {
+            Authorization: `Bearer ${session}`,
+          },
+        })
       ).data;
     },
   });
@@ -46,10 +43,18 @@ const RootDashboardTeacher = ({
       </div>
       <div className="w-full mt-8 lg:w-3/4 lg:mt-0">
         {contentView === "content" && (
-          <ContentDashboardTeacher dataCourse={dataCourse?.data} sessionName={sessionName} />
+          <ContentDashboardTeacher
+            dataCourse={dataCourse?.data}
+            sessionName={sessionName}
+          />
         )}
         {contentView === "class" && (
-          <ClassDashboardTeacher sessionSlug={sessionSlug} />
+          <ClassDashboardTeacher
+            dataCourse={dataCourse?.data}
+            session={session}
+            sessionSlug={sessionSlug}
+            isLoading={isLoading}
+          />
         )}
       </div>
     </div>

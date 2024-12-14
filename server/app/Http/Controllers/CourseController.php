@@ -46,7 +46,7 @@ class CourseController extends Controller implements HasMiddleware
     {
         $validated = $request->validate([
             'title' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s\-\'\\/]+$/',
-            'description' => 'required|string|regex:/^[a-zA-Z\s\-\'\\/]+$/',
+            'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'image_url' => 'required|string',
             'price' => 'required|numeric',
