@@ -47,4 +47,4 @@ Route::prefix('courses')->group(function () {
     Route::post('{course}/purchase', [CourseController::class, 'purchase']);
 });
 
-Route::apiResource('grades', GradeController::class);
+Route::apiResource('submissions.grades', GradeController::class);
