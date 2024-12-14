@@ -12,6 +12,8 @@ class Assignment extends Model
     /** @use HasFactory<\Database\Factories\AssignmentFactory> */
     use HasFactory;
 
+    protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = [

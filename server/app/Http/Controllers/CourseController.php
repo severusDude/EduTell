@@ -69,9 +69,11 @@ class CourseController extends Controller implements HasMiddleware
     /**
      * Display the specified resource.
      */
-    public function show(string $course)
+    public function show(Request $request, string $course)
     {
-        return new CourseResource(Course::where('slug', $course)->firstOrFail());
+        $course = Course::where('slug', $course)->with('chapters')->firstOrFail();
+
+        return new CourseResource($course);
     }
 
     /**

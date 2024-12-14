@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Grade extends Model
 {
+    protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = [

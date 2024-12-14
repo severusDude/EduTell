@@ -16,7 +16,8 @@ class UserController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('auth:api', except: ['index', 'show'])
+            new Middleware('auth:api', except: ['index', 'show']),
+            new Middleware('role:teacher', only: ['teaches'])
         ];
     }
 
@@ -100,10 +101,8 @@ class UserController extends Controller implements HasMiddleware
         return CourseResource::collection($request->user()->teaches()->paginate(15));
     }
 
-    public function courses(string $user)
+    public function courses(Request $request)
     {
-        $user = User::where('slug', $user)->firstOrFail();
-
-        return CourseResource::collection($user->courses()->paginate(15));
+        return CourseResource::collection($request->user()->courses()->paginate(15));
     }
 }
