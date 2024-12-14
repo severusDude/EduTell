@@ -2,18 +2,28 @@
 
 import ButtonBack from "@/components/ButtonBack";
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputTitleCourse from "./InputTitleCourse";
 import InputCategoryCourse from "./InputCategoryCourse";
 import InputDescriptionCourse from "./InputDescriptionCourse";
 import InputPriceCourse from "./InputPriceCourse";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { BASE_URL } from "@/constant/url";
 import InputDifficultCourse from "./InputDifficultCourse";
 import InputTimeCourse from "./InputTimeCourse";
+import { CourseType } from "@/types/course";
+import toast from "react-hot-toast";
 
-const CreateCourse = ({ token }: { token: string }) => {
+const EditCourse = ({
+  token,
+  slug,
+  data,
+}: {
+  token: string;
+  slug: string;
+  data: CourseType;
+}) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
@@ -21,12 +31,26 @@ const CreateCourse = ({ token }: { token: string }) => {
   const [difficult, setDifficult] = useState<string>("");
   const [time, setTime] = useState<number>(0);
 
-  const { mutate: handleCreateCourse, data: newCourse } = useMutation({
+  useEffect(() => {
+    if (data) {
+      setTitle(data.title);
+      setDescription(data.description);
+      setPrice(data.price);
+      setTime(data.duration);
+      setCategory(String(data.category_id));
+      setDifficult(data.difficulty);
+    }
+  }, [data]);
+
+  const { mutate: handleUpdateCourse, data: updateCourse } = useMutation({
     mutationKey: ["create-course"],
+    onSuccess: () => {
+      toast.success("Data Berhasil DiUpdate");
+    },
     mutationFn: async () => {
-      console.log(typeof(description))
-      const data = await axios.post(
-        `${BASE_URL}/courses`,
+      console.log("ini title", title);
+      return await axios.patch(
+        `${BASE_URL}/courses/${slug}`,
         {
           title,
           description,
@@ -35,7 +59,7 @@ const CreateCourse = ({ token }: { token: string }) => {
           difficulty: difficult,
           duration: time,
           image_url: "image",
-          is_published: true
+          is_published: true,
         },
         {
           headers: {
@@ -51,12 +75,13 @@ const CreateCourse = ({ token }: { token: string }) => {
       <div className="flex items-center justify-between">
         <ButtonBack />
         <Button
-          onClick={() => handleCreateCourse()}
+          onClick={() => handleUpdateCourse()}
           className="transition-all ease-in-out bg-primary-color hover:bg-primary-color/80"
         >
           Simpan
         </Button>
       </div>
+
       <h1 className="text-2xl font-semibold">Kelola Kursus</h1>
       <div className="grid grid-cols-1 gap-4 mt-2 lg:grid-cols-2">
         <div className="space-y-2 lg:space-y-4">
@@ -109,4 +134,4 @@ const CreateCourse = ({ token }: { token: string }) => {
   );
 };
 
-export default CreateCourse;
+export default EditCourse;

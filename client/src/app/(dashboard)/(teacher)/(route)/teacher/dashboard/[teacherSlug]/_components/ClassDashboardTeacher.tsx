@@ -12,26 +12,13 @@ const ClassDashboardTeacher = ({
   sessionSlug,
   session,
   isLoading,
-  dataCourse
+  dataCourse,
 }: {
   sessionSlug: string;
   session: string;
-  dataCourse: CourseType[],
-  isLoading: boolean
+  dataCourse: CourseType[];
+  isLoading: boolean;
 }) => {
-  // const { data: dataCourse, isLoading } = useQuery({
-  //   queryKey: ["only-course-created"],
-  //   queryFn: async () => {
-  //     return (
-  //       await axios.get(`${BASE_URL}/users/${sessionSlug}/teaches`, {
-  //         headers: {
-  //           Authorization: `Bearer ${session}`,
-  //         },
-  //       })
-  //     ).data;
-  //   },
-  // });
-
   return (
     <div className="border-[0.3px] shadow-md rounded-md p-4 lg:min-h-[428px] space-y-4">
       <Link href={`/teacher/dashboard/${sessionSlug}/create-course`}>
@@ -58,9 +45,11 @@ const ClassDashboardTeacher = ({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Button className="w-full bg-accent" variant={"outline"}>
-                    Edit
-                  </Button>
+                  <Link className="w-full" href={`/teacher/dashboard/${sessionSlug}/edit-course/${item.slug}`}>
+                    <Button className="w-full bg-accent" variant={"outline"}>
+                      Edit
+                    </Button>
+                  </Link>
                   <Button className="w-full" variant={"destructive"}>
                     Delete
                   </Button>

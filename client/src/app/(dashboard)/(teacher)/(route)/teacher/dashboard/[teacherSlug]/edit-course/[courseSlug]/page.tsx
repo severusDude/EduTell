@@ -5,12 +5,13 @@ import {
   getSlug,
 } from "@/lib/session";
 import { redirect } from "next/navigation";
-import CreateCourse from "./_components/CreateCourse";
+import EditCourse from "./_components/EditCourse";
+import WrapperEditCourse from "./_components/WrapperEditCourse";
 
 export default async function CreateCousePage({
   params,
 }: {
-  params: { teacherSlug: string };
+  params: { teacherSlug: string, courseSlug: string };
 }) {
   const sessionName = await getSessionName();
   const session = await getSession();
@@ -31,7 +32,7 @@ export default async function CreateCousePage({
 
   return (
     <div className="border-[0.3px] rounded-md p-4">
-      <CreateCourse token={session} />
+      <WrapperEditCourse slug={params.courseSlug} token={session} />
     </div>
   );
 }
