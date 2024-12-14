@@ -5,27 +5,18 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
-class Submission extends Model
+class Grade extends Model
 {
     public $incrementing = false;
 
     protected $fillable = [
-        'content'
+        'score',
+        'comment'
     ];
 
-    public function user()
+    public function submission()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function assignment()
-    {
-        return $this->belongsTo(Assignment::class);
-    }
-
-    public function grade()
-    {
-        return $this->hasOne(Grade::class);
+        return $this->belongsTo(Submission::class);
     }
 
     public static function booted(): void

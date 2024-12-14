@@ -21,7 +21,10 @@ class SubmissionResource extends JsonResource
                 return $this->user->slug;
             }),
             'content' => $this->content,
-            'submitted_at' => (string) $this->created_at
+            'submitted_at' => (string) $this->created_at,
+            'grade' => new GradeResource($this->whenLoaded('grade', function () {
+                return $this->grade;
+            }))
         ];
     }
 }

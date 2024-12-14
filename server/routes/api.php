@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\GradeController;
 use App\Http\Controllers\SubchapterController;
 use App\Http\Controllers\SubmissionController;
 
@@ -45,3 +46,8 @@ Route::prefix('courses')->group(function () {
     Route::get('{course}/students', [CourseController::class, 'students']);
     Route::post('{course}/purchase', [CourseController::class, 'purchase']);
 });
+
+Route::get('users/{user:slug}/grades', [GradeController::class, 'index']);
+
+Route::apiResource('submissions.grades', GradeController::class)
+    ->except('index');
