@@ -18,7 +18,7 @@ class AssignmentResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'due_date' => $this->due_date,
+            'due_date' => (string) $this->due_date,
             'is_active' => $this->is_active
         ];
     }

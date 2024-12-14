@@ -26,7 +26,8 @@ class CourseController extends Controller implements HasMiddleware
                 'show',
                 'teacher',
                 'students',
-                'purchase'
+                'purchase',
+                'progress'
             ])
         ];
     }
@@ -45,7 +46,8 @@ class CourseController extends Controller implements HasMiddleware
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s\-\'\\/]+$/',
+
+            'title' => 'required|string|min:3|max:50',
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'image_url' => 'required|string',
@@ -69,9 +71,13 @@ class CourseController extends Controller implements HasMiddleware
     /**
      * Display the specified resource.
      */
-    public function show(string $course)
+    public function show(Request $request, string $course)
     {
-        return new CourseResource(Course::where('slug', $course)->firstOrFail());
+        $course = Course::where('slug', $course)
+            ->with('chapters')
+            ->firstOrFail();
+
+        return new CourseResource($course);
     }
 
     /**
@@ -86,8 +92,8 @@ class CourseController extends Controller implements HasMiddleware
         }
 
         $validated = $request->validate([
-            'title' => 'required|string|min:3|max:50|regex:/^[a-zA-Z\s\-\'\\/]+$/',
-            'description' => 'required|string|regex:/^[a-zA-Z\s\-\'\\/]+$/',
+            'title' => 'required|string|min:3|max:50',
+            'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'image_url' => 'required|string',
             'price' => 'required|numeric',
@@ -148,6 +154,30 @@ class CourseController extends Controller implements HasMiddleware
                 'purchased_at' => now()
             ]);
 
-        return CourseResource::collection($request->user()->courses()->paginate(15));
+        // create progress table
+        $subchapters = $course->chapters->flatMap(function ($chapter) {
+            return $chapter->subchapters;
+        });
+
+        $request->user()->subchapters()->attach($subchapters->pluck('id'), ['is_completed' => false]);
+
+        return CourseResource::collection($request->user()->courses()->where('course_id', $course->id)->get());
+    }
+
+    public function progress(Request $request, Course $course)
+    {
+        if (!$request->user()->hasPurchased($course)) {
+            return response()->json(['message' => 'User has not purchased this course'], 406);
+        }
+
+        $subchapters = $request->user()->subchapters()->whereIn(
+            'chapter_id',
+            $course->chapters->pluck('id')
+        )->get();
+
+        return response()->json([
+            'finished' => $subchapters->where('progress.is_completed', true)->count(),
+            'unfinished' => $subchapters->where('progress.is_completed', false)->count()
+        ]);
     }
 }

@@ -11,6 +11,8 @@ class Subchapter extends Model
     /** @use HasFactory<\Database\Factories\SubchapterFactory> */
     use HasFactory;
 
+    protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = [
@@ -29,6 +31,14 @@ class Subchapter extends Model
     public function assignments()
     {
         return $this->hasMany(Assignment::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'progresses')
+            ->as('progress')
+            ->withPivot('is_completed')
+            ->withTimestamps();
     }
 
     protected function casts(): array

@@ -40,8 +40,7 @@ class AuthController extends Controller
 
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json($request);
-                // return response()->json(['error' => 'Invalid credentials'], 401);
+                return response()->json(['error' => 'Invalid credentials'], 401);
             }
 
             // Get the authenticated user.
@@ -89,5 +88,23 @@ class AuthController extends Controller
         JWTAuth::invalidate(JWTAuth::getToken());
 
         return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function me()
+    {
+        try {
+            if (! $user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Invalid token'], 400);
+        }
+
+        return new UserResource($user);
     }
 }

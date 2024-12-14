@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AuthController;
@@ -47,7 +46,43 @@ Route::prefix('courses')->group(function () {
     Route::post('{course}/purchase', [CourseController::class, 'purchase']);
 });
 
+Route::get('courses/{course:slug}/progress', [CourseController::class, 'progress']);
+
+Route::post(
+    'courses/{course:slug}/chapters/{chapter:position}/subchapters/{subchapter:position}/mark-complete',
+    [SubchapterController::class, 'markAsCompleted']
+);
+
 Route::get('users/{user:slug}/grades', [GradeController::class, 'index']);
 
 Route::apiResource('submissions.grades', GradeController::class)
     ->except('index');
+
+
+//updated routes
+Route::prefix('v1')->group(function () {
+
+    // auth routes
+    Route::prefix('auth')->group(function () {
+        Route::post('register', [AuthController::class, 'register']);
+        Route::post('login', [AuthController::class, 'login']);
+    });
+
+    // me routes (currently authenticated user)
+    Route::prefix('me')->middleware('auth:api')->group(function () {
+        Route::get('', [AuthController::class, 'me']);
+        Route::get('logout', [AuthController::class, 'logout']);
+        Route::get('teaches', [UserController::class, 'teaches']);
+        Route::get('courses', [UserController::class, 'courses']);
+        Route::get('progresses', [UserController::class, 'progresses']);
+    });
+
+    // category routes
+    // Route::apiResource('categories', CategoryController::class);
+    // Route::apiResource('courses', CourseController::class);
+    // Route::apiResource('chapters', ChapterController::class);
+    // Route::apiResource('subchapters', SubchapterController::class);
+    // Route::apiResource('assignments', AssignmentController::class);
+    // Route::apiResource('submissions', SubmissionController::class);
+    // Route::apiResource('grades', GradeController::class);
+});
