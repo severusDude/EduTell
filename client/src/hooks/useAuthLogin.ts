@@ -10,6 +10,7 @@ import { loginActionType } from "@/types/authTypes";
 export interface jwtPayload extends JwtPayload {
   slug: string;
   name: string;
+  role: string;
 }
 
 type funcLoginActionType = {
@@ -38,8 +39,18 @@ export const useAuthLogin = (
         data.data.token ? data.data.token : ""
       }; path=/; max-age=3600; secure`;
       const decode = jwtDecode<jwtPayload>(data.data.token && data.data.token);
+
+      console.log(decode);
+
       toast.success("Berhasil Melakukan Login");
-      router.push(`/dashboard/${decode.slug}`);
+      if (decode.role === "teacher") {
+        router.push(`/teacher/dashboard/${decode.slug}`);
+      }
+
+      if (decode.role === "student") {
+        router.push(`/dashboard/${decode.slug}`);
+      }
+
       router.refresh();
     },
   });

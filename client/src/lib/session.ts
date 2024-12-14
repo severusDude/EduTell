@@ -29,3 +29,13 @@ export const getSlug = async () => {
   const decode = jwtDecode<jwtPayload>(token);
   return decode.slug;
 };
+
+export const getSessionRole = async () => {
+  const token = await getSession()
+  if(!token){
+    return null
+  }
+
+  const decode = jwtDecode<jwtPayload>(token);
+  return decode.role;
+}
