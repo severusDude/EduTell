@@ -33,7 +33,7 @@ class CourseResource extends JsonResource
             'enrolled' => $this->students()->count(),
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
-            'purchased' => ($user && $user->hasPurchased($course)) ?
+            'purchased' => (string) ($user && $user->hasPurchased($course)) ?
                 $course->students()->where('user_id', $user->id)->first()->pivot->purchased_at ??
                 $course->teacher->slug // for teacher
                 : null,
