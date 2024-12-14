@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignUuid('user_id')->constrained();
             $table->foreignIdFor(Category::class);
             $table->string('image_url')->nullable();
-            $table->smallInteger('price', unsigned: true);
+            $table->integer('price', unsigned: true);
             $table->enum('difficulty', ['Beginner', 'Intermediate', 'Advanced'])->default('Beginner');
             $table->tinyInteger('duration', unsigned: true)->default(0);
             $table->boolean('is_published')->default(false);
