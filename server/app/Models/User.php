@@ -99,6 +99,17 @@ class User extends Authenticatable implements JWTSubject
             ->withTimestamps();
     }
 
+    // progress controls
+    public function markAsCompleted(Subchapter $subchapter)
+    {
+        return $this->subchapters()->updateExistingPivot($subchapter->id, ['is_completed' => true]);
+    }
+
+    public function markAsIncomplete(Subchapter $subchapter)
+    {
+        return $this->subchapters()->updateExistingPivot($subchapter->id, ['is_completed' => false]);
+    }
+
 
     public function submissions()
     {
