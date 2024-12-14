@@ -12,6 +12,9 @@ import axios from "axios";
 import { BASE_URL } from "@/constant/url";
 import InputDifficultCourse from "./InputDifficultCourse";
 import InputTimeCourse from "./InputTimeCourse";
+import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const CreateCourse = ({ token }: { token: string }) => {
   const [title, setTitle] = useState<string>("");
@@ -21,10 +24,20 @@ const CreateCourse = ({ token }: { token: string }) => {
   const [difficult, setDifficult] = useState<string>("");
   const [time, setTime] = useState<number>(0);
 
-  const { mutate: handleCreateCourse, data: newCourse } = useMutation({
+  const router = useRouter()
+
+  const {
+    mutate: handleCreateCourse,
+    data: newCourse,
+    isPending,
+  } = useMutation({
     mutationKey: ["create-course"],
+    onSuccess: () => {
+      toast.success("Course Berhasil Dibuat");
+      router.back()
+      router.refresh()
+    },
     mutationFn: async () => {
-      console.log(typeof(description))
       const data = await axios.post(
         `${BASE_URL}/courses`,
         {
@@ -35,7 +48,7 @@ const CreateCourse = ({ token }: { token: string }) => {
           difficulty: difficult,
           duration: time,
           image_url: "image",
-          is_published: true
+          is_published: true,
         },
         {
           headers: {
@@ -52,8 +65,12 @@ const CreateCourse = ({ token }: { token: string }) => {
         <ButtonBack />
         <Button
           onClick={() => handleCreateCourse()}
-          className="transition-all ease-in-out bg-primary-color hover:bg-primary-color/80"
+          className={`transition-all ease-in-out bg-primary-color hover:bg-primary-color/80 ${
+            isPending ? "bg-primary-color/70" : ""
+          }`}
+          disabled={isPending}
         >
+          {isPending && <Loader2 className="animate-spin" />}
           Simpan
         </Button>
       </div>

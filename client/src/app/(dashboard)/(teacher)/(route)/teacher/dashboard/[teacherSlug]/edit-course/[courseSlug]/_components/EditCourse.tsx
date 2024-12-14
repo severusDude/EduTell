@@ -14,6 +14,7 @@ import InputDifficultCourse from "./InputDifficultCourse";
 import InputTimeCourse from "./InputTimeCourse";
 import { CourseType } from "@/types/course";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const EditCourse = ({
   token,
@@ -31,12 +32,15 @@ const EditCourse = ({
   const [difficult, setDifficult] = useState<string>("");
   const [time, setTime] = useState<number>(0);
 
+  const router = useRouter();
+
   useEffect(() => {
     if (data) {
       setTitle(data.title);
       setDescription(data.description);
       setPrice(data.price);
       setTime(data.duration);
+      console.log(data.category_id);
       setCategory(String(data.category_id));
       setDifficult(data.difficulty);
     }
@@ -46,15 +50,17 @@ const EditCourse = ({
     mutationKey: ["create-course"],
     onSuccess: () => {
       toast.success("Data Berhasil DiUpdate");
+      router.back();
+      router.refresh();
     },
     mutationFn: async () => {
-      console.log("ini title", title);
+      console.log("ini category", category);
       return await axios.patch(
         `${BASE_URL}/courses/${slug}`,
         {
           title,
           description,
-          category_id: Number(category),
+          category_id: category,
           price,
           difficulty: difficult,
           duration: time,
