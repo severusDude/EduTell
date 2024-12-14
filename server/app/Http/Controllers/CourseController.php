@@ -150,6 +150,13 @@ class CourseController extends Controller implements HasMiddleware
                 'purchased_at' => now()
             ]);
 
-        return CourseResource::collection($request->user()->courses()->paginate(15));
+        // create progress table
+        $subchapters = $course->chapters->flatMap(function ($chapter) {
+            return $chapter->subchapters;
+        });
+
+        $request->user()->subchapters()->attach($subchapters->pluck('id'), ['is_completed' => false]);
+
+        return CourseResource::collection($request->user()->courses()->where('course_id', $course->id)->get());
     }
 }
