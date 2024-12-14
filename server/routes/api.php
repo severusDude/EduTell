@@ -46,6 +46,11 @@ Route::prefix('courses')->group(function () {
     Route::post('{course}/purchase', [CourseController::class, 'purchase']);
 });
 
+Route::post(
+    'courses/{course:slug}/chapters/{chapter:position}/subchapters/{subchapter:position}/mark-complete',
+    [SubchapterController::class, 'markAsCompleted']
+);
+
 Route::get('users/{user:slug}/grades', [GradeController::class, 'index']);
 
 Route::apiResource('submissions.grades', GradeController::class)

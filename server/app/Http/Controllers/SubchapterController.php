@@ -20,7 +20,7 @@ class SubchapterController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth:api', except: ['index', 'show']),
-            new Middleware('role:teacher', except: ['index', 'show'])
+            new Middleware('role:teacher', except: ['index', 'show', 'markAsCompleted'])
         ];
     }
 
@@ -142,5 +142,30 @@ class SubchapterController extends Controller implements HasMiddleware
         $subchapter->delete();
 
         return response()->json(['message' => 'Subchapter has been deleted succesfully'], 204);
+    }
+
+    public function markAsCompleted(Request $request, Course $course, Chapter $chapter, Subchapter $subchapter)
+    {
+        if (!$request->user()->hasPurchased($course)) {
+            return response(['message' => 'Unauthorized'], 403);
+        }
+
+        if ($request->user()
+            ->subchapters()
+            ->find($subchapter->id)
+            ->progress
+            ->is_completed
+        ) {
+            return response()->json(['message' => 'User has already finished this subchapter'], 406);
+        }
+
+        $request->user()->markAsCompleted($subchapter);
+
+        return response()->json(
+            $request->user()
+                ->subchapters()
+                ->find($subchapter->id)
+                ->progress
+        );
     }
 }
