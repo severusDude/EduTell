@@ -40,8 +40,7 @@ class AuthController extends Controller
 
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json($request);
-                // return response()->json(['error' => 'Invalid credentials'], 401);
+                return response()->json(['error' => 'Invalid credentials'], 401);
             }
 
             // Get the authenticated user.
