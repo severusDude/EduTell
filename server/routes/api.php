@@ -47,4 +47,7 @@ Route::prefix('courses')->group(function () {
     Route::post('{course}/purchase', [CourseController::class, 'purchase']);
 });
 
-Route::apiResource('submissions.grades', GradeController::class);
+Route::get('users/{user:slug}/grades', [GradeController::class, 'index']);
+
+Route::apiResource('submissions.grades', GradeController::class)
+    ->except('index');

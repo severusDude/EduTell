@@ -2,19 +2,52 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\GradeResource;
+use Closure;
+use App\Models\User;
 use App\Models\Grade;
+use App\Models\Course;
 use App\Models\Submission;
 use Illuminate\Http\Request;
+use App\Http\Resources\GradeResource;
+use App\Http\Resources\SubmissionResource;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class GradeController extends Controller
+class GradeController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth:api'),
+            new Middleware('role:teacher', except: ['index', 'show']),
+
+            new Middleware(function (Request $request, Closure $next) {
+
+                $submission = $request->route('submission');
+
+                $course = $submission->assignment->subchapter->chapter->course;
+
+                if (
+                    !($request->user()->hasPurchased($course))
+                ) {
+                    return response()->json(['error' => 'Unauthorized'], 403);
+                }
+
+                return $next($request);
+            }, except: ['index'])
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index(Submission $submission)
+    public function index(Request $request)
     {
-        return new GradeResource($submission->grade);
+        // dd($request->user()->submissions()->with('grade')->get());
+
+        return SubmissionResource::collection(
+            $request->user()->submissions()->with('grade')->get()
+        );
     }
 
     /**
@@ -22,6 +55,10 @@ class GradeController extends Controller
      */
     public function store(Request $request, Submission $submission)
     {
+        if ($submission->grade()->exists()) {
+            return response()->json(['message' => 'Submission has already been graded'], 406);
+        }
+
         $validated = $request->validate([
             'score' => 'required|decimal:0,2|min:0|max:100',
             'comment' => 'present|string|nullable',
