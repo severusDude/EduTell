@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const HeaderSectionDetailCourse = () => {
+const SkeletonHeaderSectionDetailCourse = () => {
   return (
     <div className="flex flex-col gap-8">
       <Skeleton className="w-3/4 h-16 lg:h-24 lg:mx-auto lg:w-1/2" />
@@ -31,4 +31,4 @@ const HeaderSectionDetailCourse = () => {
   );
 };
 
-export default HeaderSectionDetailCourse;
+export default SkeletonHeaderSectionDetailCourse;
