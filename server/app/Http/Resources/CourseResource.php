@@ -38,6 +38,7 @@ class CourseResource extends JsonResource
                 $course->teacher->slug // for teacher
                 : null,
             // 3 jam ngurusin gini doang loh asuu
+            'chapters' => ChapterResource::collection($this->whenLoaded('chapters', $course->chapters()->orderBy('position')->get())),
         ];
     }
 }
