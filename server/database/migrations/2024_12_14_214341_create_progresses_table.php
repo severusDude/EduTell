@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purchases', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+        Schema::create('progresses', function (Blueprint $table) {
+            $table->id();
             $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignUuid('course_id')->constrained()->cascadeOnDelete();
-            $table->timestamp('purchased_at');
+            $table->foreignUuid('subchapter_id')->constrained()->cascadeOnDelete();
+            $table->boolean('is_completed')->default(false);
             $table->timestamps();
 
-            $table->unique(['user_id', 'course_id']);
+            $table->unique(['user_id', 'subchapter_id']);
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('purchases');
+        Schema::dropIfExists('progress');
     }
 };

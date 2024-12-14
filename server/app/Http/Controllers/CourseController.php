@@ -26,7 +26,8 @@ class CourseController extends Controller implements HasMiddleware
                 'show',
                 'teacher',
                 'students',
-                'purchase'
+                'purchase',
+                'progress'
             ])
         ];
     }
@@ -150,6 +151,30 @@ class CourseController extends Controller implements HasMiddleware
                 'purchased_at' => now()
             ]);
 
-        return CourseResource::collection($request->user()->courses()->paginate(15));
+        // create progress table
+        $subchapters = $course->chapters->flatMap(function ($chapter) {
+            return $chapter->subchapters;
+        });
+
+        $request->user()->subchapters()->attach($subchapters->pluck('id'), ['is_completed' => false]);
+
+        return CourseResource::collection($request->user()->courses()->where('course_id', $course->id)->get());
+    }
+
+    public function progress(Request $request, Course $course)
+    {
+        if (!$request->user()->hasPurchased($course)) {
+            return response()->json(['message' => 'User has not purchased this course'], 406);
+        }
+
+        $subchapters = $request->user()->subchapters()->whereIn(
+            'chapter_id',
+            $course->chapters->pluck('id')
+        )->get();
+
+        return response()->json([
+            'finished' => $subchapters->where('progress.is_completed', true)->count(),
+            'unfinished' => $subchapters->where('progress.is_completed', false)->count()
+        ]);
     }
 }

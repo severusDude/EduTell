@@ -46,6 +46,13 @@ Route::prefix('courses')->group(function () {
     Route::post('{course}/purchase', [CourseController::class, 'purchase']);
 });
 
+Route::get('courses/{course:slug}', [CourseController::class, 'progress']);
+
+Route::post(
+    'courses/{course:slug}/chapters/{chapter:position}/subchapters/{subchapter:position}/mark-complete',
+    [SubchapterController::class, 'markAsCompleted']
+);
+
 Route::get('users/{user:slug}/grades', [GradeController::class, 'index']);
 
 Route::apiResource('submissions.grades', GradeController::class)
@@ -67,6 +74,7 @@ Route::prefix('v1')->group(function () {
         Route::get('logout', [AuthController::class, 'logout']);
         Route::get('teaches', [UserController::class, 'teaches']);
         Route::get('courses', [UserController::class, 'courses']);
+        Route::get('progresses', [UserController::class, 'progresses']);
     });
 
     // category routes

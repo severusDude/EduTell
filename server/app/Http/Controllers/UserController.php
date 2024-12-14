@@ -105,4 +105,12 @@ class UserController extends Controller implements HasMiddleware
     {
         return CourseResource::collection($request->user()->courses()->paginate(15));
     }
+
+    public function progresses(Request $request)
+    {
+        return response()->json([
+            'finished' => $request->user()->subchapters()->wherePivot('is_completed', true)->count(),
+            'unfinished' => $request->user()->subchapters()->wherePivot('is_completed', false)->count()
+        ]);
+    }
 }
