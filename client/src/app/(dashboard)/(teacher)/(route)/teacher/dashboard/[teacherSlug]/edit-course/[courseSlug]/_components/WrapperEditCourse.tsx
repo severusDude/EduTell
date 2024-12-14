@@ -10,9 +10,11 @@ import Loading from "@/components/Loading";
 const WrapperEditCourse = ({
   slug,
   token,
+  slugName,
 }: {
   slug: string;
   token: string;
+  slugName: string;
 }) => {
   const { data, isLoading } = useQuery({
     queryKey: ["get-course-for-edit"],
@@ -26,10 +28,17 @@ const WrapperEditCourse = ({
     },
   });
 
+  console.log("UPDATE DATA ", data);
+
   return isLoading ? (
     <Loading />
   ) : (
-    <EditCourse data={data?.data} slug={slug} token={token} />
+    <EditCourse
+      slugName={slugName}
+      data={data?.data}
+      slug={slug}
+      token={token}
+    />
   );
 };
 

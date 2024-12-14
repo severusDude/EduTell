@@ -15,8 +15,10 @@ import InputTimeCourse from "./InputTimeCourse";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import InputChapterCourse from "./InputChapterCourse";
+import { slugify } from "@/utils/createSlug";
 
-const CreateCourse = ({ token }: { token: string }) => {
+const CreateCourse = ({ token, slug }: { token: string, slug: string }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
@@ -32,13 +34,12 @@ const CreateCourse = ({ token }: { token: string }) => {
     isPending,
   } = useMutation({
     mutationKey: ["create-course"],
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Course Berhasil Dibuat");
-      router.back()
-      router.refresh()
+      router.push(`/teacher/dashboard/${slug}/edit-course/${slugify(data.data.data.title)}`)
     },
     mutationFn: async () => {
-      const data = await axios.post(
+      return await axios.post(
         `${BASE_URL}/courses`,
         {
           title,
@@ -106,13 +107,7 @@ const CreateCourse = ({ token }: { token: string }) => {
           </div>
 
           {/* chapter course */}
-          <div className="p-4 border-[0.3px] rounded-md bg-primary-color/20 space-y-2">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Chapter Kursus</h2>
-              <Button variant={"link"}>Edit Chapter</Button>
-            </div>
-            <p className="text-base text-text-primary">Masukan Foto Kursus</p>
-          </div>
+          {/* <InputChapterCourse chapter={chapter} /> */}
         </div>
       </div>
       <div className="mt-4">
