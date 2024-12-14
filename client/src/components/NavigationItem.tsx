@@ -5,7 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NavigationItemProps } from "@/types/NavigationTypes";
 
-const NavigationItem = ({ itemNavbar, session }: NavigationItemProps) => {
+const NavigationItem = ({
+  itemNavbar,
+  session: slug,
+  role,
+}: NavigationItemProps) => {
   const pathname = usePathname();
   return (
     <>
@@ -35,19 +39,12 @@ const NavigationItem = ({ itemNavbar, session }: NavigationItemProps) => {
           <p>{item.name}</p>
         </Link>
       ))}
-      {session ? (
-        <div className="flex flex-col gap-2">
-          <Link
-            href={`/dashboard/${session}`}
-            className={`${
-              pathname === `/dashboard/${session}`
-                ? "bg-primary-color text-white"
-                : ""
-            } w-full rounded-md py-2 hover:bg-primary-color/40 transition-all ease-in-out lg:hidden`}
-          >
-            Dashboard
-          </Link>
-        </div>
+      {slug ? (
+        <NavigationRoleItem
+          pathname={pathname}
+          role={role ? role : ""}
+          slug={slug}
+        />
       ) : (
         <div className="flex flex-col gap-2">
           <Link
@@ -73,3 +70,39 @@ const NavigationItem = ({ itemNavbar, session }: NavigationItemProps) => {
 };
 
 export default NavigationItem;
+
+const NavigationRoleItem = ({
+  role,
+  slug,
+  pathname,
+}: {
+  role?: string;
+  slug: string;
+  pathname: string;
+}) => {
+  return role === "teacher" ? (
+    <div className="flex flex-col gap-2">
+      <Link
+        href={`/teacher/dashboard/${slug}`}
+        className={`${
+          pathname === `/teacher/dashboard/${slug}`
+            ? "bg-primary-color text-white"
+            : ""
+        } w-full rounded-md py-2 hover:bg-primary-color/40 transition-all ease-in-out lg:hidden`}
+      >
+        Dashboard
+      </Link>
+    </div>
+  ) : (
+    <div className="flex flex-col gap-2">
+      <Link
+        href={`/dashboard/${slug}`}
+        className={`${
+          pathname === `/dashboard/${slug}` ? "bg-primary-color text-white" : ""
+        } w-full rounded-md py-2 hover:bg-primary-color/40 transition-all ease-in-out lg:hidden`}
+      >
+        Dashboard
+      </Link>
+    </div>
+  );
+};

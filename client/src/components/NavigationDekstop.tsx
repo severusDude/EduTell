@@ -8,7 +8,8 @@ import { NavigationDekstopProps } from "@/types/NavigationTypes";
 
 const NavigationDekstop = ({
   itemNavbar,
-  slug: session,
+  slug,
+  role,
 }: NavigationDekstopProps) => {
   return (
     <nav className="lg:px-[64px] lg:py-[34px] z-20 items-center justify-between hidden gap-2 lg:flex transparent-background">
@@ -20,11 +21,7 @@ const NavigationDekstop = ({
           Edutell
         </Link>
       </div>
-      <NavigationItem
-        itemNavbar={itemNavbar}
-        session={session}
-        slug={session}
-      />
+      <NavigationItem itemNavbar={itemNavbar} session={slug} slug={slug} />
       <div className="relative">
         <Input className="pl-12 py-2 border-primary-color w-[445px]" />
         <Search
@@ -34,15 +31,8 @@ const NavigationDekstop = ({
         <p className="text-primary-color absolute top-1.5 right-4">Search</p>
       </div>
 
-      {session ? (
-        <div className="space-x-4">
-          <Link
-            href={`/dashboard/${session}`}
-            className={`text-[16px] transition-all ease-in-out`}
-          >
-            <Button variant={"outline"}>Dashboard</Button>
-          </Link>
-        </div>
+      {slug ? (
+        <NavigationRoleItemDekstop role={role ? role : ""} slug={slug} />
       ) : (
         <div className="flex items-center gap-2">
           <User
@@ -71,3 +61,31 @@ const NavigationDekstop = ({
 };
 
 export default NavigationDekstop;
+
+const NavigationRoleItemDekstop = ({
+  slug,
+  role,
+}: {
+  slug: string;
+  role: string;
+}) => {
+  return role === "teacher" ? (
+    <div className="space-x-4">
+      <Link
+        href={`/teacher/dashboard/${slug}`}
+        className={`text-[16px] transition-all ease-in-out`}
+      >
+        <Button variant={"outline"}>Dashboard</Button>
+      </Link>
+    </div>
+  ) : (
+    <div className="space-x-4">
+      <Link
+        href={`/dashboard/${slug}`}
+        className={`text-[16px] transition-all ease-in-out`}
+      >
+        <Button variant={"outline"}>Dashboard</Button>
+      </Link>
+    </div>
+  );
+};
