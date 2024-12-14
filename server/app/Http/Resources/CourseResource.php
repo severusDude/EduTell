@@ -31,6 +31,7 @@ class CourseResource extends JsonResource
             'duration' => $this->duration,
             'is_published' => $this->is_published,
             'enrolled' => $this->students()->count(),
+            'chapters_count' => $this->chapters()->count(),
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'purchased' => (string) ($user && $user->hasPurchased($course)) ?
