@@ -10,10 +10,6 @@ const itemNavbar = [
     name: "Course",
     href: "/course",
   },
-  {
-    name: "Tentang Kami",
-    href: "/tentang-kami",
-  },
 ];
 
 const NavigationWrapper = ({ slug, role }: { slug?: string, role?: string }) => {
