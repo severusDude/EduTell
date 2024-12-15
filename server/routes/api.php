@@ -44,6 +44,7 @@ Route::apiResource('courses.chapters.subchapters.assignments.submissions', Submi
 Route::prefix('courses')->group(function () {
     Route::get('{course}/teacher', [CourseController::class, 'teacher']);
     Route::get('{course}/students', [CourseController::class, 'students']);
+    Route::get('{course:slug}/certificate', [CourseController::class, 'certificate']);
     Route::post('{course}/purchase', [CourseController::class, 'purchase']);
 });
 

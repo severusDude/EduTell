@@ -11,6 +11,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\CourseResource;
 use App\Http\Controllers\AuthController;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
 
@@ -27,7 +28,8 @@ class CourseController extends Controller implements HasMiddleware
                 'teacher',
                 'students',
                 'purchase',
-                'progress'
+                'progress',
+                'certificate',
             ])
         ];
     }
@@ -200,5 +202,16 @@ class CourseController extends Controller implements HasMiddleware
             'finished' => $subchapters->where('progress.is_completed', true)->count(),
             'unfinished' => $subchapters->where('progress.is_completed', false)->count()
         ]);
+    }
+
+    public function certificate(Request $request, Course $course)
+    {
+        $user = $request->user();
+
+        $completion_date = now()->toFormattedDateString();
+
+        $pdf = Pdf::loadView('certificate', compact('course', 'user', 'completion_date'));
+
+        return $pdf->download('certificate-' . $user->name . '-' . $course->title . '.pdf');
     }
 }
