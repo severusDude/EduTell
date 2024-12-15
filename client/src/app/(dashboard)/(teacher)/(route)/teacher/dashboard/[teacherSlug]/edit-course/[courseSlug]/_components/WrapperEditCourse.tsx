@@ -16,7 +16,7 @@ const WrapperEditCourse = ({
   token: string;
   slugName: string;
 }) => {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["get-course-for-edit"],
     queryFn: async () => {
       const response = await axios.get(`${BASE_URL}/courses/${slug}`, {
@@ -38,6 +38,7 @@ const WrapperEditCourse = ({
       data={data?.data}
       slug={slug}
       token={token}
+      refetch={refetch}
     />
   );
 };

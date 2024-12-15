@@ -22,11 +22,13 @@ const EditCourse = ({
   slug,
   data,
   slugName,
+  refetch,
 }: {
   token: string;
   slug: string;
   slugName: string;
   data: CourseType;
+  refetch: () => void;
 }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -35,8 +37,6 @@ const EditCourse = ({
   const [difficult, setDifficult] = useState<string>("");
   const [time, setTime] = useState<number>(0);
   const [chapter, setChapter] = useState<any[]>([]);
-
-  const router = useRouter();
 
   useEffect(() => {
     if (data) {
@@ -47,9 +47,11 @@ const EditCourse = ({
       console.log(data.category_id);
       setCategory(String(data.category_id));
       setDifficult(data.difficulty);
-      chapter.push(data.chapters);
+      if (data?.chapters) {
+        setChapter([...data?.chapters]);
+      }
     }
-  }, [data]);
+  }, [data, refetch]);
 
   const { mutate: handleUpdateCourse, data: updateCourse } = useMutation({
     mutationKey: ["create-course"],
@@ -58,6 +60,7 @@ const EditCourse = ({
     },
     onSuccess: () => {
       toast.success("Data Berhasil DiUpdate");
+      refetch();
     },
     mutationFn: async () => {
       console.log("ini category", category);
@@ -127,9 +130,11 @@ const EditCourse = ({
 
           {/* chapter course */}
           <InputChapterCourse
+            session={token}
             slugCourse={slug}
             slugName={slugName}
             chapter={chapter}
+            refetch={refetch}
           />
         </div>
       </div>

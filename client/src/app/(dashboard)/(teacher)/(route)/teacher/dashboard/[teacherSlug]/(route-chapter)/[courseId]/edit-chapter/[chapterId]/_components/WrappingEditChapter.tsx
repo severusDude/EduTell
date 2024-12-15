@@ -14,14 +14,16 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import Loading from "@/components/Loading";
 
-const WrappingCreateChapter = ({
+const WrappingEditChapter = ({
   courseId,
   token,
   teacherSlug,
+  chapterPosition,
 }: {
   courseId: string;
   token: string;
   teacherSlug: string;
+  chapterPosition: string;
 }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -33,7 +35,7 @@ const WrappingCreateChapter = ({
     queryKey: ["get-chapter-position"],
     queryFn: async () => {
       return (
-        await axios.get(`${BASE_URL}/courses/${courseId}/chapters`, {
+        await axios.get(`${BASE_URL}/courses/${courseId}/chapters/${chapterPosition}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -43,9 +45,10 @@ const WrappingCreateChapter = ({
   });
 
   useEffect(() => {
-    if (initialDataChapter) {
-      setPosition(initialDataChapter?.data.length + 1);
-      console.log("INI POSISI ", position)
+    if (initialDataChapter?.data) {
+      setTitle(initialDataChapter?.data.title);
+      setDescription(initialDataChapter?.data.description);
+      setPosition(Number(chapterPosition));
     }
   }, [initialDataChapter]);
 
@@ -56,22 +59,20 @@ const WrappingCreateChapter = ({
   } = useMutation({
     mutationKey: ["create-chapter"],
     onSuccess: () => {
-      toast.success("Berhasil Membuat Chapter");
+      toast.success("Berhasil Mengupdate Chapter");
       router.push(`/teacher/dashboard/${teacherSlug}/edit-course/${courseId}`);
-      router.refresh()
-      router.refresh()
     },
     onError: () => {
-      toast.error("Gagal Membuat Chapter");
+      toast.error("Gagal Mengupdate Chapter");
     },
     mutationFn: async () => {
-      return await axios.post(
-        `${BASE_URL}/courses/${courseId}/chapters`,
+      return await axios.patch(
+        `${BASE_URL}/courses/${courseId}/chapters/${chapterPosition}`,
         {
           title,
           description,
           is_published: true,
-          position,
+          position: Number(chapterPosition),
         },
         {
           headers: {
@@ -113,4 +114,4 @@ const WrappingCreateChapter = ({
   );
 };
 
-export default WrappingCreateChapter;
+export default WrappingEditChapter;

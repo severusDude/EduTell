@@ -1,11 +1,11 @@
 import { getSession } from "@/lib/session";
-import WrappingCreateChapter from "./_components/WrappingCreateChapter";
+import WrappingEditChapter from "./_components/WrappingEditChapter";
 
 
-export default async function CreateChapterPage({
+export default async function EditChapterPage({
   params,
 }: {
-  params: { teacherSlug: string; courseId: string };
+  params: { teacherSlug: string; courseId: string, chapterId: string };
 }) {
   const session = await getSession();
 
@@ -14,10 +14,11 @@ export default async function CreateChapterPage({
   }
 
   return (
-    <WrappingCreateChapter
+    <WrappingEditChapter
       teacherSlug={params.teacherSlug}
       token={session}
       courseId={params.courseId}
+      chapterPosition={params.chapterId}
     />
   );
 }
