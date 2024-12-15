@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
@@ -75,6 +76,11 @@ Route::prefix('v1')->group(function () {
         Route::get('teaches', [UserController::class, 'teaches']);
         Route::get('courses', [UserController::class, 'courses']);
         Route::get('progresses', [UserController::class, 'progresses']);
+    });
+
+    Route::prefix('attachments')->group(function () {
+        Route::post('', [AttachmentController::class, 'store']);
+        Route::get('{attachment}', [AttachmentController::class, 'download']);
     });
 
     // category routes
