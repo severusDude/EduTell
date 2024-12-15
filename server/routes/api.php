@@ -72,6 +72,7 @@ Route::prefix('v1')->group(function () {
     // me routes (currently authenticated user)
     Route::prefix('me')->middleware('auth:api')->group(function () {
         Route::get('', [AuthController::class, 'me']);
+        Route::put('', [AuthController::class, 'update']);
         Route::get('logout', [AuthController::class, 'logout']);
         Route::get('teaches', [UserController::class, 'teaches']);
         Route::get('courses', [UserController::class, 'courses']);

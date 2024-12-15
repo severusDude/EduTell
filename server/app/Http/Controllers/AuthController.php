@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
@@ -106,5 +107,49 @@ class AuthController extends Controller
         }
 
         return new UserResource($user);
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|alpha_dash|min:3|max:50',
+            'slug' => [
+                Rule::unique('users', 'slug')->ignore($user->id),
+                'required',
+                'string',
+                'alpha_dash',
+                'min:3',
+                'max:50'
+            ],
+            'image' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
+            'date_of_birth' => 'nullable|date_format:d-m-Y',
+            'bio' => 'nullable|string|max:750',
+            'gender' => [
+                'required',
+                'string',
+                Rule::in(['male', 'female', 'prefer not to say'])
+            ],
+        ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+
+            if ($image->isValid()) {
+                $filename = $validated['slug'] . 'profilepic.' . $image->extension();
+                $path = $image->storeAs('images', $filename, 'public');
+                $validated['image_url'] = $path;
+            }
+        }
+
+        $user->fill($validated);
+        $user->save();
+
+        return new UserResource($user->fresh());
     }
 }
