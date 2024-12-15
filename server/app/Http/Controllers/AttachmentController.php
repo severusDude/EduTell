@@ -61,33 +61,37 @@ class AttachmentController extends Controller implements HasMiddleware
             'attachments.*' => 'required|file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:5120'
         ]);
 
-        $files = $request->file('attachments');
+        if ($request->hasFile('attachments')) {
+            $files = $request->file('attachments');
 
-        foreach ($files as $file) {
-            if ($file->isValid()) {
-                $original_filename = $file->getClientOriginalName();
-                $file_name = pathinfo($original_filename, PATHINFO_FILENAME) . '.' . $file->extension();
-                $path = $file->store('attachments', 'public');
+            foreach ($files as $file) {
+                if ($file->isValid()) {
+                    $original_filename = $file->getClientOriginalName();
+                    $file_name = pathinfo($original_filename, PATHINFO_FILENAME) . '.' . $file->extension();
+                    $path = $file->store('attachments', 'public');
 
-                // Attachment::create([
-                //     'user_id' => $request->user()->id,
-                //     'file_name' => $file_name,
-                //     'file_url' => $path
-                // ]);
+                    // Attachment::create([
+                    //     'user_id' => $request->user()->id,
+                    //     'file_name' => $file_name,
+                    //     'file_url' => $path
+                    // ]);
 
-                $request->user()->attachments()->create([
-                    'user_id' => $request->user()->id,
-                    'file_name' => $file_name,
-                    'file_url' => $path
-                ]);
+                    $request->user()->attachments()->create([
+                        'user_id' => $request->user()->id,
+                        'file_name' => $file_name,
+                        'file_url' => $path
+                    ]);
+                }
             }
-        }
-        // $path = $request->file('attachments')->store('attachments', 'public');
+            // $path = $request->file('attachments')->store('attachments', 'public');
 
-        return response()->json([
-            'message' => 'Files has been uploaded succesfully',
-            'data' => AttachmentResource::collection($request->user()->attachments)
-        ]);
+            return response()->json([
+                'message' => 'Files has been uploaded succesfully',
+                'data' => AttachmentResource::collection($request->user()->attachments)
+            ]);
+        }
+
+        return response()->json(['error' => 'No files included'], 400);
     }
 
     public function serve(Attachment $attachment)
