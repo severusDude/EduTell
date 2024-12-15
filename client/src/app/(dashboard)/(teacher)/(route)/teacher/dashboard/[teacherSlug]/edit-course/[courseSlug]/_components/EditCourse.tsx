@@ -14,15 +14,21 @@ import InputDifficultCourse from "./InputDifficultCourse";
 import InputTimeCourse from "./InputTimeCourse";
 import { CourseType } from "@/types/course";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import InputChapterCourse from "./InputChapterCourse";
 
 const EditCourse = ({
   token,
   slug,
   data,
+  slugName,
+  refetch,
 }: {
   token: string;
   slug: string;
+  slugName: string;
   data: CourseType;
+  refetch: () => void;
 }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -30,6 +36,7 @@ const EditCourse = ({
   const [category, setCategory] = useState<string>("");
   const [difficult, setDifficult] = useState<string>("");
   const [time, setTime] = useState<number>(0);
+  const [chapter, setChapter] = useState<any[]>([]);
 
   useEffect(() => {
     if (data) {
@@ -37,24 +44,32 @@ const EditCourse = ({
       setDescription(data.description);
       setPrice(data.price);
       setTime(data.duration);
+      console.log(data.category_id);
       setCategory(String(data.category_id));
       setDifficult(data.difficulty);
+      if (data?.chapters) {
+        setChapter([...data?.chapters]);
+      }
     }
-  }, [data]);
+  }, [data, refetch]);
 
   const { mutate: handleUpdateCourse, data: updateCourse } = useMutation({
     mutationKey: ["create-course"],
+    onError: () => {
+      toast.error("Gagal Mengupdate Data");
+    },
     onSuccess: () => {
       toast.success("Data Berhasil DiUpdate");
+      refetch();
     },
     mutationFn: async () => {
-      console.log("ini title", title);
+      console.log("ini category", category);
       return await axios.patch(
         `${BASE_URL}/courses/${slug}`,
         {
           title,
           description,
-          category_id: Number(category),
+          category_id: category,
           price,
           difficulty: difficult,
           duration: time,
@@ -114,13 +129,13 @@ const EditCourse = ({
           </div>
 
           {/* chapter course */}
-          <div className="p-4 border-[0.3px] rounded-md bg-primary-color/20 space-y-2">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Chapter Kursus</h2>
-              <Button variant={"link"}>Edit Chapter</Button>
-            </div>
-            <p className="text-base text-text-primary">Masukan Foto Kursus</p>
-          </div>
+          <InputChapterCourse
+            session={token}
+            slugCourse={slug}
+            slugName={slugName}
+            chapter={chapter}
+            refetch={refetch}
+          />
         </div>
       </div>
       <div className="mt-4">

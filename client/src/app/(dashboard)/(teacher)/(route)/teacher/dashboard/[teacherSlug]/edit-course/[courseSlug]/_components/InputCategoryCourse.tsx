@@ -26,6 +26,8 @@ const InputCategoryCourse = ({
 }: InputCategoryCourseProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  console.log("ini category", category);
+
   const { data: categoryData } = useQuery({
     queryKey: ["category-course"],
     queryFn: async () => (await axios.get(`${BASE_URL}/categories`)).data,
@@ -46,11 +48,7 @@ const InputCategoryCourse = ({
         />
       ) : (
         <p className="text-base text-text-primary">
-          {category
-            ? categoryData?.data.find(
-                (data: CategoryType) => data.id == category
-              )?.name || "Nama kategori tidak ditemukan"
-            : "Masukan Kategori Kursus"}
+          {category ? category : "Masukan Kategori Kursus"}
         </p>
       )}
     </div>
@@ -67,7 +65,12 @@ const SelectCategory = ({
   categoryData: CategoryType[];
 }) => {
   return (
-    <Select onValueChange={(value) => setCategory(value)}>
+    <Select
+      onValueChange={(value) => {
+        console.log("isi category", value);
+        setCategory(value);
+      }}
+    >
       <SelectTrigger className="border-[0.3px] border-text-primary">
         <SelectValue placeholder="Pilih Kategori" />
       </SelectTrigger>

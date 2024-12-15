@@ -10,11 +10,13 @@ import Loading from "@/components/Loading";
 const WrapperEditCourse = ({
   slug,
   token,
+  slugName,
 }: {
   slug: string;
   token: string;
+  slugName: string;
 }) => {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["get-course-for-edit"],
     queryFn: async () => {
       const response = await axios.get(`${BASE_URL}/courses/${slug}`, {
@@ -26,10 +28,18 @@ const WrapperEditCourse = ({
     },
   });
 
+  console.log("UPDATE DATA ", data);
+
   return isLoading ? (
     <Loading />
   ) : (
-    <EditCourse data={data?.data} slug={slug} token={token} />
+    <EditCourse
+      slugName={slugName}
+      data={data?.data}
+      slug={slug}
+      token={token}
+      refetch={refetch}
+    />
   );
 };
 

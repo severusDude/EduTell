@@ -31,7 +31,7 @@ export default async function CreateCousePage({
 
   return (
     <div className="border-[0.3px] rounded-md p-4">
-      <CreateCourse token={session} />
+      <CreateCourse slug={sessionSlug} token={session} />
     </div>
   );
 }
