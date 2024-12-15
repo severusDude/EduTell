@@ -33,6 +33,8 @@ const InputCategoryCourse = ({
     queryFn: async () => (await axios.get(`${BASE_URL}/categories`)).data,
   });
 
+  console.log("CATEOGRY ", categoryData);
+
   return (
     <div className="p-4 border-[0.3px] rounded-md bg-primary-color/20 space-y-2">
       <div className="flex items-center justify-between">
@@ -48,7 +50,11 @@ const InputCategoryCourse = ({
         />
       ) : (
         <p className="text-base text-text-primary">
-          {category ? category : "Masukan Kategori Kursus"}
+          {category
+            ? categoryData?.data.find(
+                (data: CategoryType) => data.id == category
+              )?.name || "Nama kategori tidak ditemukan"
+            : "Masukan Kategori Kursus"}
         </p>
       )}
     </div>
