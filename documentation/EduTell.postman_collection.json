@@ -211,16 +211,6 @@
 				{
 					"name": "Logout",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -263,16 +253,6 @@
 						"disabledSystemHeaders": {}
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -293,6 +273,88 @@
 							"path": [
 								"v1",
 								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// let jsonResponse = pm.response.json();\r",
+									"// pm.collectionVariables.set(\"user\", jsonResponse.data.slug);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "{{user}}",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "{{user}}",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/I:/Documents/[FOLDER KELUARGA]/Folder Dede/AI_Nimek/cropped middle.jpg"
+								},
+								{
+									"key": "date_of_birth",
+									"value": "15-12-2024",
+									"type": "text"
+								},
+								{
+									"key": "bio",
+									"value": "bio updated",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "male",
+									"description": "male, female, prefer not to say",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/v1/me?_method=PUT",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"me"
+							],
+							"query": [
+								{
+									"key": "_method",
+									"value": "PUT"
+								}
 							]
 						}
 					},
@@ -859,13 +921,54 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Laravel Dasar\",\r\n    \"description\": \"Ini adalah kursus laravel dasar\",\r\n    \"category_id\": 1,\r\n    \"image_url\": \"this\",\r\n    \"price\": 20,\r\n    \"difficulty\": \"Beginner\",\r\n    \"duration\": 45,\r\n    \"is_published\": false\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Laravel Dasar",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Ini adalah kursus laravel dasar",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": [
+										"/I:/Documents/[FOLDER KELUARGA]/Folder Dede/AI_Nimek/_772f8be5-1ad2-4766-8355-2403b243b841.jfif",
+										"/I:/Documents/[FOLDER KELUARGA]/Folder Dede/AI_Nimek/cropped middle.jpg"
+									]
+								},
+								{
+									"key": "price",
+									"value": "20",
+									"description": "satuan rupiah",
+									"type": "text"
+								},
+								{
+									"key": "difficulty",
+									"value": "Beginner",
+									"type": "text"
+								},
+								{
+									"key": "duration",
+									"value": "45",
+									"description": "satuan jam",
+									"type": "text"
+								},
+								{
+									"key": "is_published",
+									"value": "true",
+									"type": "text"
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{server}}/{{courses_route}}",
@@ -882,7 +985,7 @@
 				{
 					"name": "Update",
 					"request": {
-						"method": "PATCH",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Accept",
@@ -890,22 +993,66 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Laravel Dasar\",\r\n    \"description\": \"Ini adalah kursus laravel dasar yang telah di update\",\r\n    \"category_id\": 1,\r\n    \"image_url\": \"this\",\r\n    \"price\": 20,\r\n    \"difficulty\": \"Beginner\",\r\n    \"duration\": 45,\r\n    \"is_published\": true\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Laravel Dasar",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Ini adalah kursus laravel dasar",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "price",
+									"value": "20",
+									"description": "satuan rupiah",
+									"type": "text"
+								},
+								{
+									"key": "difficulty",
+									"value": "Beginner",
+									"type": "text"
+								},
+								{
+									"key": "duration",
+									"value": "45",
+									"description": "satuan jam",
+									"type": "text"
+								},
+								{
+									"key": "is_published",
+									"value": "true",
+									"type": "text"
 								}
-							}
+							]
 						},
 						"url": {
-							"raw": "{{server}}/{{courses_route}}/{{course}}",
+							"raw": "{{server}}/{{courses_route}}/{{course}}?_method=PUT",
 							"host": [
 								"{{server}}"
 							],
 							"path": [
 								"{{courses_route}}",
 								"{{course}}"
+							],
+							"query": [
+								{
+									"key": "_method",
+									"value": "PUT"
+								}
 							]
 						}
 					},
@@ -1386,9 +1533,15 @@
 									"type": "text"
 								},
 								{
+									"key": "videos[]",
+									"value": "https://youtu.be/66mZt7X5dXw?si=JrWkeIsorYyWUqJY",
+									"type": "text"
+								},
+								{
 									"key": "attachments[]",
 									"type": "file",
-									"src": "/I:/Documents/[FOLDER KELUARGA]/Folder Dede/TINGKAT PERSAINGAN SNMPTN 2022 di PTN.xlsx"
+									"src": "/I:/Documents/[FOLDER KELUARGA]/Folder Dede/TINGKAT PERSAINGAN SNMPTN 2022 di PTN.xlsx",
+									"disabled": true
 								}
 							]
 						},
@@ -1837,13 +1990,19 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"content\": \"Selesai\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "content",
+									"value": "Selesai",
+									"type": "text"
+								},
+								{
+									"key": "attachments[]",
+									"type": "file",
+									"src": "/C:/Users/lfaja/OneDrive/Documents/tugas akbar.docx"
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}/submissions",
@@ -1880,7 +2039,7 @@
 						}
 					],
 					"request": {
-						"method": "PATCH",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Accept",
@@ -1888,16 +2047,23 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"content\": \"Selesai updated\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "content",
+									"value": "Selesai UPDATED",
+									"type": "text"
+								},
+								{
+									"key": "attachments[]",
+									"type": "file",
+									"src": [],
+									"disabled": true
 								}
-							}
+							]
 						},
 						"url": {
-							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}/submissions/{{submission}}",
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}/submissions/{{submission}}?_method=PUT",
 							"host": [
 								"{{server}}"
 							],
@@ -1912,6 +2078,12 @@
 								"{{assignment}}",
 								"submissions",
 								"{{submission}}"
+							],
+							"query": [
+								{
+									"key": "_method",
+									"value": "PUT"
+								}
 							]
 						}
 					},
