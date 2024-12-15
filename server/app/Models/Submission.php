@@ -30,6 +30,11 @@ class Submission extends Model
         return $this->hasOne(Grade::class);
     }
 
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable')->chaperone();
+    }
+
     public static function booted(): void
     {
         static::creating(function ($model) {

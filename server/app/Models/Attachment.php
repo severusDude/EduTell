@@ -12,8 +12,15 @@ class Attachment extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'file_url'
+        'file_url',
+        'attachable_id',
+        'attachable_type'
     ];
+
+    public function attachable()
+    {
+        return $this->morphTo();
+    }
 
     public static function booted(): void
     {
