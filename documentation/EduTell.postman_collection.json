@@ -1,0 +1,2654 @@
+{
+	"info": {
+		"_postman_id": "a6f446a0-e64c-4ff4-967e-4c74dd4d45fd",
+		"name": "EduTell",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35494623"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"user\", jsonResponse.data.slug);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"raihan\",\r\n    \"slug\": \"raihan\",\r\n    \"email\": \"raihan@example.com\",\r\n    \"password\": \"{{password}}\",\r\n    \"c_password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{auth_route}}/register",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{auth_route}}",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.environment.set(\"access_token\", jsonResponse.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // \"email\": \"{{email}}\",\r\n    // \"password\": \"{{password}}\"\r\n    \"email\": \"teacher@example.com\",\r\n    \"password\": \"teacher\"\r\n    // \"email\": \"raihan@example.com\",\r\n    // \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{auth_route}}/login",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{auth_route}}",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{server}}/{{auth_route}}/logout",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{auth_route}}",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"user\", jsonResponse.slug);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server}}/{{auth_route}}/user",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{auth_route}}",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Me",
+			"item": [
+				{
+					"name": "Logout",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/v1/me/logout",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"me",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"user\", jsonResponse.data.slug);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server}}/v1/me",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// let jsonResponse = pm.response.json();\r",
+									"// pm.collectionVariables.set(\"user\", jsonResponse.data.slug);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "{{user}}",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "{{user}}",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/I:/Documents/[FOLDER KELUARGA]/Folder Dede/AI_Nimek/cropped middle.jpg"
+								},
+								{
+									"key": "date_of_birth",
+									"value": "15-12-2024",
+									"type": "text"
+								},
+								{
+									"key": "bio",
+									"value": "bio updated",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "male",
+									"description": "male, female, prefer not to say",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/v1/me?_method=PUT",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"me"
+							],
+							"query": [
+								{
+									"key": "_method",
+									"value": "PUT"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teaches",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/v1/me/teaches",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"me",
+								"teaches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Courses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/v1/me/courses",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"me",
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Progresses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/v1/me/progresses",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"me",
+								"progresses"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{users_route}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{users_route}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{users_route}}/student",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{users_route}}",
+								"student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Username",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{users_route}}/slug/student",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{users_route}}",
+								"slug",
+								"student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"user\", jsonResponse.data.slug);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"student\",\r\n    \"slug\": \"student\",\r\n    \"date_of_birth\": \"27-07-2005\",\r\n    \"bio\": \"some text added with a bit of sprinkler\",\r\n    \"gender\": \"male\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{users_route}}/{{user}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{users_route}}",
+								"{{user}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{users_route}}/{{user}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{users_route}}",
+								"{{user}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{categories_route}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{categories_route}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Data Scientist>>\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{categories_route}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{categories_route}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Peniliti Data\",\r\n    \"description\": \"Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{categories_route}}/7",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{categories_route}}",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{categories_route}}/7",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{categories_route}}",
+								"7"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Course",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Progress",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/progress",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"progress"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"course\", jsonResponse.data.slug);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Laravel Dasar",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Ini adalah kursus laravel dasar",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": [
+										"/I:/Documents/[FOLDER KELUARGA]/Folder Dede/AI_Nimek/_772f8be5-1ad2-4766-8355-2403b243b841.jfif",
+										"/I:/Documents/[FOLDER KELUARGA]/Folder Dede/AI_Nimek/cropped middle.jpg"
+									]
+								},
+								{
+									"key": "price",
+									"value": "20",
+									"description": "satuan rupiah",
+									"type": "text"
+								},
+								{
+									"key": "difficulty",
+									"value": "Beginner",
+									"type": "text"
+								},
+								{
+									"key": "duration",
+									"value": "45",
+									"description": "satuan jam",
+									"type": "text"
+								},
+								{
+									"key": "is_published",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Laravel Dasar",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Ini adalah kursus laravel dasar",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "price",
+									"value": "20",
+									"description": "satuan rupiah",
+									"type": "text"
+								},
+								{
+									"key": "difficulty",
+									"value": "Beginner",
+									"type": "text"
+								},
+								{
+									"key": "duration",
+									"value": "45",
+									"description": "satuan jam",
+									"type": "text"
+								},
+								{
+									"key": "is_published",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}?_method=PUT",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}"
+							],
+							"query": [
+								{
+									"key": "_method",
+									"value": "PUT"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Chapter",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"chapter\", jsonResponse.data.position);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Persiapan\",\r\n    \"description\": \"Persiapan untuk membuat proyek laravel\",\r\n    \"is_published\": true,\r\n    \"position\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"chapter\", jsonResponse.data.position);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Persiapan Aplikasi\",\r\n    \"description\": \"Persiapan untuk membuat proyek laravel\",\r\n    \"is_published\": true,\r\n    \"position\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Subchapter",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"subchapter\", jsonResponse.data.position);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Persyaratan program",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Program program apa yang dapat membantu kamu dalam membuat sebuah aplikasi laravel",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "Halo semuanya, disini kita akan mengetahui program apa saja yang dapat membantu kita dalam mengembangkan suatu aplikasi laravel",
+									"type": "text"
+								},
+								{
+									"key": "is_published",
+									"value": "true",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "position",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "video",
+									"value": "https://youtu.be/66mZt7X5dXw?si=JrWkeIsorYyWUqJY",
+									"description": "lagu milet coy",
+									"type": "text"
+								},
+								{
+									"key": "attachments[]",
+									"description": "tambahin file dulu, tambahin square brakcets ngab, biar kedetek sebagai array",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"subchapter\", jsonResponse.data.position);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Persyaratan program UPDATED",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Program program apa yang dapat membantu kamu dalam membuat sebuah aplikasi laravel",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "Halo semuanya, disini kita akan mengetahui program apa saja yang dapat membantu kita dalam mengembangkan suatu aplikasi laravel",
+									"type": "text"
+								},
+								{
+									"key": "is_published",
+									"value": "true",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "position",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "video",
+									"value": "https://youtu.be/66mZt7X5dXw?si=JrWkeIsorYyWUqJY",
+									"type": "text"
+								},
+								{
+									"key": "attachments[]",
+									"type": "file",
+									"src": "/I:/Documents/[FOLDER KELUARGA]/Folder Dede/TINGKAT PERSAINGAN SNMPTN 2022 di PTN.xlsx",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}?_method=PUT",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}"
+							],
+							"query": [
+								{
+									"key": "_method",
+									"value": "PUT"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark As Completed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/mark-complete",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"mark-complete"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Assignment",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"assignment\", jsonResponse.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Install program\",\r\n    \"description\": \"Install program PHP versi 8.1, Composer versi 2, dan Laravel versi 11\",\r\n    \"due_date\": \"14-12-2024\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"assignment\", jsonResponse.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Install program\",\r\n    \"description\": \"Install program PHP versi 8.1, Composer versi 2, dan Laravel versi 11\",\r\n    \"due_date\": \"13-12-2024\",\r\n    \"is_active\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Submission",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}/submissions",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}",
+								"submissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}/submissions/{{submission}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}",
+								"submissions",
+								"{{submission}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"submission\", jsonResponse.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "content",
+									"value": "Selesai",
+									"type": "text"
+								},
+								{
+									"key": "attachments[]",
+									"type": "file",
+									"src": "/C:/Users/lfaja/OneDrive/Documents/tugas akbar.docx"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}/submissions",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}",
+								"submissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "content",
+									"value": "Selesai UPDATED",
+									"type": "text"
+								},
+								{
+									"key": "attachments[]",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}/submissions/{{submission}}?_method=PUT",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}",
+								"submissions",
+								"{{submission}}"
+							],
+							"query": [
+								{
+									"key": "_method",
+									"value": "PUT"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/assignments/{{assignment}}/submissions/{{submission}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"assignments",
+								"{{assignment}}",
+								"submissions",
+								"{{submission}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Grade",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/users/{{user}}/grades",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"users",
+								"{{user}}",
+								"grades"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"grade\", jsonResponse.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"score\": 75.50,\r\n    \"comment\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/submissions/{{submission}}/grades",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"submissions",
+								"{{submission}}",
+								"grades"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"grade\", jsonResponse.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"score\": 90,\r\n    \"comment\": \"Update nilai\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/submissions/{{submission}}/grades/{{grade}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"submissions",
+								"{{submission}}",
+								"grades",
+								"{{grade}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"score\": 2342,\r\n    \"comment\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/submissions/{{submission}}/grades/{{grade}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"submissions",
+								"{{submission}}",
+								"grades",
+								"{{grade}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Purchase",
+			"item": [
+				{
+					"name": "Purchase Course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/purchase",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"purchase"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Course Teacher",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/teacher",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"teacher"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Course Students",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/students",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"students"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Attachment",
+			"item": [
+				{
+					"name": "Upload",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.environment.set(\"attachment\", jsonResponse.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachments[]",
+									"value": "https://youtu.be/66mZt7X5dXw?si=fDyxSz_kkXdSB2YB",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "attachments[]",
+									"value": "https://youtu.be/Lc2rdHUiugU?si=AsJP3aOgWFCdIAtE",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "attachments[]",
+									"contentType": "",
+									"description": "square brackets added so it properly recognized the key as an array of items\n\ntambahin dulu filenya",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/v1/attachments",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"attachments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Serve",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/v1/attachments/{{attachment}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"attachments",
+								"{{attachment}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Download",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/v1/attachments/{{attachment}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"attachments",
+								"{{attachment}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/v1/attachments/{{attachment}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"attachments",
+								"{{attachment}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "course",
+			"value": ""
+		},
+		{
+			"key": "chapter",
+			"value": ""
+		},
+		{
+			"key": "subchapter",
+			"value": ""
+		},
+		{
+			"key": "assignment",
+			"value": ""
+		},
+		{
+			"key": "user",
+			"value": ""
+		},
+		{
+			"key": "submission",
+			"value": ""
+		},
+		{
+			"key": "grade",
+			"value": ""
+		}
+	]
+}
