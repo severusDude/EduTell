@@ -14,6 +14,8 @@ class SubchapterResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $course = $this->chapter->course;
+
         return [
             'title' => $this->title,
             'description' => $this->description,
@@ -26,12 +28,22 @@ class SubchapterResource extends JsonResource
             ),
             'is_published' => $this->is_published,
             'position' => $this->position,
-            'assignments' => AssignmentResource::collection($this->whenLoaded('assignments', function () {
-                return $this->assignments()->get();
-            })),
-            'attachments' => AttachmentResource::collection($this->whenLoaded('attachments'), function () {
-                return $this->attachments()->get();
-            })
+            // 'assignments' => AssignmentResource::collection($this->whenLoaded('assignments', function () {
+            //     return $this->assignments()->get();
+            // })),
+            // 'attachments' => AttachmentResource::collection($this->whenLoaded('attachments'), function () {
+            //     return $this->attachments()->get();
+            // }),
+            'assignments' => $this->when($request->user() && $request->user()->hasPurchased($course), function () {
+                return AssignmentResource::collection($this->whenLoaded('assignments', function () {
+                    return $this->assignments()->get();
+                }));
+            }),
+            'attachments' => $this->when($request->user() && $request->user()->hasPurchased($course), function () {
+                return AttachmentResource::collection($this->whenLoaded('attachments', function () {
+                    return $this->attachments()->get();
+                }));
+            }),
         ];
     }
 }
