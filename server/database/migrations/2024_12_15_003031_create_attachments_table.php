@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('attachments', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
             $table->string('file_name');
             $table->string('file_url');
             $table->uuidMorphs('attachable');

@@ -12,11 +12,17 @@ class Attachment extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'user_id',
         'file_name',
         'file_url',
         'attachable_id',
         'attachable_type'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function attachable()
     {

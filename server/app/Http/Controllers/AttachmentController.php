@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AttachmentResource;
 use App\Models\Attachment;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Storage;
 
-class AttachmentController extends Controller
+class AttachmentController extends Controller implements HasMiddleware
 {
+    public static function middleware()
+    {
+        return [
+            new Middleware('auth:api'),
+        ];
+    }
+
     public function store(Request $request)
     {
         // dd($request);
@@ -52,27 +63,41 @@ class AttachmentController extends Controller
 
         $files = $request->file('attachments');
 
-        $uploaded_files = [];
-
         foreach ($files as $file) {
             if ($file->isValid()) {
+                $original_filename = $file->getClientOriginalName();
+                $file_name = pathinfo($original_filename, PATHINFO_FILENAME) . '.' . $file->extension();
                 $path = $file->store('attachments', 'public');
 
-                $attachment = Attachment::create([
+                // Attachment::create([
+                //     'user_id' => $request->user()->id,
+                //     'file_name' => $file_name,
+                //     'file_url' => $path
+                // ]);
+
+                $request->user()->attachments()->create([
+                    'user_id' => $request->user()->id,
+                    'file_name' => $file_name,
                     'file_url' => $path
                 ]);
-
-                $uploaded_files[] = [
-                    $attachment
-                ];
             }
         }
         // $path = $request->file('attachments')->store('attachments', 'public');
 
         return response()->json([
             'message' => 'Files has been uploaded succesfully',
-            'data' => $uploaded_files
+            'data' => AttachmentResource::collection($request->user()->attachments)
         ]);
+    }
+
+    public function serve(Attachment $attachment)
+    {
+        if (!Storage::disk('public')->exists($attachment->file_url)) {
+            return response()->json(['error' => 'File not found'], 404);
+        }
+
+        return Storage::disk('public')->get($attachment->file_url);
+        // return response()->download(Storage::disk('public')->path($attachment->file_url), $attachment->file_name);
     }
 
     public function download(Attachment $attachment)
@@ -82,13 +107,18 @@ class AttachmentController extends Controller
             return response()->json(['error' => 'File not found'], 404);
         }
 
-        return Storage::disk('public')->download($attachment->file_url);
+        // return Storage::disk('public')->download($attachment->file_url);
+        return response()->download(Storage::disk('public')->path($attachment->file_url), $attachment->file_name);
     }
 
-    public function destroy(Attachment $attachment)
+    public function destroy(Request $request, Attachment $attachment)
     {
         if (!Storage::disk('public')->exists($attachment->file_url)) {
             return response()->json(['error' => 'File not found'], 404);
+        }
+
+        if ($attachment->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         Storage::delete($attachment->file_url);

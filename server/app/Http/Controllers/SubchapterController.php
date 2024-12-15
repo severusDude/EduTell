@@ -89,6 +89,7 @@ class SubchapterController extends Controller implements HasMiddleware
                     // ]);
 
                     $subchapter->attachments()->create([
+                        'user_id' => $request->user()->id,
                         'file_name' => $file_name,
                         'file_url' => $path
                     ]);
@@ -164,6 +165,7 @@ class SubchapterController extends Controller implements HasMiddleware
                     // ]);
 
                     $subchapter->attachments()->create([
+                        'user_id' => $request->user()->id,
                         'file_name' => $file_name,
                         'file_url' => $path
                     ]);
