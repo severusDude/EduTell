@@ -28,7 +28,10 @@ class SubchapterResource extends JsonResource
             'position' => $this->position,
             'assignments' => AssignmentResource::collection($this->whenLoaded('assignments', function () {
                 return $this->assignments()->get();
-            }))
+            })),
+            'attachments' => AttachmentResource::collection($this->whenLoaded('attachments'), function () {
+                return $this->attachments()->get();
+            })
         ];
     }
 }
