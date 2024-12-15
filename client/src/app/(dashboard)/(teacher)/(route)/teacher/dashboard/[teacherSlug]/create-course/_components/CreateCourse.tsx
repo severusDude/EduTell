@@ -12,8 +12,13 @@ import axios from "axios";
 import { BASE_URL } from "@/constant/url";
 import InputDifficultCourse from "./InputDifficultCourse";
 import InputTimeCourse from "./InputTimeCourse";
+import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import InputChapterCourse from "./InputChapterCourse";
+import { slugify } from "@/utils/createSlug";
 
-const CreateCourse = ({ token }: { token: string }) => {
+const CreateCourse = ({ token, slug }: { token: string, slug: string }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
@@ -21,11 +26,20 @@ const CreateCourse = ({ token }: { token: string }) => {
   const [difficult, setDifficult] = useState<string>("");
   const [time, setTime] = useState<number>(0);
 
-  const { mutate: handleCreateCourse, data: newCourse } = useMutation({
+  const router = useRouter()
+
+  const {
+    mutate: handleCreateCourse,
+    data: newCourse,
+    isPending,
+  } = useMutation({
     mutationKey: ["create-course"],
+    onSuccess: (data) => {
+      toast.success("Course Berhasil Dibuat");
+      router.push(`/teacher/dashboard/${slug}/edit-course/${slugify(data.data.data.title)}`)
+    },
     mutationFn: async () => {
-      console.log(typeof(description))
-      const data = await axios.post(
+      return await axios.post(
         `${BASE_URL}/courses`,
         {
           title,
@@ -35,7 +49,7 @@ const CreateCourse = ({ token }: { token: string }) => {
           difficulty: difficult,
           duration: time,
           image_url: "image",
-          is_published: true
+          is_published: true,
         },
         {
           headers: {
@@ -52,8 +66,12 @@ const CreateCourse = ({ token }: { token: string }) => {
         <ButtonBack />
         <Button
           onClick={() => handleCreateCourse()}
-          className="transition-all ease-in-out bg-primary-color hover:bg-primary-color/80"
+          className={`transition-all ease-in-out bg-primary-color hover:bg-primary-color/80 ${
+            isPending ? "bg-primary-color/70" : ""
+          }`}
+          disabled={isPending}
         >
+          {isPending && <Loader2 className="animate-spin" />}
           Simpan
         </Button>
       </div>
@@ -89,13 +107,7 @@ const CreateCourse = ({ token }: { token: string }) => {
           </div>
 
           {/* chapter course */}
-          <div className="p-4 border-[0.3px] rounded-md bg-primary-color/20 space-y-2">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Chapter Kursus</h2>
-              <Button variant={"link"}>Edit Chapter</Button>
-            </div>
-            <p className="text-base text-text-primary">Masukan Foto Kursus</p>
-          </div>
+          {/* <InputChapterCourse chapter={chapter} /> */}
         </div>
       </div>
       <div className="mt-4">
