@@ -2,22 +2,36 @@ import { Button } from "@/components/ui/button";
 import { BASE_URL } from "@/constant/url";
 import { formatRupiah } from "@/lib/utils";
 import { CourseType } from "@/types/course";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { CheckCircleIcon } from "lucide-react";
+import { CheckCircleIcon, Loader2 } from "lucide-react";
+import Link from "next/link";
 import React from "react";
+import { toast } from "react-hot-toast";
 
 const PriceSectionDetailCourse = ({
   dataCourse,
   token,
   courseId,
+  slugSession,
 }: {
   dataCourse: CourseType;
+  slugSession: string;
   token: string;
   courseId: string;
 }) => {
-  const { mutate: handlePurchase, data } = useMutation({
+  const queryClient = useQueryClient();
+
+  const {
+    mutate: handlePurchase,
+    data,
+    isPending,
+  } = useMutation({
     mutationKey: ["puchase-course"],
+    onSuccess: () => {
+      toast.success("Berhasil Daftar Course");
+      queryClient.invalidateQueries();
+    },
     mutationFn: async () => {
       return axios.post(
         `${BASE_URL}/courses/${courseId}/purchase`,
@@ -32,6 +46,7 @@ const PriceSectionDetailCourse = ({
   });
 
   console.log("result ", data);
+  console.log("Data course ", dataCourse);
 
   return (
     <>
@@ -64,19 +79,42 @@ const PriceSectionDetailCourse = ({
         </div>
 
         <div className="w-full">
-          <Button className="w-full bg-primary-color hover:bg-primary-color/80">
-            Daftar Kelas
-          </Button>
+          {dataCourse?.purchased ? (
+            <Link href={`/dashboard/${slugSession}/${dataCourse?.slug}`}>
+              <Button className="w-full bg-primary-color hover:bg-primary-color/80">
+                Akses Kelas
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              onClick={() => handlePurchase()}
+              className="w-full bg-primary-color hover:bg-primary-color/80"
+              disabled={isPending}
+            >
+              {isPending && <Loader2 className="animate-spin" />}
+              Daftar Kelas
+            </Button>
+          )}
         </div>
       </div>
 
-      <div
-        onClick={() => handlePurchase()}
-        className="fixed bottom-0 left-0 z-20 flex justify-end w-full px-4 py-2 bg-white border-t border-gray-300 shadow-md lg:hidden"
-      >
-        <Button className="tracking-widest rounded-sm bg-primary-color hover:bg-primary-color/80 border-[0.3px] border-text-primary/70">
-          Daftar Kelas
-        </Button>
+      <div className="fixed bottom-0 left-0 z-20 flex justify-end w-full px-4 py-2 bg-white border-t border-gray-300 shadow-md lg:hidden">
+        {dataCourse?.purchased ? (
+          <Link href={`/dashboard/${slugSession}/${dataCourse?.slug}`}>
+            <Button className="tracking-widest rounded-sm bg-primary-color hover:bg-primary-color/80 border-[0.3px] border-text-primary/70">
+              Lihat Kelas
+            </Button>
+          </Link>
+        ) : (
+          <Button
+            onClick={() => handlePurchase()}
+            className="tracking-widest rounded-sm bg-primary-color hover:bg-primary-color/80 border-[0.3px] border-text-primary/70"
+            disabled={isPending}
+          >
+            {isPending && <Loader2 className="animate-spin" />}
+            Daftar Kelas
+          </Button>
+        )}
       </div>
     </>
   );

@@ -1,3 +1,4 @@
+import { Preview } from "@/components/Preview";
 import {
   Accordion,
   AccordionContent,
@@ -20,18 +21,8 @@ const DescriptionSectionDetailCourse = ({
       <div className="space-y-2">
         <h2 className="text-2xl font-semibold">Deskripsi</h2>
         <div className="text-justify text-text-primary">
-          <p>{dataCourse?.description}</p>
-        </div>
-      </div>
-
-      {/* benefit */}
-      <div className="mt-12 space-y-2">
-        <h2 className="text-2xl font-semibold">Apa yang anda dapatkan?</h2>
-        <div className="text-text-primary">
-          <p>1. Pemahaman dasar tentang komponen website</p>
-          <p>2. Langkah demi langkah membangun halaman web responsif.</p>
-          <p>3. Studi kasus langsung dengan proyek sederhana.</p>
-          <p>4. Sertifikat</p>
+          <Preview value={dataCourse?.description} />
+          {/* <p>{dataCourse?.description}</p> */}
         </div>
       </div>
 
@@ -48,7 +39,9 @@ const DescriptionSectionDetailCourse = ({
                 <AccordionContent>
                   <div className="text-text-primary">
                     {item?.subchapters?.map((item: SubChapterType, index) => (
-                      <p key={index}>{index + 1}. {item?.title}</p>
+                      <p key={index}>
+                        {index + 1}. {item?.title}
+                      </p>
                     ))}
                   </div>
                 </AccordionContent>

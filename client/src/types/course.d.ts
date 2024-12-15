@@ -7,6 +7,8 @@ export type CategoryType = {
 };
 
 export type CourseType = {
+  chapters_count?: number
+  purchased?: Date | null
   category_id: number;
   created_at: string;
   description: string;

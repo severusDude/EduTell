@@ -15,15 +15,23 @@ const RootCourseDetail = ({
   courseId,
   token,
   role,
+  slugSession
 }: {
   courseId: string;
   token: string;
+  slugSession: string
   role?: string | undefined | null;
 }) => {
   const { data: dataCourse, isLoading: isLoadingCourse } = useQuery({
     queryKey: ["course-detail"],
     queryFn: async () =>
-      (await axios.get(`${BASE_URL}/courses/${courseId}`)).data,
+      (
+        await axios.get(`${BASE_URL}/courses/${courseId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ).data,
   });
 
   const { data: dataChapter } = useQuery({
@@ -51,6 +59,7 @@ const RootCourseDetail = ({
           />
           {role !== "teacher" ? (
             <PriceSectionDetailCourse
+            slugSession={slugSession}
               courseId={courseId}
               token={token}
               dataCourse={dataCourse.data}
