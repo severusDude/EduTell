@@ -89,7 +89,8 @@ class SubmissionController extends Controller implements HasMiddleware
         }
 
         $validated = $request->validate([
-            'content' => 'present|nullable|string'
+            'content' => 'present|nullable|string',
+            'attachments.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:5120',
         ]);
 
         $submission = new Submission();
@@ -100,7 +101,29 @@ class SubmissionController extends Controller implements HasMiddleware
 
         $submission->save();
 
-        return new SubmissionResource($submission);
+        if ($request->hasFile('attachments')) {
+            $attachments = $request->file('attachments');
+
+            foreach ($attachments as $file) {
+                if ($file->isValid()) {
+                    $original_filename = $file->getClientOriginalName();
+                    $file_name = pathinfo($original_filename, PATHINFO_FILENAME) . '.' . $file->extension();
+                    $path = $file->store('attachments', 'public');
+
+                    // Attachment::create([
+                    //     'file_url' => $path
+                    // ]);
+
+                    $submission->attachments()->create([
+                        'user_id' => $request->user()->id,
+                        'file_name' => $file_name,
+                        'file_url' => $path
+                    ]);
+                }
+            }
+        }
+
+        return new SubmissionResource($submission->load('grade', 'attachments'));
     }
 
     /**
@@ -121,7 +144,7 @@ class SubmissionController extends Controller implements HasMiddleware
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        return new SubmissionResource($submission);
+        return new SubmissionResource($submission->load('grade', 'attachments'));
     }
 
     /**
@@ -144,14 +167,37 @@ class SubmissionController extends Controller implements HasMiddleware
         }
 
         $validated = $request->validate([
-            'content' => 'present|nullable|string'
+            'content' => 'present|nullable|string',
+            'attachments.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:5120',
         ]);
 
         $submission->fill($validated);
 
         $submission->save();
 
-        return new SubmissionResource($submission);
+        if ($request->hasFile('attachments')) {
+            $attachments = $request->file('attachments');
+
+            foreach ($attachments as $file) {
+                if ($file->isValid()) {
+                    $original_filename = $file->getClientOriginalName();
+                    $file_name = pathinfo($original_filename, PATHINFO_FILENAME) . '.' . $file->extension();
+                    $path = $file->store('attachments', 'public');
+
+                    // Attachment::create([
+                    //     'file_url' => $path
+                    // ]);
+
+                    $submission->attachments()->create([
+                        'user_id' => $request->user()->id,
+                        'file_name' => $file_name,
+                        'file_url' => $path
+                    ]);
+                }
+            }
+        }
+
+        return new SubmissionResource($submission->fresh()->load('grade', 'attachments'));
     }
 
     /**
