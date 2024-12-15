@@ -64,7 +64,7 @@ class SubchapterController extends Controller implements HasMiddleware
                 Rule::unique('subchapters')->where(fn(Builder $query) =>
                 $query->where('chapter_id', $chapter->id))
             ],
-            'videos.*' => [
+            'video' => [
                 'nullable',
                 'url:https',
                 'regex:/(youtube.com|youtu.be)\/(watch)?(\?v=)?(\S+)?/'
@@ -80,16 +80,14 @@ class SubchapterController extends Controller implements HasMiddleware
 
         $subchapter->save();
 
-        if ($request->has('videos')) {
-            $videos = $request->videos;
+        if ($request->has('video')) {
+            $video = $request->video;
 
-            foreach ($videos as $video) {
-                $subchapter->attachments()->create([
-                    'user_id' => $request->user()->id,
-                    'file_name' => $video,
-                    'file_url' => $video
-                ]);
-            }
+            $subchapter->attachments()->create([
+                'user_id' => $request->user()->id,
+                'file_name' => $video,
+                'file_url' => $video
+            ]);
         }
 
         if ($request->hasFile('attachments')) {
@@ -162,7 +160,7 @@ class SubchapterController extends Controller implements HasMiddleware
                     ->where(fn(Builder $query) =>
                     $query->where('chapter_id', $chapter->id))
             ],
-            'videos.*' => [
+            'video' => [
                 'nullable',
                 'url:https',
                 'regex:/(youtube.com|youtu.be)\/(watch)?(\?v=)?(\S+)?/'
@@ -173,16 +171,14 @@ class SubchapterController extends Controller implements HasMiddleware
         $subchapter->fill($validated);
         $subchapter->save();
 
-        if ($request->has('videos')) {
-            $videos = $request->videos;
+        if ($request->has('video')) {
+            $video = $request->video;
 
-            foreach ($videos as $video) {
-                $subchapter->attachments()->create([
-                    'user_id' => $request->user()->id,
-                    'file_name' => $video,
-                    'file_url' => $video
-                ]);
-            }
+            $subchapter->attachments()->create([
+                'user_id' => $request->user()->id,
+                'file_name' => $video,
+                'file_url' => $video
+            ]);
         }
 
         if ($request->hasFile('attachments')) {
@@ -193,10 +189,6 @@ class SubchapterController extends Controller implements HasMiddleware
                     $original_filename = $file->getClientOriginalName();
                     $file_name = pathinfo($original_filename, PATHINFO_FILENAME) . '.' . $file->extension();
                     $path = $file->store('attachments', 'public');
-
-                    // Attachment::create([
-                    //     'file_url' => $path
-                    // ]);
 
                     $subchapter->attachments()->create([
                         'user_id' => $request->user()->id,
@@ -252,10 +244,5 @@ class SubchapterController extends Controller implements HasMiddleware
                 ->find($subchapter->id)
                 ->progress
         );
-    }
-
-    public function serveAttachments(Request $request, Course $course, Chapter $chapter, Subchapter $subchapter)
-    {
-        //
     }
 }
