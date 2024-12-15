@@ -81,6 +81,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('attachments')->group(function () {
         Route::post('', [AttachmentController::class, 'store']);
         Route::get('{attachment}', [AttachmentController::class, 'download']);
+        Route::delete('{attachment}', [AttachmentController::class, 'destroy']);
     });
 
     // category routes

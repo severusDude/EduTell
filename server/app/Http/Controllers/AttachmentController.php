@@ -84,4 +84,16 @@ class AttachmentController extends Controller
 
         return Storage::disk('public')->download($attachment->file_url);
     }
+
+    public function destroy(Attachment $attachment)
+    {
+        if (!Storage::disk('public')->exists($attachment->file_url)) {
+            return response()->json(['error' => 'File not found'], 404);
+        }
+
+        Storage::delete($attachment->file_url);
+        $attachment->delete();
+
+        return response(null, 204);
+    }
 }
