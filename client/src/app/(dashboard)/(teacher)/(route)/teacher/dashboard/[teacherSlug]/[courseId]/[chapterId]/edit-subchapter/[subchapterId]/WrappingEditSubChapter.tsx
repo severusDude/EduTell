@@ -14,6 +14,8 @@ import Loading from "@/components/Loading";
 import InputSubchapter from "./InputSubchapter";
 import InputDescriptionSubChapter from "./InputDescriptionSubChapter";
 import InputTitleSubChapter from "./InputTitleSubChapter";
+import InputContentSubChapter from "./InputContentSubChapter";
+import InputLinkVideoSubChapter from "./InputLinkVideoSubChapter";
 
 const WrappingEditSubChapter = ({
   courseId,
@@ -30,6 +32,8 @@ const WrappingEditSubChapter = ({
 }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+  const [linkVideo, setLinkVideo] = useState<any[]>([]);
   const [position, setPosition] = useState<number>(0);
 
   const router = useRouter();
@@ -54,6 +58,7 @@ const WrappingEditSubChapter = ({
     if (initialDataChapter?.data) {
       setTitle(initialDataChapter?.data.title);
       setDescription(initialDataChapter?.data.description);
+      setContent(initialDataChapter?.data.content);
       setPosition(Number(chapterPosition));
     }
   }, [initialDataChapter]);
@@ -74,18 +79,30 @@ const WrappingEditSubChapter = ({
       toast.error("Gagal Mengupdate Subchapter");
     },
     mutationFn: async () => {
-      return await axios.patch(
-        `${BASE_URL}/courses/${courseId}/chapters/${chapterPosition}/subchapters/${subchapterPosition}`,
-        {
-          title,
-          description,
-          content: "CONTENT DUMY",
-          is_published: true,
-          position: Number(subchapterPosition),
-        },
+      const formData = new FormData();
+
+      console.log("Title:", title);
+      console.log("Description:", description);
+      console.log("Content:", content);
+      console.log("Position:", subchapterPosition);
+      console.log("Videos:", linkVideo);
+
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("content", content);
+      formData.append("is_published", "true");
+      formData.append("position", subchapterPosition);
+      formData.append("videos.0", linkVideo[0]);
+
+      console.log("ini formdata ", Object.fromEntries(formData));
+
+      return await axios.post(
+        `${BASE_URL}/courses/${courseId}/chapters/${chapterPosition}/subchapters/${subchapterPosition}?_method=PUT`,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -116,6 +133,11 @@ const WrappingEditSubChapter = ({
               description={description}
               setDescription={setDescription}
             />
+
+            <InputContentSubChapter
+              description={content}
+              setDescription={setContent}
+            />
             {/* <InputSubchapter
               positionChapter={position}
               subchapter={subchapters}
@@ -123,6 +145,12 @@ const WrappingEditSubChapter = ({
               slugCourse={courseId}
               slugName={teacherSlug}
             /> */}
+            <div className="grid grid-cols-2">
+              <InputLinkVideoSubChapter
+                setTitle={setLinkVideo}
+                title={linkVideo}
+              />
+            </div>
             <h1>EDIT SUBCHAPTER</h1>
           </>
         )}
