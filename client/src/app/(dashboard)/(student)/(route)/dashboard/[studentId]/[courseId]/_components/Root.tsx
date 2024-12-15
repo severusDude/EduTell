@@ -31,7 +31,7 @@ const Root = ({ courseSlug, token, userSlug }: RootProps) => {
     <section className="relative flex flex-col-reverse items-start gap-4 lg:gap-16 lg:flex-row">
       <div className="w-full lg:w-1/4">
         {/* sidebar */}
-        <Sidebar dataCourse={courseData?.data} />
+        <Sidebar courseSlug={courseSlug} slugUser={userSlug} dataCourse={courseData?.data} />
       </div>
       <div className="w-full mt-8 lg:w-3/4 lg:mt-0"></div>
     </section>

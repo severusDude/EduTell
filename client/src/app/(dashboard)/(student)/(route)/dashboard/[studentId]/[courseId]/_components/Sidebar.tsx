@@ -13,6 +13,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useRouter, useSearchParams } from "next/navigation";
+import { BASE_URL } from "@/constant/url";
 
 const itemSidebar = [
   {
@@ -41,42 +43,64 @@ const Sidebar = ({
   // token,
   // contentView,
   // setContentView,
+  courseSlug,
   dataCourse,
+  slugUser,
 }: {
   // token: string;
   // contentView: string;
   // setContentView: React.Dispatch<React.SetStateAction<string>>;
   // setContentView: () => void;
+  courseSlug: string;
+  slugUser: string;
   dataCourse: {
     data: CourseType;
   };
 }) => {
   console.log("dari sidebar ", dataCourse);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const setQueryParams = (chapter: string, subchapter: string) => {
+    router.push(
+      `/dashboard/${slugUser}/${courseSlug}?chapter=${chapter}&subchapter=${subchapter}`
+    );
+  };
+
+  console.log(searchParams.get("chapter"))
+
   return (
     <>
       <div className="hidden px-4 py-4 rounded-md shadow-md min-h-[428px] lg:flex flex-col gap-2 border-[0.3px]">
         {dataCourse &&
-          dataCourse?.data?.chapters?.map((item: any, index: number) => (
+          dataCourse?.data?.chapters?.map((chapter: any, index: number) => (
             <Accordion type="single" collapsible key={index}>
               <AccordionItem
                 value="item-1"
                 className="px-4 py-2 text-base text-text-primary rounded-md border-[0.3px] cursor-pointer"
               >
-                <AccordionTrigger>{item.title}</AccordionTrigger>
+                <AccordionTrigger>{chapter.title}</AccordionTrigger>
                 <AccordionContent>
-                  {item.subchapters?.map((item: any, index: number) => (
-                    <p key={index} className="p-1 rounded-sm">{item.title}</p>
-                  ))}
+                  <div className="space-y-1">
+                    {chapter.subchapters?.map((item: any, index: number) => (
+                      <p
+                        onClick={() =>
+                          setQueryParams(chapter.position, item.position)
+                        }
+                        key={index}
+                        className={`p-1 rounded-sm border-[0.3px] hover:underline ${
+                          searchParams.get("chapter") == chapter.position &&
+                          searchParams.get("subchapter") == item.position &&
+                          "bg-primary-color"
+                        }`}
+                      >
+                        {item.title}
+                      </p>
+                    ))}
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            // <p
-            //   key={index}
-            //   className={`w-full px-4 py-2 text-base text-text-primary rounded-md border-[0.3px] cursor-pointer hover:bg-primary-color/80 `}
-            //   // onClick={() => setContentView(item.content)}
-            // >
-            //   {item.title}
-            // </p>
           ))}
 
         <div className="mt-auto space-y-2">
