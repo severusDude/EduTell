@@ -8,8 +8,8 @@ const ButtonBack = () => {
 
   const router = useRouter()
 
-  return <div className="my-4 cursor-pointer">
-    <ArrowLeftIcon size={28} onClick={() => router.back()} />
+  return <div className="my-4">
+    <ArrowLeftIcon size={28} onClick={() => router.back()} className="cursor-pointer" />
   </div>
   
 };

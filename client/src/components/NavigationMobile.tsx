@@ -5,6 +5,7 @@ import React from "react";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -17,11 +18,13 @@ type NavigationMobileProps = {
     href: string;
   }[];
   slug?: string;
+  role?: string
 };
 
 const NavigationMobile = ({
   itemNavbar,
   slug: session,
+  role
 }: NavigationMobileProps) => {
   return (
     <nav className="sticky top-0 z-10 flex items-center justify-between px-4 py-4 transparent-background lg:hidden ">
@@ -41,10 +44,12 @@ const NavigationMobile = ({
           <SheetContent>
             <SheetHeader>
               <SheetTitle>EduTell</SheetTitle>
+              <SheetDescription></SheetDescription>
               <NavigationItem
                 itemNavbar={itemNavbar}
                 session={session}
                 slug={session}
+                role={role}
               />
             </SheetHeader>
           </SheetContent>

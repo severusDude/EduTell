@@ -1,3 +1,11 @@
+export type CategoryType = {
+  created_at: Date;
+  description?: string;
+  id: string;
+  name: string;
+  updated_at: Date;
+};
+
 export type CourseType = {
   category_id: number;
   created_at: string;

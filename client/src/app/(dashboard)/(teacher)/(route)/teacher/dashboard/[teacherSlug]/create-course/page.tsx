@@ -5,14 +5,12 @@ import {
   getSlug,
 } from "@/lib/session";
 import { redirect } from "next/navigation";
-import Sidebar from "./_components/Sidebar";
-import Content from "./_components/Content";
-import Root from "./_components/Root";
+import CreateCourse from "./_components/CreateCourse";
 
-export default async function DashboardPage({
+export default async function CreateCousePage({
   params,
 }: {
-  params: { studentId: string };
+  params: { teacherSlug: string };
 }) {
   const sessionName = await getSessionName();
   const session = await getSession();
@@ -23,21 +21,17 @@ export default async function DashboardPage({
     redirect("/login");
   }
 
-  if (sessionRole !== "student") {
+  if (sessionRole !== "teacher") {
     redirect("/");
   }
 
-  if (params.studentId !== sessionSlug) {
+  if (sessionSlug !== params.teacherSlug) {
     return <h1>404</h1>;
   }
 
   return (
-    <main className="px-4 lg:px-0">
-      <Root
-        session={session}
-        sessionName={sessionName}
-        sessionSlug={sessionSlug}
-      />
-    </main>
+    <div className="border-[0.3px] rounded-md p-4">
+      <CreateCourse token={session} />
+    </div>
   );
 }

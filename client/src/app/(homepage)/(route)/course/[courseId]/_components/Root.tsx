@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import ButtonBack from "@/components/ButtonBack";
 import { BASE_URL } from "@/constant/url";
@@ -11,7 +11,15 @@ import Loading from "@/components/Loading";
 import DescriptionSectionDetailCourse from "./DescriptionSectionDetailCourse";
 import PriceSectionDetailCourse from "./PriceSectionDetailCourse";
 
-const RootCourseDetail = ({ courseId, token }: { courseId: string, token: string }) => {
+const RootCourseDetail = ({
+  courseId,
+  token,
+  role,
+}: {
+  courseId: string;
+  token: string;
+  role?: string | undefined | null;
+}) => {
   const { data: dataCourse, isLoading: isLoadingCourse } = useQuery({
     queryKey: ["course-detail"],
     queryFn: async () =>
@@ -41,7 +49,15 @@ const RootCourseDetail = ({ courseId, token }: { courseId: string, token: string
             dataChapter={dataChapter?.data}
             dataCourse={dataCourse?.data}
           />
-          <PriceSectionDetailCourse courseId={courseId} token={token} dataCourse={dataCourse.data} />
+          {role !== "teacher" ? (
+            <PriceSectionDetailCourse
+              courseId={courseId}
+              token={token}
+              dataCourse={dataCourse.data}
+            />
+          ) : (
+            ""
+          )}
         </div>
       )}
     </section>

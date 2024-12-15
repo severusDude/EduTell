@@ -16,16 +16,16 @@ const SkeletonHeaderSectionDetailCourse = () => {
 
       <div className="flex flex-col items-start w-full gap-2 lg:flex-row lg:justify-evenly text-text-primary">
         {/* Peserta */}
-        <Skeleton className="w-64 h-8 lg:w-48 lg:h-28" />
+        <Skeleton className="w-full h-8 lg:w-48 lg:h-28" />
 
         {/* Level */}
-        <Skeleton className="w-64 h-8 lg:w-48 lg:h-28" />
+        <Skeleton className="w-full h-8 lg:w-48 lg:h-28" />
 
         {/* Rating */}
-        <Skeleton className="w-64 h-8 lg:w-48 lg:h-28" />
+        <Skeleton className="w-full h-8 lg:w-48 lg:h-28" />
 
         {/* Mentor */}
-        <Skeleton className="w-64 h-8 lg:w-48 lg:h-28" />
+        <Skeleton className="w-full h-8 lg:w-48 lg:h-28" />
       </div>
     </div>
   );
