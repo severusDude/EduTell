@@ -117,7 +117,11 @@ class AttachmentController extends Controller implements HasMiddleware
 
     public function destroy(Request $request, Attachment $attachment)
     {
-        if (!Storage::disk('public')->exists($attachment->file_url)) {
+        if (
+            !(Storage::disk('public')->exists($attachment->file_url) ||
+                preg_match('/(youtube.com|youtu.be)\/(watch)?(\?v=)?(\S+)?/', $attachment->file_url)
+            )
+        ) {
             return response()->json(['error' => 'File not found'], 404);
         }
 

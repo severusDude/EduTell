@@ -64,6 +64,11 @@ class SubchapterController extends Controller implements HasMiddleware
                 Rule::unique('subchapters')->where(fn(Builder $query) =>
                 $query->where('chapter_id', $chapter->id))
             ],
+            'videos.*' => [
+                'nullable',
+                'url:https',
+                'regex:/(youtube.com|youtu.be)\/(watch)?(\?v=)?(\S+)?/'
+            ],
             'attachments.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:5120',
         ]);
 
@@ -74,6 +79,18 @@ class SubchapterController extends Controller implements HasMiddleware
         $subchapter->chapter_id = $chapter->id;
 
         $subchapter->save();
+
+        if ($request->has('videos')) {
+            $videos = $request->videos;
+
+            foreach ($videos as $video) {
+                $subchapter->attachments()->create([
+                    'user_id' => $request->user()->id,
+                    'file_name' => $video,
+                    'file_url' => $video
+                ]);
+            }
+        }
 
         if ($request->hasFile('attachments')) {
             $attachments = $request->file('attachments');
@@ -145,11 +162,28 @@ class SubchapterController extends Controller implements HasMiddleware
                     ->where(fn(Builder $query) =>
                     $query->where('chapter_id', $chapter->id))
             ],
+            'videos.*' => [
+                'nullable',
+                'url:https',
+                'regex:/(youtube.com|youtu.be)\/(watch)?(\?v=)?(\S+)?/'
+            ],
             'attachments.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:5120',
         ]);
 
         $subchapter->fill($validated);
         $subchapter->save();
+
+        if ($request->has('videos')) {
+            $videos = $request->videos;
+
+            foreach ($videos as $video) {
+                $subchapter->attachments()->create([
+                    'user_id' => $request->user()->id,
+                    'file_name' => $video,
+                    'file_url' => $video
+                ]);
+            }
+        }
 
         if ($request->hasFile('attachments')) {
             $attachments = $request->file('attachments');
