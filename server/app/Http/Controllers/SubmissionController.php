@@ -19,7 +19,7 @@ class SubmissionController extends Controller implements HasMiddleware
         return [
             new Middleware('auth:api'),
             // new Middleware('role:teacher', only: ['index', 'show']),
-            function (Request $request, Closure $next) {
+            new Middleware(function (Request $request, Closure $next) {
                 // get course slug from url
                 $course_slug = $request->route('course');
 
@@ -32,7 +32,16 @@ class SubmissionController extends Controller implements HasMiddleware
                 }
 
                 return $next($request);
-            },
+            }),
+
+            new Middleware(function (Request $request, Closure $next) {
+                $assignment = Assignment::findOrFail($request->route('assignment'));
+
+                // check whether submission has passed assignment due date
+                if ($assignment->due_date <= now()) {
+                    return response()->json(['message' => 'Submitting submission not allowed exceeding assignment\'s due date'], 406);
+                }
+            }, except: ['index', 'show']),
 
             new Middleware('role:student', except: ['index', 'show']),
 
@@ -79,13 +88,9 @@ class SubmissionController extends Controller implements HasMiddleware
             return response()->json(['message' => 'User has already made submission to this assignment'], 403);
         }
 
-        // check whether submission has passed assignment due date
-        if ($assignment->due_date >= now()) {
-            return response()->json(['message' => 'Submitting submission not allowed exceeding assignment\'s due date'], 406);
-        }
-
         $validated = $request->validate([
-            'content' => 'present|nullable|string'
+            'content' => 'present|nullable|string',
+            'attachments.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:5120',
         ]);
 
         $submission = new Submission();
@@ -96,7 +101,29 @@ class SubmissionController extends Controller implements HasMiddleware
 
         $submission->save();
 
-        return new SubmissionResource($submission);
+        if ($request->hasFile('attachments')) {
+            $attachments = $request->file('attachments');
+
+            foreach ($attachments as $file) {
+                if ($file->isValid()) {
+                    $original_filename = $file->getClientOriginalName();
+                    $file_name = pathinfo($original_filename, PATHINFO_FILENAME) . '.' . $file->extension();
+                    $path = $file->store('attachments', 'public');
+
+                    // Attachment::create([
+                    //     'file_url' => $path
+                    // ]);
+
+                    $submission->attachments()->create([
+                        'user_id' => $request->user()->id,
+                        'file_name' => $file_name,
+                        'file_url' => $path
+                    ]);
+                }
+            }
+        }
+
+        return new SubmissionResource($submission->load('grade', 'attachments'));
     }
 
     /**
@@ -117,7 +144,7 @@ class SubmissionController extends Controller implements HasMiddleware
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        return new SubmissionResource($submission);
+        return new SubmissionResource($submission->load('grade', 'attachments'));
     }
 
     /**
@@ -139,20 +166,38 @@ class SubmissionController extends Controller implements HasMiddleware
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        // check whether submission has passed assignment due date
-        if ($submission->assignment->due_date >= now()) {
-            return response()->json(['message' => 'Submission changes not allowed exceeding assignment\'s due date'], 406);
-        }
-
         $validated = $request->validate([
-            'content' => 'present|nullable|string'
+            'content' => 'present|nullable|string',
+            'attachments.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:5120',
         ]);
 
         $submission->fill($validated);
 
         $submission->save();
 
-        return new SubmissionResource($submission);
+        if ($request->hasFile('attachments')) {
+            $attachments = $request->file('attachments');
+
+            foreach ($attachments as $file) {
+                if ($file->isValid()) {
+                    $original_filename = $file->getClientOriginalName();
+                    $file_name = pathinfo($original_filename, PATHINFO_FILENAME) . '.' . $file->extension();
+                    $path = $file->store('attachments', 'public');
+
+                    // Attachment::create([
+                    //     'file_url' => $path
+                    // ]);
+
+                    $submission->attachments()->create([
+                        'user_id' => $request->user()->id,
+                        'file_name' => $file_name,
+                        'file_url' => $path
+                    ]);
+                }
+            }
+        }
+
+        return new SubmissionResource($submission->fresh()->load('grade', 'attachments'));
     }
 
     /**
@@ -172,11 +217,6 @@ class SubmissionController extends Controller implements HasMiddleware
         // check whether the submission belong to currently authenticated user
         if ($submission->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        // check whether submission has passed assignment due date
-        if ($submission->assignment->due_date >= now()) {
-            return response()->json(['message' => 'Submission changes not allowed exceeding assignment\'s due date'], 406);
         }
 
         $submission->delete();

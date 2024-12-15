@@ -24,6 +24,9 @@ class SubmissionResource extends JsonResource
             'submitted_at' => (string) $this->created_at,
             'grade' => new GradeResource($this->whenLoaded('grade', function () {
                 return $this->grade;
+            })),
+            'attachments' => AttachmentResource::collection($this->whenLoaded('attachments', function () {
+                return $this->attachments()->get();
             }))
         ];
     }
