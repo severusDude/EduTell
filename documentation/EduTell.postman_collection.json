@@ -87,7 +87,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n    // \"email\": \"teacher@example.com\",\r\n    // \"password\": \"teacher\"\r\n    // \"email\": \"raihan@example.com\",\r\n    // \"password\": \"{{password}}\"\r\n}",
+							"raw": "{\r\n    // \"email\": \"{{email}}\",\r\n    // \"password\": \"{{password}}\"\r\n    \"email\": \"teacher@example.com\",\r\n    \"password\": \"teacher\"\r\n    // \"email\": \"raihan@example.com\",\r\n    // \"password\": \"{{password}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -202,6 +202,208 @@
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "Me",
+			"item": [
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/v1/me/logout",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"me",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"user\", jsonResponse.data.slug);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server}}/v1/me",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teaches",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/v1/me/teaches",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"me",
+								"teaches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Courses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/v1/me/courses",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"me",
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Progresses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/v1/me/progresses",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"me",
+								"progresses"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		},
@@ -602,6 +804,31 @@
 							"path": [
 								"{{courses_route}}",
 								"{{course}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Progress",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/progress",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"progress"
 							]
 						}
 					},
@@ -1042,13 +1269,53 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Persyaratan program\",\r\n    \"description\": \"Program program apa yang dapat membantu kamu dalam membuat sebuah aplikasi laravel\",\r\n    \"content\": \"Halo semuanya, disini kita akan mengetahui program apa saja yang dapat membantu kita dalam mengembangkan suatu aplikasi laravel\",\r\n    \"is_published\": true,\r\n    \"position\": 1\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Persyaratan program",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Program program apa yang dapat membantu kamu dalam membuat sebuah aplikasi laravel",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "Halo semuanya, disini kita akan mengetahui program apa saja yang dapat membantu kita dalam mengembangkan suatu aplikasi laravel",
+									"type": "text"
+								},
+								{
+									"key": "is_published",
+									"value": "true",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "position",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "videos[]",
+									"value": "https://youtu.be/66mZt7X5dXw?si=JrWkeIsorYyWUqJY",
+									"description": "lagu milet coy",
+									"type": "text"
+								},
+								{
+									"key": "videos[]",
+									"value": "https://www.youtube.com/watch?v=Lc2rdHUiugU&list=TLPQMTUxMjIwMjS6lTAtY8nuYQ&index=2",
+									"description": "cuman buat testing",
+									"type": "text"
+								},
+								{
+									"key": "attachments[]",
+									"description": "tambahin file dulu, tambahin square brakcets ngab, biar kedetek sebagai array",
+									"type": "file",
+									"src": []
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters",
@@ -1082,7 +1349,7 @@
 						}
 					],
 					"request": {
-						"method": "PATCH",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Accept",
@@ -1090,16 +1357,43 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Persyaratan program UPDATED\",\r\n    \"description\": \"Program program apa yang dapat membantu kamu dalam membuat sebuah aplikasi laravel\",\r\n    \"content\": \"Halo semuanya, disini kita akan mengetahui program apa saja yang dapat membantu kita dalam mengembangkan suatu aplikasi laravel\",\r\n    \"is_published\": true,\r\n    \"position\": 1\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Persyaratan program UPDATED",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Program program apa yang dapat membantu kamu dalam membuat sebuah aplikasi laravel",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "Halo semuanya, disini kita akan mengetahui program apa saja yang dapat membantu kita dalam mengembangkan suatu aplikasi laravel",
+									"type": "text"
+								},
+								{
+									"key": "is_published",
+									"value": "true",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "position",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "attachments[]",
+									"type": "file",
+									"src": "/I:/Documents/[FOLDER KELUARGA]/Folder Dede/TINGKAT PERSAINGAN SNMPTN 2022 di PTN.xlsx"
 								}
-							}
+							]
 						},
 						"url": {
-							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}",
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}?_method=PUT",
 							"host": [
 								"{{server}}"
 							],
@@ -1110,6 +1404,12 @@
 								"{{chapter}}",
 								"subchapters",
 								"{{subchapter}}"
+							],
+							"query": [
+								{
+									"key": "_method",
+									"value": "PUT"
+								}
 							]
 						}
 					},
@@ -1138,6 +1438,47 @@
 								"{{chapter}}",
 								"subchapters",
 								"{{subchapter}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark As Completed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/{{courses_route}}/{{course}}/chapters/{{chapter}}/subchapters/{{subchapter}}/mark-complete",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"{{courses_route}}",
+								"{{course}}",
+								"chapters",
+								"{{chapter}}",
+								"subchapters",
+								"{{subchapter}}",
+								"mark-complete"
 							]
 						}
 					},
@@ -1655,7 +1996,148 @@
 								"value": "application/json",
 								"type": "text"
 							}
-						]
+						],
+						"url": {
+							"raw": "{{server}}/users/{{user}}/grades",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"users",
+								"{{user}}",
+								"grades"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"grade\", jsonResponse.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"score\": 75.50,\r\n    \"comment\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/submissions/{{submission}}/grades",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"submissions",
+								"{{submission}}",
+								"grades"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"grade\", jsonResponse.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"score\": 90,\r\n    \"comment\": \"Update nilai\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/submissions/{{submission}}/grades/{{grade}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"submissions",
+								"{{submission}}",
+								"grades",
+								"{{grade}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"score\": 2342,\r\n    \"comment\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/submissions/{{submission}}/grades/{{grade}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"submissions",
+								"{{submission}}",
+								"grades",
+								"{{grade}}"
+							]
+						}
 					},
 					"response": []
 				}
@@ -1696,56 +2178,6 @@
 		{
 			"name": "Purchase",
 			"item": [
-				{
-					"name": "Teached Courses",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{server}}/{{users_route}}/{{user}}/teaches",
-							"host": [
-								"{{server}}"
-							],
-							"path": [
-								"{{users_route}}",
-								"{{user}}",
-								"teaches"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Purchased Courses",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{server}}/{{users_route}}/{{user}}/courses",
-							"host": [
-								"{{server}}"
-							],
-							"path": [
-								"{{users_route}}",
-								"{{user}}",
-								"courses"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "Purchase Course",
 					"request": {
@@ -1854,6 +2286,173 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "Attachment",
+			"item": [
+				{
+					"name": "Upload",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();\r",
+									"pm.environment.set(\"attachment\", jsonResponse.data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "attachments[]",
+									"value": "https://youtu.be/66mZt7X5dXw?si=fDyxSz_kkXdSB2YB",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "attachments[]",
+									"value": "https://youtu.be/Lc2rdHUiugU?si=AsJP3aOgWFCdIAtE",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "attachments[]",
+									"contentType": "",
+									"description": "square brackets added so it properly recognized the key as an array of items\n\ntambahin dulu filenya",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/v1/attachments",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"attachments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Serve",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/v1/attachments/{{attachment}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"attachments",
+								"{{attachment}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Download",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/v1/attachments/{{attachment}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"attachments",
+								"{{attachment}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/v1/attachments/{{attachment}}",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"attachments",
+								"{{attachment}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
 		}
 	],
 	"variable": [
@@ -1879,6 +2478,10 @@
 		},
 		{
 			"key": "submission",
+			"value": ""
+		},
+		{
+			"key": "grade",
 			"value": ""
 		}
 	]
