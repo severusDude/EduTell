@@ -50,16 +50,27 @@ class CourseController extends Controller implements HasMiddleware
             'title' => 'required|string|min:3|max:50',
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'image_url' => 'required|string',
+            'image' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
             'price' => 'required|numeric',
             'difficulty' => ['required', 'string', Rule::in(['Beginner', 'Intermediate', 'Advanced'])],
             'duration' => 'required|numeric',
-            'is_published' => 'required|boolean'
+            // 'is_published' => 'required|boolean'
         ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+
+            if ($image->isValid()) {
+                $filename = Str::slug($request->user()->slug . '_' . $validated['title']) . '_course.' . $image->extension();
+                $path = $image->storeAs('images', $filename, 'public');
+                $validated['image_url'] = $path;
+            }
+        }
 
         $course = new Course;
         $course->fill($validated);
 
+        $course->is_published = true;
         $course->user_id = $request->user()->id;
 
 
@@ -95,12 +106,22 @@ class CourseController extends Controller implements HasMiddleware
             'title' => 'required|string|min:3|max:50',
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'image_url' => 'required|string',
+            'image' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
             'price' => 'required|numeric',
             'difficulty' => ['required', 'string', Rule::in(['Beginner', 'Intermediate', 'Advanced'])],
             'duration' => 'required|numeric',
-            'is_published' => 'required|boolean'
+            // 'is_published' => 'required|boolean'
         ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+
+            if ($image->isValid()) {
+                $filename = Str::slug($request->user()->slug . '_' . $validated['title']) . '_course.' . $image->extension();
+                $path = $image->storeAs('images', $filename, 'public');
+                $validated['image_url'] = $path;
+            }
+        }
 
         $course->fill($validated);
         $course->save();
