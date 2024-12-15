@@ -36,6 +36,7 @@ const WrappingEditSubChapter = ({
   const [content, setContent] = useState<string>("");
   const [linkVideo, setLinkVideo] = useState<string>("");
   const [attacmentVideo, setAttacmentVideo] = useState<any[]>([]);
+  const [attacmentFile, setAttacmentFile] = useState<any[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [position, setPosition] = useState<number>(0);
 
@@ -64,7 +65,16 @@ const WrappingEditSubChapter = ({
       setDescription(initialDataChapter?.data.description);
       setContent(initialDataChapter?.data.content);
       if (initialDataChapter?.data.attachments) {
-        setAttacmentVideo([...initialDataChapter?.data.attachments]);
+        const youtubeLinks = initialDataChapter?.data.attachments.filter((item: any) =>
+          item?.file_name?.includes("https://youtu")
+        );
+
+        const attachments = initialDataChapter?.data.attachments.filter((item: any) =>
+          !item?.file_name?.includes("https://youtu")
+        );
+    
+        setAttacmentVideo([...youtubeLinks]);
+        setAttacmentFile([...attachments]);
       }
       setPosition(Number(chapterPosition));
     }
@@ -97,7 +107,9 @@ const WrappingEditSubChapter = ({
       formData.append("content", content);
       formData.append("is_published", "true");
       formData.append("position", subchapterPosition);
-      formData.append("video", linkVideo);
+      if (linkVideo) {
+        formData.append("video", linkVideo);
+      }
       if (file) {
         formData.append("attachments[]", file);
       }
@@ -144,14 +156,14 @@ const WrappingEditSubChapter = ({
               description={content}
               setDescription={setContent}
             />
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 ">
               <InputLinkVideoSubChapter
                 setAttacmentVideo={setAttacmentVideo}
                 attacmentVideo={attacmentVideo}
                 setTitle={setLinkVideo}
                 title={linkVideo}
               />
-              <InputFileSubChapter file={file} setFile={setFile} />
+              <InputFileSubChapter attacment={attacmentFile} file={file} setFile={setFile} />
             </div>
             <h1>EDIT SUBCHAPTER</h1>
           </>

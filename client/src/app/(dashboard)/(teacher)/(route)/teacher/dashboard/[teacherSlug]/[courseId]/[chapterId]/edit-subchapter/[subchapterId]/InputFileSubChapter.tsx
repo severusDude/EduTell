@@ -5,9 +5,14 @@ import React, { useState } from "react";
 type InputFileSubChapterProps = {
   file: File | null;
   setFile: React.Dispatch<React.SetStateAction<File | null>>;
+  attacment: any[];
 };
 
-const InputFileSubChapter = ({ setFile, file }: InputFileSubChapterProps) => {
+const InputFileSubChapter = ({
+  setFile,
+  file,
+  attacment,
+}: InputFileSubChapterProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,14 +31,21 @@ const InputFileSubChapter = ({ setFile, file }: InputFileSubChapterProps) => {
       </div>
       {isOpen ? (
         <Input
-        type="file"
+          type="file"
           onChange={handleFileChange}
           className="border-[0.3px] border-text-primary outline-none"
         />
+      ) : attacment ? (
+        attacment.map((item, index) => (
+          <p
+            key={index}
+            className="text-base text-text-primary truncate-chars-20"
+          >
+            {item.file_name}
+          </p>
+        ))
       ) : (
-        <p className="text-base text-text-primary">
-          {file ? "ada file" : "Masukan Judul Subchapter"}
-        </p>
+        "Tidak ada Attachment"
       )}
     </div>
   );
