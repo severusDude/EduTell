@@ -1441,19 +1441,13 @@
 								},
 								{
 									"key": "position",
-									"value": "4",
+									"value": "1",
 									"type": "text"
 								},
 								{
-									"key": "videos[]",
+									"key": "video",
 									"value": "https://youtu.be/66mZt7X5dXw?si=JrWkeIsorYyWUqJY",
 									"description": "lagu milet coy",
-									"type": "text"
-								},
-								{
-									"key": "videos[]",
-									"value": "https://www.youtube.com/watch?v=Lc2rdHUiugU&list=TLPQMTUxMjIwMjS6lTAtY8nuYQ&index=2",
-									"description": "cuman buat testing",
 									"type": "text"
 								},
 								{
@@ -1533,7 +1527,7 @@
 									"type": "text"
 								},
 								{
-									"key": "videos[]",
+									"key": "video",
 									"value": "https://youtu.be/66mZt7X5dXw?si=JrWkeIsorYyWUqJY",
 									"type": "text"
 								},
