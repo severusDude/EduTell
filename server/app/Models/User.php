@@ -116,6 +116,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Submission::class);
     }
 
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
+
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.

@@ -5,14 +5,18 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
-class Submission extends Model
+class Attachment extends Model
 {
-    protected $keyType = 'string';
-
     public $incrementing = false;
 
+    protected $keyType = 'string';
+
     protected $fillable = [
-        'content'
+        'user_id',
+        'file_name',
+        'file_url',
+        'attachable_id',
+        'attachable_type'
     ];
 
     public function user()
@@ -20,19 +24,9 @@ class Submission extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function assignment()
+    public function attachable()
     {
-        return $this->belongsTo(Assignment::class);
-    }
-
-    public function grade()
-    {
-        return $this->hasOne(Grade::class);
-    }
-
-    public function attachments()
-    {
-        return $this->morphMany(Attachment::class, 'attachable')->chaperone();
+        return $this->morphTo();
     }
 
     public static function booted(): void

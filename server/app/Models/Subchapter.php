@@ -41,6 +41,11 @@ class Subchapter extends Model
             ->withTimestamps();
     }
 
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable')->chaperone();
+    }
+
     protected function casts(): array
     {
         return [
