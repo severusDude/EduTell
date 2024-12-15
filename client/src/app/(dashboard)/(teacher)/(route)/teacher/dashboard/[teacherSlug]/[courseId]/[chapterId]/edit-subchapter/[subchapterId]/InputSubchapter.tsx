@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { BASE_URL } from "@/constant/url";
@@ -8,34 +8,36 @@ import Link from "next/link";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
-const InputChapterCourse = ({
-  chapter,
+const InputSubchapter = ({
+  subchapter,
   slugName,
   slugCourse,
   session,
-  refetch,
+  positionChapter,
 }: {
-  chapter: any[];
+  subchapter: any[];
   slugName: string;
   slugCourse: string;
   session: string;
-  refetch: () => void;
+  positionChapter: number;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
+
+  console.log("dari inputnya", subchapter);
 
   const { mutate: handleDelete, isPending } = useMutation({
     mutationKey: ["delete-chapter"],
     onSuccess: () => {
-      toast.success("Berhasil Menghapus Chapter");
+      toast.success("Berhasil Menghapus Subchapter");
       queryClient.invalidateQueries();
     },
     onError: () => {
-      toast.error("Gagal Menghapus Chapter");
+      toast.error("Gagal Menghapus Subchapter");
     },
-    mutationFn: async (position: string) => {
+    mutationFn: async (positionSubchapter: string) => {
       await axios.delete(
-        `${BASE_URL}/courses/${slugCourse}/chapters/${position}`,
+        `${BASE_URL}/courses/${slugCourse}/chapters/${positionChapter}/subchapters/${positionSubchapter}`,
         {
           headers: {
             Authorization: `Bearer ${session}`,
@@ -48,14 +50,14 @@ const InputChapterCourse = ({
   return (
     <div className="p-4 border-[0.3px] rounded-md bg-primary-color/20 space-y-2">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Chapter Kursus</h2>
+        <h2 className="text-xl font-semibold">Subchapter Kursus</h2>
         <Button onClick={() => setIsOpen((prev) => !prev)} variant={"link"}>
           {isOpen ? "Close" : "Edit Chapter"}
         </Button>
       </div>
       {isOpen ? (
         <div className="space-y-2">
-          {chapter?.map((item: any, index: number) => (
+          {subchapter?.map((item: any, index: number) => (
             <div
               className="p-2 border-[0.3px] rounded-md border-text-primary/60 flex justify-between items-center"
               key={index}
@@ -71,7 +73,6 @@ const InputChapterCourse = ({
                 </Link>
                 <Button
                   onClick={() => {
-                    console.log(item.position);
                     handleDelete(String(item.position));
                   }}
                   variant={"destructive"}
@@ -82,7 +83,7 @@ const InputChapterCourse = ({
             </div>
           ))}
           <Link
-            href={`/teacher/dashboard/${slugName}/${slugCourse}/create-chapter`}
+            href={`/teacher/dashboard/${slugName}/${slugCourse}/${positionChapter}/create-subchapter`}
           >
             <Button className="w-full mt-2" variant={"outline"}>
               TAMBAH
@@ -91,8 +92,8 @@ const InputChapterCourse = ({
         </div>
       ) : (
         <div className="space-y-2">
-          {chapter?.length !== 0 ? (
-            chapter?.map((item: any, index: number) => (
+          {subchapter?.length !== 0 ? (
+            subchapter?.map((item: any, index: number) => (
               <div
                 key={index}
                 className="p-2 border-[0.3px] rounded-md border-text-primary/60"
@@ -101,7 +102,7 @@ const InputChapterCourse = ({
               </div>
             ))
           ) : (
-            <p className="text-base text-text-primary">Chapter Kursus</p>
+            <p className="text-base text-text-primary">Subchapter Kursus</p>
           )}
         </div>
       )}
@@ -109,4 +110,4 @@ const InputChapterCourse = ({
   );
 };
 
-export default InputChapterCourse;
+export default InputSubchapter;

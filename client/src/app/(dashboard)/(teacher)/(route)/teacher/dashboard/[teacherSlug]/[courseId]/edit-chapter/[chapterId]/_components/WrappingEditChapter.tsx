@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import Loading from "@/components/Loading";
+import InputSubchapter from "./InputSubchapter";
 
 const WrappingEditChapter = ({
   courseId,
@@ -28,6 +29,7 @@ const WrappingEditChapter = ({
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [position, setPosition] = useState<number>(0);
+  const [subchapters, setSubchapters] = useState<any[]>([]);
 
   const router = useRouter();
 
@@ -35,11 +37,14 @@ const WrappingEditChapter = ({
     queryKey: ["get-chapter-position"],
     queryFn: async () => {
       return (
-        await axios.get(`${BASE_URL}/courses/${courseId}/chapters/${chapterPosition}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        await axios.get(
+          `${BASE_URL}/courses/${courseId}/chapters/${chapterPosition}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
       ).data;
     },
   });
@@ -49,6 +54,9 @@ const WrappingEditChapter = ({
       setTitle(initialDataChapter?.data.title);
       setDescription(initialDataChapter?.data.description);
       setPosition(Number(chapterPosition));
+      if (initialDataChapter?.data.subchapters) {
+        setSubchapters([...initialDataChapter?.data.subchapters]);
+      }
     }
   }, [initialDataChapter]);
 
@@ -106,6 +114,13 @@ const WrappingEditChapter = ({
             <InputDescriptionChapter
               description={description}
               setDescription={setDescription}
+            />
+            <InputSubchapter
+              positionChapter={position}
+              subchapter={subchapters}
+              session={token}
+              slugCourse={courseId}
+              slugName={teacherSlug}
             />
           </>
         )}

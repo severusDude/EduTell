@@ -2,9 +2,7 @@
 
 import React, { useEffect } from "react";
 import ButtonBack from "@/components/ButtonBack";
-import InputTitleChapter from "./InputTitleChapter";
 import { Button } from "@/components/ui/button";
-import InputDescriptionChapter from "./InputDescriptionChapter";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -13,15 +11,22 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import Loading from "@/components/Loading";
+import InputSubchapter from "./InputSubchapter";
+import InputDescriptionSubChapter from "./InputDescriptionSubChapter";
+import InputTitleSubChapter from "./InputTitleSubChapter";
 
-const WrappingCreateChapter = ({
+const WrappingEditSubChapter = ({
   courseId,
   token,
   teacherSlug,
+  chapterPosition,
+  subchapterPosition,
 }: {
   courseId: string;
   token: string;
   teacherSlug: string;
+  chapterPosition: string;
+  subchapterPosition: string;
 }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -33,45 +38,50 @@ const WrappingCreateChapter = ({
     queryKey: ["get-chapter-position"],
     queryFn: async () => {
       return (
-        await axios.get(`${BASE_URL}/courses/${courseId}/chapters`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        await axios.get(
+          `${BASE_URL}/courses/${courseId}/chapters/${chapterPosition}/subchapters/${subchapterPosition}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
       ).data;
     },
   });
 
   useEffect(() => {
-    if (initialDataChapter) {
-      setPosition(initialDataChapter?.data.length + 1);
-      console.log("INI POSISI ", position)
+    if (initialDataChapter?.data) {
+      setTitle(initialDataChapter?.data.title);
+      setDescription(initialDataChapter?.data.description);
+      setPosition(Number(chapterPosition));
     }
   }, [initialDataChapter]);
 
   const {
-    mutate: handleCreate,
+    mutate: handleUpdate,
     data,
     isPending,
   } = useMutation({
-    mutationKey: ["create-chapter"],
+    mutationKey: ["update-subchapter"],
     onSuccess: () => {
-      toast.success("Berhasil Membuat Chapter");
-      router.push(`/teacher/dashboard/${teacherSlug}/edit-course/${courseId}`);
-      router.refresh()
-      router.refresh()
+      toast.success("Berhasil Mengupdate Subchapter");
+      router.push(
+        `/teacher/dashboard/${teacherSlug}/${courseId}/edit-chapter/${chapterPosition}`
+      );
     },
     onError: () => {
-      toast.error("Gagal Membuat Chapter");
+      toast.error("Gagal Mengupdate Subchapter");
     },
     mutationFn: async () => {
-      return await axios.post(
-        `${BASE_URL}/courses/${courseId}/chapters`,
+      return await axios.patch(
+        `${BASE_URL}/courses/${courseId}/chapters/${chapterPosition}/subchapters/${subchapterPosition}`,
         {
           title,
           description,
+          content: "CONTENT DUMY",
           is_published: true,
-          position,
+          position: Number(subchapterPosition),
         },
         {
           headers: {
@@ -87,7 +97,7 @@ const WrappingCreateChapter = ({
       <div className="flex items-center justify-between">
         <ButtonBack />
         <Button
-          onClick={() => handleCreate()}
+          onClick={() => handleUpdate()}
           disabled={isPending}
           className="transition-all ease-in-out bg-primary-color hover:bg-primary-color/80"
         >
@@ -100,12 +110,20 @@ const WrappingCreateChapter = ({
           <Loading />
         ) : (
           <>
-            <h3 className="text-xl font-semibold">Kelola Chapter</h3>
-            <InputTitleChapter title={title} setTitle={setTitle} />
-            <InputDescriptionChapter
+            <h3 className="text-xl font-semibold">Kelola Subchapter</h3>
+            <InputTitleSubChapter title={title} setTitle={setTitle} />
+            <InputDescriptionSubChapter
               description={description}
               setDescription={setDescription}
             />
+            {/* <InputSubchapter
+              positionChapter={position}
+              subchapter={subchapters}
+              session={token}
+              slugCourse={courseId}
+              slugName={teacherSlug}
+            /> */}
+            <h1>EDIT SUBCHAPTER</h1>
           </>
         )}
       </div>
@@ -113,4 +131,4 @@ const WrappingCreateChapter = ({
   );
 };
 
-export default WrappingCreateChapter;
+export default WrappingEditSubChapter;
