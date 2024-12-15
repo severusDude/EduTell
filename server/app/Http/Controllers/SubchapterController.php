@@ -129,11 +129,13 @@ class SubchapterController extends Controller implements HasMiddleware
         $chapter = $course->chapters->where('position', $chapter)->firstOrFail();
         $subchapter = $chapter->subchapters->where('position', $subchapter)->firstOrFail();
 
+        // dd($request);
+
         $validated = $request->validate([
             'title' => 'required|string',
             'description' => 'present|string',
             'content' => 'required|string',
-            'is_published' => 'required|boolean',
+            // 'is_published' => 'required|boolean',
             'position' => [
                 'required',
                 'numeric',
@@ -141,13 +143,35 @@ class SubchapterController extends Controller implements HasMiddleware
                     ->ignore($subchapter)
                     ->where(fn(Builder $query) =>
                     $query->where('chapter_id', $chapter->id))
-            ]
+            ],
+            'attachments.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:5120',
         ]);
 
         $subchapter->fill($validated);
         $subchapter->save();
 
-        return new SubchapterResource($subchapter->fresh());
+        if ($request->hasFile('attachments')) {
+            $attachments = $request->file('attachments');
+
+            foreach ($attachments as $file) {
+                if ($file->isValid()) {
+                    $original_filename = $file->getClientOriginalName();
+                    $file_name = pathinfo($original_filename, PATHINFO_FILENAME) . '.' . $file->extension();
+                    $path = $file->store('attachments', 'public');
+
+                    // Attachment::create([
+                    //     'file_url' => $path
+                    // ]);
+
+                    $subchapter->attachments()->create([
+                        'file_name' => $file_name,
+                        'file_url' => $path
+                    ]);
+                }
+            }
+        }
+
+        return new SubchapterResource($subchapter->fresh()->load('attachments'));
     }
 
     /**
