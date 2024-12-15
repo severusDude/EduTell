@@ -34,15 +34,21 @@ class SubchapterResource extends JsonResource
             // 'attachments' => AttachmentResource::collection($this->whenLoaded('attachments'), function () {
             //     return $this->attachments()->get();
             // }),
+            // 'assignments' => $this->when($request->user() && $request->user()->hasPurchased($course), function () {
+            //     return AssignmentResource::collection($this->whenLoaded('assignments', function () {
+            //         return $this->assignments()->get();
+            //     }));
+            // }),
+            // 'attachments' => $this->when($request->user() && $request->user()->hasPurchased($course), function () {
+            //     return AttachmentResource::collection($this->whenLoaded('attachments', function () {
+            //         return $this->attachments()->get();
+            //     }));
+            // }),
             'assignments' => $this->when($request->user() && $request->user()->hasPurchased($course), function () {
-                return AssignmentResource::collection($this->whenLoaded('assignments', function () {
-                    return $this->assignments()->get();
-                }));
+                return AssignmentResource::collection($this->assignments()->get());
             }),
             'attachments' => $this->when($request->user() && $request->user()->hasPurchased($course), function () {
-                return AttachmentResource::collection($this->whenLoaded('attachments', function () {
-                    return $this->attachments()->get();
-                }));
+                return AttachmentResource::collection($this->attachments()->get());
             }),
         ];
     }
