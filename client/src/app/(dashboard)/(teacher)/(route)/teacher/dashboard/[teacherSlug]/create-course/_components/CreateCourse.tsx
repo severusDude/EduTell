@@ -17,16 +17,18 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import InputChapterCourse from "./InputChapterCourse";
 import { slugify } from "@/utils/createSlug";
+import InputImageCourse from "./InputImageCourse";
 
-const CreateCourse = ({ token, slug }: { token: string, slug: string }) => {
+const CreateCourse = ({ token, slug }: { token: string; slug: string }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
   const [category, setCategory] = useState<string>("");
   const [difficult, setDifficult] = useState<string>("");
+  const [file, setFile] = useState<File | null>(null);
   const [time, setTime] = useState<number>(0);
 
-  const router = useRouter()
+  const router = useRouter();
 
   const {
     mutate: handleCreateCourse,
@@ -36,30 +38,35 @@ const CreateCourse = ({ token, slug }: { token: string, slug: string }) => {
     mutationKey: ["create-course"],
     onSuccess: (data) => {
       toast.success("Course Berhasil Dibuat");
-      router.push(`/teacher/dashboard/${slug}/edit-course/${slugify(data.data.data.title)}`)
-    },
-    mutationFn: async () => {
-      return await axios.post(
-        `${BASE_URL}/courses`,
-        {
-          title,
-          description,
-          category_id: Number(category),
-          price,
-          difficulty: difficult,
-          duration: time,
-          image_url: "image",
-          is_published: true,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      router.push(
+        `/teacher/dashboard/${slug}/edit-course/${slugify(
+          data.data.data.title
+        )}`
       );
     },
+    mutationFn: async () => {
+      console.log("file image ", file);
+  
+      // Membuat FormData
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("category_id", Number(category));
+      formData.append("price", price);
+      formData.append("difficulty", difficult);
+      formData.append("duration", time);
+      formData.append("image", file); // Menambahkan file gambar
+      formData.append("is_published", true);
+  
+      // Mengirim data FormData ke server
+      return await axios.post(`${BASE_URL}/courses`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Menambahkan header Content-Type
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    },
   });
-
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -98,13 +105,8 @@ const CreateCourse = ({ token, slug }: { token: string, slug: string }) => {
         </div>
         <div className="space-y-4">
           {/* image */}
-          <div className="p-4 border-[0.3px] rounded-md bg-primary-color/20 space-y-2">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Foto Kursus</h2>
-              <Button variant={"link"}>Edit Judul</Button>
-            </div>
-            <p className="text-base text-text-primary">Masukan Foto Kursus</p>
-          </div>
+
+          <InputImageCourse file={file} setFile={setFile} />
 
           {/* chapter course */}
           {/* <InputChapterCourse chapter={chapter} /> */}

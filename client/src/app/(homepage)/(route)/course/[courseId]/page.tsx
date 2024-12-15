@@ -1,5 +1,5 @@
 import RootCourseDetail from "./_components/Root";
-import { getSession, getSessionRole } from "@/lib/session";
+import { getSession, getSessionRole, getSlug } from "@/lib/session";
 
 export default async function CourseDetailPage({
   params,
@@ -7,11 +7,19 @@ export default async function CourseDetailPage({
   params: { courseId: string };
 }) {
   const token = await getSession();
-  const role = await getSessionRole()
+  const role = await getSessionRole();
+  const slugSession = await getSlug();
 
   if (!token) {
     return;
   }
 
-  return <RootCourseDetail role={role} token={token} courseId={params.courseId} />;
+  return (
+    <RootCourseDetail
+      slugSession={slugSession ? slugSession : ""}
+      role={role}
+      token={token}
+      courseId={params.courseId}
+    />
+  );
 }

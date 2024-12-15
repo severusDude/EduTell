@@ -16,6 +16,7 @@ import { CourseType } from "@/types/course";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import InputChapterCourse from "./InputChapterCourse";
+import InputImageCourse from "./InputImageCourse";
 
 const EditCourse = ({
   token,
@@ -36,6 +37,8 @@ const EditCourse = ({
   const [category, setCategory] = useState<string>("");
   const [difficult, setDifficult] = useState<string>("");
   const [time, setTime] = useState<number>(0);
+  const [image, setImage] = useState<string>("");
+  const [file, setFile] = useState<File | null>(null);
   const [chapter, setChapter] = useState<any[]>([]);
 
   useEffect(() => {
@@ -44,7 +47,9 @@ const EditCourse = ({
       setDescription(data.description);
       setPrice(data.price);
       setTime(data.duration);
-      console.log(data.category_id);
+      if (data?.image_url) {
+        setImage(data?.image_url);
+      }
       setCategory(String(data.category_id));
       setDifficult(data.difficulty);
       if (data?.chapters) {
@@ -63,22 +68,23 @@ const EditCourse = ({
       refetch();
     },
     mutationFn: async () => {
-      console.log("ini category", category);
-      return await axios.patch(
-        `${BASE_URL}/courses/${slug}`,
-        {
-          title,
-          description,
-          category_id: category,
-          price,
-          difficulty: difficult,
-          duration: time,
-          image_url: "image",
-          is_published: true,
-        },
+
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("category_id", Number(category));
+      formData.append("price", price);
+      formData.append("difficulty", difficult);
+      formData.append("duration", time);
+      formData.append("image", file); // Menambahkan file gambar
+      formData.append("is_published", true);
+      return await axios.post(
+        `${BASE_URL}/courses/${slug}?_method=PUT`,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data", // Menambahkan header Content-Type
           },
         }
       );
@@ -120,13 +126,7 @@ const EditCourse = ({
         </div>
         <div className="space-y-4">
           {/* image */}
-          <div className="p-4 border-[0.3px] rounded-md bg-primary-color/20 space-y-2">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Foto Kursus</h2>
-              <Button variant={"link"}>Edit Judul</Button>
-            </div>
-            <p className="text-base text-text-primary">Masukan Foto Kursus</p>
-          </div>
+          <InputImageCourse image={image} file={file} setFile={setFile} />
 
           {/* chapter course */}
           <InputChapterCourse
