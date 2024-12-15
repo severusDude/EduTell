@@ -66,11 +66,11 @@ const WrappingEditSubChapter = ({
       setContent(initialDataChapter?.data.content);
       if (initialDataChapter?.data.attachments) {
         const youtubeLinks = initialDataChapter?.data.attachments.filter((item: any) =>
-          item?.file_name?.includes("https://youtu")
+          item?.file_name?.includes("https://www.youtu")
         );
 
         const attachments = initialDataChapter?.data.attachments.filter((item: any) =>
-          !item?.file_name?.includes("https://youtu")
+          !item?.file_name?.includes("https://www.youtu")
         );
     
         setAttacmentVideo([...youtubeLinks]);
