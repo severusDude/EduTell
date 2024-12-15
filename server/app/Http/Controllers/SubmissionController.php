@@ -19,7 +19,7 @@ class SubmissionController extends Controller implements HasMiddleware
         return [
             new Middleware('auth:api'),
             // new Middleware('role:teacher', only: ['index', 'show']),
-            function (Request $request, Closure $next) {
+            new Middleware(function (Request $request, Closure $next) {
                 // get course slug from url
                 $course_slug = $request->route('course');
 
@@ -32,7 +32,16 @@ class SubmissionController extends Controller implements HasMiddleware
                 }
 
                 return $next($request);
-            },
+            }),
+
+            new Middleware(function (Request $request, Closure $next) {
+                $assignment = Assignment::findOrFail($request->route('assignment'));
+
+                // check whether submission has passed assignment due date
+                if ($assignment->due_date <= now()) {
+                    return response()->json(['message' => 'Submitting submission not allowed exceeding assignment\'s due date'], 406);
+                }
+            }, except: ['index', 'show']),
 
             new Middleware('role:student', except: ['index', 'show']),
 
@@ -77,11 +86,6 @@ class SubmissionController extends Controller implements HasMiddleware
         //check whether user has already submitted the submission
         if ($assignment->submissions()->where('user_id', $request->user()->id)->exists()) {
             return response()->json(['message' => 'User has already made submission to this assignment'], 403);
-        }
-
-        // check whether submission has passed assignment due date
-        if ($assignment->due_date >= now()) {
-            return response()->json(['message' => 'Submitting submission not allowed exceeding assignment\'s due date'], 406);
         }
 
         $validated = $request->validate([
@@ -139,11 +143,6 @@ class SubmissionController extends Controller implements HasMiddleware
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        // check whether submission has passed assignment due date
-        if ($submission->assignment->due_date >= now()) {
-            return response()->json(['message' => 'Submission changes not allowed exceeding assignment\'s due date'], 406);
-        }
-
         $validated = $request->validate([
             'content' => 'present|nullable|string'
         ]);
@@ -172,11 +171,6 @@ class SubmissionController extends Controller implements HasMiddleware
         // check whether the submission belong to currently authenticated user
         if ($submission->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        // check whether submission has passed assignment due date
-        if ($submission->assignment->due_date >= now()) {
-            return response()->json(['message' => 'Submission changes not allowed exceeding assignment\'s due date'], 406);
         }
 
         $submission->delete();
