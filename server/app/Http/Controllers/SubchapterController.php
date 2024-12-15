@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\Chapter;
+use App\Models\Attachment;
 use App\Models\Subchapter;
 use Illuminate\Http\Request;
-use App\Http\Resources\SubchapterResource;
-use App\Models\Course;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\Builder;
+use App\Http\Resources\SubchapterResource;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
 class SubchapterController extends Controller implements HasMiddleware
 {
@@ -56,23 +57,46 @@ class SubchapterController extends Controller implements HasMiddleware
             'title' => 'required|string',
             'description' => 'present|string',
             'content' => 'required|string',
-            'is_published' => 'required|boolean',
+            // 'is_published' => 'required|boolean',
             'position' => [
                 'required',
                 'numeric',
                 Rule::unique('subchapters')->where(fn(Builder $query) =>
                 $query->where('chapter_id', $chapter->id))
-            ]
+            ],
+            'attachments.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:5120',
         ]);
 
         $subchapter = new Subchapter();
 
         $subchapter->fill($validated);
+        $subchapter->is_published = true;
         $subchapter->chapter_id = $chapter->id;
 
         $subchapter->save();
 
-        return new SubchapterResource($subchapter);
+        if ($request->hasFile('attachments')) {
+            $attachments = $request->file('attachments');
+
+            foreach ($attachments as $file) {
+                if ($file->isValid()) {
+                    $original_filename = $file->getClientOriginalName();
+                    $file_name = pathinfo($original_filename, PATHINFO_FILENAME) . '.' . $file->extension();
+                    $path = $file->store('attachments', 'public');
+
+                    // Attachment::create([
+                    //     'file_url' => $path
+                    // ]);
+
+                    $subchapter->attachments()->create([
+                        'file_name' => $file_name,
+                        'file_url' => $path
+                    ]);
+                }
+            }
+        }
+
+        return new SubchapterResource($subchapter->load('attachments'));
     }
 
     /**
@@ -85,6 +109,7 @@ class SubchapterController extends Controller implements HasMiddleware
         $subchapter = $chapter->subchapters()
             ->where('position', $subchapter)
             ->with('assignments')
+            ->with('attachments')
             ->firstOrFail();
 
         return new SubchapterResource($subchapter);
@@ -167,5 +192,10 @@ class SubchapterController extends Controller implements HasMiddleware
                 ->find($subchapter->id)
                 ->progress
         );
+    }
+
+    public function serveAttachments(Request $request, Course $course, Chapter $chapter, Subchapter $subchapter)
+    {
+        //
     }
 }
