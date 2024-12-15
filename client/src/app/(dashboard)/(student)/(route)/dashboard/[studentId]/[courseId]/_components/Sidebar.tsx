@@ -103,16 +103,16 @@ const Sidebar = ({
             </Accordion>
           ))}
 
-        <div className="mt-auto space-y-2">
+        {/* <div className="mt-auto space-y-2">
           <div className="flex items-center w-full gap-2 px-4 py-2 text-base rounded-md hover:bg-primary-color/80 border-[0.3px] cursor-pointer">
             <Settings />
             Pengaturan
           </div>
           <div className="flex items-center w-full gap-2 px-4 py-2  text-base rounded-md hover:bg-red-600 border-[0.3px] cursor-pointer">
             <LogOutIcon />
-            {/* <ButtonLogout token={token} /> */}
+            <ButtonLogout token={token} />
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className="fixed bottom-0 left-0 z-20 flex justify-around w-full p-2 bg-white border-t border-gray-300 shadow-md lg:hidden">
