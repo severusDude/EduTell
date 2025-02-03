@@ -3,13 +3,15 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuthRegister } from "@/hooks/useAuthRegister";
 import { slugify } from "@/utils/createSlug";
-import { AxiosError } from "axios";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 const RegisterPage = () => {
   const [username, setUsername] = useState<string>("");
@@ -23,56 +25,69 @@ const RegisterPage = () => {
   const [errorConfirmPassword, setErrorConfirmPassword] = useState<string>("");
   const [errorNoRegister, setErrorNoRegister] = useState<string>("");
 
-  const {
-    mutate: handleRegister,
-    error,
-    isPending,
-  } = useAuthRegister(
-    {
-      c_password,
-      username,
-      password,
-      email,
-      slug: slugify(username),
-    },
-    {
-      setUsername,
-      setC_password,
-      setEmail,
-      setPassword,
-    }
-  );
+  const router = useRouter();
 
-  useEffect(() => {
-    if (error) {
-      if (error instanceof AxiosError) {
-        const emailError = error.response?.data.errors?.email?.[0] || "";
-        const passwordError = error.response?.data.errors?.password?.[0] || "";
-        const usernameError = error.response?.data.errors?.name?.[0] || "";
-        const confirmPasswordError =
-        error.response?.data.errors?.c_password?.[0] || "";
+  const { mutate: handleRegister, isPending } = useMutation({
+    mutationKey: ["register-mutation"],
+    mutationFn: async () => {
+      try {
+        const slug = slugify(username);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/auth/register",
+          {
+            name: username,
+            email,
+            password,
+            c_password,
+            slug,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        return response;
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          const emailError = error.response?.data.errors?.email?.[0] || "";
+          const passwordError =
+            error.response?.data.errors?.password?.[0] || "";
+          const usernameError = error.response?.data.errors?.name?.[0] || "";
+          const confirmPasswordError = error.response?.data.errors?.c_password
+            ? "The confirm password field must match password."
+            : "";
 
-        setErrorEmail(emailError);
-        setErrorPassword(passwordError);
-        setErrorUsername(usernameError);
-        setErrorConfirmPassword(confirmPasswordError);
-        setErrorNoRegister("");
-      } else {
-        console.log(error);
-        setErrorNoRegister("Gagal Melakukan registrasi");
-        setErrorConfirmPassword("");
-        setErrorEmail("");
-        setErrorPassword("");
-        setErrorUsername("");
+          setErrorEmail(emailError);
+          setErrorPassword(passwordError);
+          setErrorUsername(usernameError);
+          setErrorConfirmPassword(confirmPasswordError);
+          setErrorNoRegister("");
+          throw new Error();
+        } else {
+          console.log(error);
+          setErrorNoRegister("Gagal Melakukan registrasi");
+          setErrorConfirmPassword("");
+          setErrorEmail("");
+          setErrorPassword("");
+          setErrorUsername("");
+          throw new Error();
+        }
       }
-    } else {
-      setErrorConfirmPassword("");
-      setErrorEmail("");
-      setErrorPassword("");
-      setErrorUsername("");
+    },
+    onError: () => {
+      toast.error("Gagal melakukan register");
+    },
+    onSuccess: () => {
+      setC_password("");
+      setPassword("");
+      setUsername("");
+      setEmail("");
       setErrorNoRegister("");
-    }
-  }, [error]);
+      router.push("/login");
+      toast.success("Berhasil Melakukan Register");
+    },
+  });
 
   return (
     <main className="flex lg:flex-row flex-col items-center justify-center lg:justify-between min-h-screen w-[95%] lg:w-[80%] mx-auto gap-8">

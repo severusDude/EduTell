@@ -28,7 +28,7 @@ const Class = ({
           Semua Yang Anda Butuhkan Untuk Belajar Ada Di Sini.
         </p>
       </div>
-      <div className="flex flex-wrap justify-between gap-4 mt-12">
+      <div className="flex flex-wrap gap-4 mt-12">
         {isLoading ? (
           <Loading />
         ) : dataCourse?.length === 0 ? (

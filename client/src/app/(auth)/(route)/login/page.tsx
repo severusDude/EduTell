@@ -3,13 +3,21 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuthLogin } from "@/hooks/useAuthLogin";
-import { AxiosError } from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { ZodError } from "zod";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+
+interface jwtPayload extends JwtPayload {
+  slug: string;
+  name: string;
+  role: string;
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
@@ -18,30 +26,80 @@ export default function LoginPage() {
   const [errorPassword, setErrorPassword] = useState<string>("");
   const [errorNoLogin, setErrorNoLogin] = useState<string>("");
 
-  const {
-    mutate: handleLogin,
-    isPending,
-    error,
-  } = useAuthLogin({ email, password }, { setEmail, setPassword });
+  const router = useRouter();
 
-  useEffect(() => {
-    if (error) {
-      if (error instanceof AxiosError) {
-        const emailError = error.response?.data.errors?.email?.[0] || "";
-        const passwordError = error.response?.data.errors?.password?.[0] || "";
+  const queryClient = useQueryClient();
 
-        setErrorEmail(emailError);
-        setErrorPassword(passwordError);
-        setErrorNoLogin("")
-      } else {
-        setErrorNoLogin("Email atau Password Salah");
+  const { mutate: handleLogin, isPending } = useMutation({
+    mutationKey: ["login-mutation"],
+    mutationFn: async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/api/auth/login",
+          {
+            email,
+            password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        return response;
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          switch (error.status) {
+            case 422:
+              const emailError = error.response?.data.errors?.email?.[0] || "";
+              const passwordError =
+                error.response?.data.errors?.password?.[0] || "";
+              setErrorEmail(emailError);
+              setErrorPassword(passwordError);
+              setErrorNoLogin("");
+              break;
+            case 401:
+              setErrorPassword(
+                "We couldn't find an account with that email and password combination."
+              );
+              setErrorEmail("");
+              setErrorNoLogin("");
+              break;
+            default:
+              setErrorEmail("");
+              setErrorNoLogin("");
+              setErrorPassword("");
+          }
+        } else {
+          throw new Error("Server internal error");
+        }
       }
-    } else {
-      setErrorEmail("");
-      setErrorPassword("");
-      setErrorNoLogin("");
-    }
-  }, [error]);
+    },
+    onError: () => {
+      toast.error("Gagal melakukan Login");
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries();
+      document.cookie = `accessToken=${
+        data?.data.token ? data.data.token : ""
+      }; path=/; max-age=3600; secure`;
+      const decode = jwtDecode<jwtPayload>(data?.data.token && data.data.token);
+
+      console.log(decode);
+
+      toast.success("Berhasil Melakukan Login");
+      if (decode.role === "teacher") {
+        router.push(`/teacher/dashboard/${decode.slug}`);
+      }
+
+      if (decode.role === "student") {
+        router.push(`/dashboard/${decode.slug}`);
+      }
+
+      router.refresh()
+    },
+  });
 
   return (
     <main className="flex items-center lg:flex-row flex-col justify-center lg:justify-between min-h-screen w-[95%] lg:w-[80%] mx-auto gap-8">

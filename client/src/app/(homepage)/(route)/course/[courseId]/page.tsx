@@ -10,15 +10,11 @@ export default async function CourseDetailPage({
   const role = await getSessionRole();
   const slugSession = await getSlug();
 
-  if (!token) {
-    return;
-  }
-
   return (
     <RootCourseDetail
       slugSession={slugSession ? slugSession : ""}
       role={role}
-      token={token}
+      token={token ? token : ""}
       courseId={params.courseId}
     />
   );

@@ -4,9 +4,15 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React from "react";
 import toast from "react-hot-toast";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
+import { cn } from "@/lib/utils";
 
-const ButtonLogout = ({ token }: { token: string }) => {
+type ButtonLogoutProps = {
+  props?: React.HTMLProps<HTMLHeadingElement>;
+  token: string;
+};
+
+const ButtonLogout = ({ token, props }: ButtonLogoutProps) => {
   const router = useRouter();
   const handleLogout = async () => {
     try {
@@ -15,19 +21,24 @@ const ButtonLogout = ({ token }: { token: string }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      Cookies.remove("accessToken")
+      Cookies.remove("accessToken");
       toast.success("Berhasil Logout");
     } catch (error) {
       toast.error("Gagal Melakukan Logout");
     } finally {
       router.push("/");
-      router.refresh()
+      router.refresh();
     }
   };
 
   return (
     <>
-      <span className="text-sm lg:text-base" onClick={handleLogout}>Logout</span>
+      <span
+        className={cn("text-sm lg:text-base", props?.className)}
+        onClick={handleLogout}
+      >
+        Logout
+      </span>
     </>
   );
 };
