@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { loginFormSchema, LoginFormSchema } from "@/types/authTypes";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { jwtDecode, JwtPayload } from "jwt-decode";
@@ -10,7 +12,7 @@ import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 interface jwtPayload extends JwtPayload {
@@ -20,11 +22,9 @@ interface jwtPayload extends JwtPayload {
 }
 
 export default function LoginPage() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [errorEmail, setErrorEmail] = useState<string>("");
-  const [errorPassword, setErrorPassword] = useState<string>("");
-  const [errorNoLogin, setErrorNoLogin] = useState<string>("");
+  const form = useForm<LoginFormSchema>({
+    resolver: zodResolver(loginFormSchema),
+  });
 
   const router = useRouter();
 
@@ -32,13 +32,13 @@ export default function LoginPage() {
 
   const { mutate: handleLogin, isPending } = useMutation({
     mutationKey: ["login-mutation"],
-    mutationFn: async () => {
+    mutationFn: async (formData: LoginFormSchema) => {
       try {
         const response = await axios.post(
           "http://localhost:8000/api/auth/login",
           {
-            email,
-            password,
+            email: formData.email,
+            password: formData.password,
           },
           {
             headers: {
@@ -51,32 +51,19 @@ export default function LoginPage() {
       } catch (error) {
         if (error instanceof AxiosError) {
           switch (error.status) {
-            case 422:
-              const emailError = error.response?.data.errors?.email?.[0] || "";
-              const passwordError =
-                error.response?.data.errors?.password?.[0] || "";
-              setErrorEmail(emailError);
-              setErrorPassword(passwordError);
-              setErrorNoLogin("");
-              break;
             case 401:
-              setErrorPassword(
-                "We couldn't find an account with that email and password combination."
-              );
-              setErrorEmail("");
-              setErrorNoLogin("");
+              form.setError("password", {
+                message:
+                  "We couldn't find an account with that email and password combination.",
+              });
               break;
-            default:
-              setErrorEmail("");
-              setErrorNoLogin("");
-              setErrorPassword("");
           }
         } else {
           throw new Error("Server internal error");
         }
       }
     },
-    onError: () => {
+    onError: (error) => {
       toast.error("Gagal melakukan Login");
     },
     onSuccess: (data) => {
@@ -97,9 +84,13 @@ export default function LoginPage() {
         router.push(`/dashboard/${decode.slug}`);
       }
 
-      router.refresh()
+      router.refresh();
     },
   });
+
+  const handleLoginForm = (values: LoginFormSchema) => {
+    handleLogin(values);
+  };
 
   return (
     <main className="flex items-center lg:flex-row flex-col justify-center lg:justify-between min-h-screen w-[95%] lg:w-[80%] mx-auto gap-8">
@@ -112,42 +103,46 @@ export default function LoginPage() {
             Selamat Datang Kembali!
           </h4>
         </div>
-        <div className="space-y-6">
+        <form
+          onSubmit={form.handleSubmit(handleLoginForm)}
+          className="space-y-6"
+        >
           <div>
-            <Label id="email">Email</Label>
+            <Label htmlFor="email" id="email">
+              Email
+            </Label>
             <Input
-              name="email"
               placeholder="Masukan Alamat Email"
-              onChange={(e) => setEmail(e.target.value)}
+              {...form.register("email")}
             />
             <p>
-              {errorEmail && (
-                <span className="text-xs text-red-600">{errorEmail}</span>
+              {form.formState.errors.email?.message && (
+                <span className="text-xs text-red-600">
+                  {form.formState.errors.email?.message}
+                </span>
               )}
             </p>
           </div>
           <div>
-            <Label id="password">Password</Label>
+            <Label htmlFor="password" id="password">
+              Password
+            </Label>
             <Input
-              name="password"
               type="password"
-              onChange={(e) => setPassword(e.target.value)}
               placeholder="Masukan Password"
+              {...form.register("password")}
             />
             <p>
-              {errorPassword && (
-                <span className="text-xs text-red-600">{errorPassword}</span>
-              )}
-            </p>
-            <p>
-              {errorNoLogin && (
-                <span className="text-xs text-red-600">{errorNoLogin}</span>
+              {form.formState.errors.password?.message && (
+                <span className="text-xs text-red-600">
+                  {form.formState.errors.password?.message}
+                </span>
               )}
             </p>
           </div>
           <div>
             <Button
-              onClick={() => handleLogin()}
+              type="submit"
               className={`w-full bg-primary-color flex items-center gap-1 hover:bg-primary-color/80 ${
                 isPending && "bg-primary-color/70"
               } `}
@@ -156,18 +151,6 @@ export default function LoginPage() {
               {isPending && <Loader2 className="animate-spin" />}
               Login
             </Button>
-
-            {/* <div className="flex items-center justify-between gap-4 my-4 lg:gap-0">
-              <div className="w-full h-px bg-gray-300 lg:w-full"></div>
-              <div className="px-0 text-xs text-gray-500 max-w-fit min-w-fit lg:px-8">
-                Atau Lanjutkan Dengan
-              </div>
-              <div className="w-full h-px bg-gray-300 lg:w-full"></div>
-            </div>
-
-            <Button className="w-full bg-primary-color hover:bg-primary-color/80">
-              Google
-            </Button> */}
           </div>
 
           <div className="text-center">
@@ -181,7 +164,7 @@ export default function LoginPage() {
               </Link>{" "}
             </p>
           </div>
-        </div>
+        </form>
       </div>
       <div className="hidden w-1/2 rounded-md lg:block bg-primary-color">
         <Image
