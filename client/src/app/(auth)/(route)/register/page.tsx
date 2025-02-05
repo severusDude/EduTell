@@ -3,76 +3,71 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuthRegister } from "@/hooks/useAuthRegister";
 import { slugify } from "@/utils/createSlug";
-import { AxiosError } from "axios";
+import { useMutation } from "@tanstack/react-query";
+import axios, { Axios, AxiosError } from "axios";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import React from "react";
+import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerFormSchema, RegisterFormSchema } from "@/types/authTypes";
 
 const RegisterPage = () => {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [c_password, setC_password] = useState<string>("");
+  const form = useForm<RegisterFormSchema>({
+    resolver: zodResolver(registerFormSchema),
+  });
 
-  const [errorUsername, setErrorUsername] = useState<string>("");
-  const [errorEmail, setErrorEmail] = useState<string>("");
-  const [errorPassword, setErrorPassword] = useState<string>("");
-  const [errorConfirmPassword, setErrorConfirmPassword] = useState<string>("");
-  const [errorNoRegister, setErrorNoRegister] = useState<string>("");
+  const handleRegisterForm = (values: RegisterFormSchema) => {
+    handleRegister(values);
+  };
 
-  const {
-    mutate: handleRegister,
-    error,
-    isPending,
-  } = useAuthRegister(
-    {
-      c_password,
-      username,
-      password,
-      email,
-      slug: slugify(username),
-    },
-    {
-      setUsername,
-      setC_password,
-      setEmail,
-      setPassword,
-    }
-  );
+  const router = useRouter();
 
-  useEffect(() => {
-    if (error) {
-      if (error instanceof AxiosError) {
-        const emailError = error.response?.data.errors?.email?.[0] || "";
-        const passwordError = error.response?.data.errors?.password?.[0] || "";
-        const usernameError = error.response?.data.errors?.name?.[0] || "";
-        const confirmPasswordError =
-        error.response?.data.errors?.c_password?.[0] || "";
-
-        setErrorEmail(emailError);
-        setErrorPassword(passwordError);
-        setErrorUsername(usernameError);
-        setErrorConfirmPassword(confirmPasswordError);
-        setErrorNoRegister("");
-      } else {
-        console.log(error);
-        setErrorNoRegister("Gagal Melakukan registrasi");
-        setErrorConfirmPassword("");
-        setErrorEmail("");
-        setErrorPassword("");
-        setErrorUsername("");
+  const { mutate: handleRegister, isPending } = useMutation({
+    mutationKey: ["register-mutation"],
+    mutationFn: async (formData: RegisterFormSchema) => {
+      const slug = slugify(formData.username);
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/auth/register",
+          {
+            name: formData.username,
+            email: formData.email,
+            password: formData.password,
+            c_password: formData.confirmPassword,
+            slug,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        return response;
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          throw error;
+        }
+        throw new Error("Terjadi kesalahan yang tidak diketahui.");
       }
-    } else {
-      setErrorConfirmPassword("");
-      setErrorEmail("");
-      setErrorPassword("");
-      setErrorUsername("");
-      setErrorNoRegister("");
-    }
-  }, [error]);
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        const errorMessageEmailIsExits = error.response?.data.errors.email[0];
+        toast.error(errorMessageEmailIsExits);
+      } else {
+        toast.error(error.message);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Berhasil Melakukan Register");
+      router.push("/login");
+    },
+  });
 
   return (
     <main className="flex lg:flex-row flex-col items-center justify-center lg:justify-between min-h-screen w-[95%] lg:w-[80%] mx-auto gap-8">
@@ -85,68 +80,69 @@ const RegisterPage = () => {
             Bergabunglah Bersama Kami!
           </h4>
         </div>
-        <div className="space-y-2">
+        <form
+          onSubmit={form.handleSubmit(handleRegisterForm)}
+          className="space-y-2"
+        >
           <div>
-            <Label id="name">Username</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
-              name="name"
-              value={username}
               placeholder="Masukan Nama Lengkap Anda"
-              onChange={(e) => setUsername(e.target.value)}
+              {...form.register("username")}
             />
-            {errorUsername && (
-              <span className="text-xs text-red-600">{errorUsername}</span>
-            )}
-          </div>
-          <div>
-            <Label id="email">Email</Label>
-            <Input
-              name="email"
-              value={email}
-              placeholder="Masukan Alamat Email"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            {errorEmail && (
-              <span className="text-xs text-red-600">{errorEmail}</span>
-            )}
-          </div>
-          <div>
-            <Label id="password">Password</Label>
-            <Input
-              value={password}
-              name="password"
-              type="password"
-              placeholder="Masukan Password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            {errorPassword && (
-              <span className="text-xs text-red-600">{errorPassword}</span>
-            )}
-          </div>
-
-          <div>
-            <Label id="c_password">Confirm Password</Label>
-            <Input
-              value={c_password}
-              name="c_password"
-              type="password"
-              placeholder="Masukan Password"
-              onChange={(e) => setC_password(e.target.value)}
-            />
-            {errorConfirmPassword && (
+            {form.formState.errors.username?.message && (
               <span className="text-xs text-red-600">
-                {errorConfirmPassword}
+                {form.formState.errors.username?.message}
               </span>
             )}
+          </div>
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              placeholder="Masukan Alamat Email"
+              {...form.register("email")}
+            />
+            {form.formState.errors.email?.message && (
+              <span className="text-xs text-red-600">
+                {form.formState.errors.email?.message}
+              </span>
+            )}
+          </div>
+          <div>
+            <Label htmlFor="password" id="password">
+              Password
+            </Label>
+            <Input
+              type="password"
+              placeholder="Masukan Password"
+              {...form.register("password")}
+            />
+            {form.formState.errors.password?.message && (
+              <span className="text-xs text-red-600">
+                {form.formState.errors.password?.message}
+              </span>
+            )}
+          </div>
 
-            {errorNoRegister && (
-              <span className="text-xs text-red-600">{errorNoRegister}</span>
+          <div>
+            <Label htmlFor="confirmPassword" id="confirm-password">
+              Confirm Password
+            </Label>
+            <Input
+              placeholder="Masukan Password"
+              type="password"
+              {...form.register("confirmPassword")}
+            />
+            {form.formState.errors.confirmPassword?.message && (
+              <span className="text-xs text-red-600">
+                {form.formState.errors.confirmPassword?.message}
+              </span>
             )}
           </div>
 
           <div>
             <Button
-              onClick={() => handleRegister()}
+              type="submit"
               className={`w-full bg-primary-color flex items-center gap-1 hover:bg-primary-color/80 ${
                 isPending && "bg-primary-color/70"
               } `}
@@ -155,20 +151,8 @@ const RegisterPage = () => {
               {isPending && <Loader2 className="animate-spin" />}
               Register
             </Button>
-
-            {/* <div className="flex items-center justify-between gap-4 my-4 lg:gap-0">
-              <div className="w-full h-px bg-gray-300 lg:w-full"></div>
-              <div className="px-0 text-xs text-gray-500 max-w-fit min-w-fit lg:px-8">
-                Atau Lanjutkan Dengan
-              </div>
-              <div className="w-full h-px bg-gray-300 lg:w-full"></div>
-            </div>
-
-            <Button className="w-full bg-primary-color hover:bg-primary-color/80">
-              Google
-            </Button> */}
           </div>
-        </div>
+        </form>
         <div className="mt-6 text-center">
           <p>
             Sudah Punya Akun ?{" "}

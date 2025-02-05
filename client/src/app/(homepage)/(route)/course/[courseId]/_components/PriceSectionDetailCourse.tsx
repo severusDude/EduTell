@@ -3,9 +3,10 @@ import { BASE_URL } from "@/constant/url";
 import { formatRupiah } from "@/lib/utils";
 import { CourseType } from "@/types/course";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { CheckCircleIcon, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "react-hot-toast";
 
@@ -20,18 +21,12 @@ const PriceSectionDetailCourse = ({
   token: string;
   courseId: string;
 }) => {
+  
   const queryClient = useQueryClient();
+  const router = useRouter();
 
-  const {
-    mutate: handlePurchase,
-    data,
-    isPending,
-  } = useMutation({
+  const { mutate: handlePurchase, isPending } = useMutation({
     mutationKey: ["puchase-course"],
-    onSuccess: () => {
-      toast.success("Berhasil Daftar Course");
-      queryClient.invalidateQueries();
-    },
     mutationFn: async () => {
       return axios.post(
         `${BASE_URL}/courses/${courseId}/purchase`,
@@ -43,10 +38,18 @@ const PriceSectionDetailCourse = ({
         }
       );
     },
-  });
 
-  console.log("result ", data);
-  console.log("Data course ", dataCourse);
+    onError: (error: AxiosError) => {
+      if (error.status === 401) {
+        router.push("/login");
+      }
+    },
+
+    onSuccess: () => {
+      toast.success("Berhasil Daftar Course");
+      queryClient.invalidateQueries();
+    },
+  });
 
   return (
     <>
