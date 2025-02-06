@@ -7,7 +7,7 @@ const TestimonialList = () => {
       <h1 className="text-5xl font-semibold text-center">
         Kata <span className="text-primary-color">Mereka</span>
       </h1>
-      <div className="mt-12 [mask-image:linear-gradient(to_right,transparent,black_25%,black_70%,transparent)] overflow-hidden">
+      <div className="mt-12 [mask-image:linear-gradient(to_right,transparent,black_25%,black_70%,transparent)] overflow-hidden space-y-2 py-12">
         <Testimonial duration={12} />
         <Testimonial duration={10} />
       </div>

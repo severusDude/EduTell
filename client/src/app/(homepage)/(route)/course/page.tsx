@@ -4,7 +4,7 @@ import ListCategory from "./_components/ListCategory";
 
 export default function CoursePage() {
   return (
-    <section className="relative mt-24">
+    <section className="relative mt-36">
       <Blob url="/image/blob-2.png" className="-left-16 -top-48" />
       <Blob url="/image/blob-1.png" className="-right-0 lg:-right-16 -top-32" />
       <div>

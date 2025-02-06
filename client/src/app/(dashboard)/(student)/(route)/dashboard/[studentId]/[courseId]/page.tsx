@@ -14,7 +14,7 @@ export default async function CourseContentPage({
   }
 
   return (
-    <div className="px-4 lg:px-0">
+    <div className="px-4 lg:px-0 mt-36">
       <Root
         token={token}
         courseSlug={params.courseId}

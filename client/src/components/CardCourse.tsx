@@ -10,19 +10,19 @@ const CardCourse = ({ courseData }: { courseData: CourseType }) => {
     <Link
       scroll={true}
       href={`/course/${courseData?.slug}`}
-      className="w-full rounded-md shadow-xl cursor-pointer lg:w-auto hover:opacity-95"
+      className="w-full shadow-xl cursor-pointer rounded-2xl lg:w-auto hover:opacity-95"
     >
       <Image
-        className="w-full rounded-t-md"
+        className="w-full rounded-2xl"
         src={"/image/image-placeholder.png"}
         alt="image-placeholder"
         width={424}
         height={125}
       />
       <div className="p-5 space-y-2">
-        <h4 className="text-2xl font-semibold">
-          {courseData?.title.length > 25
-            ? courseData.title.slice(0, 25) + "..."
+        <h4 className="text-xl font-semibold">
+          {courseData?.title.length > 20
+            ? courseData.title.slice(0, 20) + "..."
             : courseData?.title}
         </h4>
         <div className="flex items-center gap-2">
@@ -36,7 +36,7 @@ const CardCourse = ({ courseData }: { courseData: CourseType }) => {
           {/* <p className="line-through text-text-primary">Rp.300,000</p> */}
           <p>{formatRupiah(courseData?.price)}</p>
         </div>
-        <div className="flex items-center gap-4 text-sm">
+        <div className="flex items-center justify-between gap-4 text-sm">
           <div className="flex items-center gap-2">
             <Clock size={20} />
             <p>{courseData?.duration} Jam</p>
