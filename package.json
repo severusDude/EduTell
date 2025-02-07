@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "gsap": "^3.12.7",
-    "react-use": "^17.6.0"
-  }
-}
