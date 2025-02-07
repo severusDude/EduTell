@@ -35,7 +35,7 @@ const InputImageCourse = ({ setFile, file, image }: InputImageCourseProps) => {
           className="border-[0.3px] border-text-primary outline-none"
         />
       ) : image ? (
-        <Image src={`${modifiedUrl}`} alt="image" className="w-full h-[280px] rounded-md object-cover" width={300} height={300} />
+        <Image src={`${modifiedUrl}`} alt="image" className="object-cover rounded-md " width={900} height={300} />
       ) : (
         // "Ada file"
         "Tidak ada Foto"

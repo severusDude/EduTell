@@ -8,8 +8,8 @@ const CardReview = () => {
         <Image
           src={"/image/profile-placeholder.png"}
           alt="profile-image"
-          width={42}
-          height={42}
+          width={38}
+          height={38}
         />
         <p className="text-xl font-semibold">Rina</p>
       </div>

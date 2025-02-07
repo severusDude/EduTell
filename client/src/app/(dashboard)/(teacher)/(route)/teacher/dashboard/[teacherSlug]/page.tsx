@@ -30,7 +30,7 @@ export default async function TeacherDashboardPage({
   }
 
   return (
-    <main className="px-4 lg:px-0">
+    <main className="px-4 lg:px-0 mt-28">
       <RootDashboardTeacher
         session={session}
         sessionName={sessionName}
