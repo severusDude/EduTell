@@ -9,7 +9,7 @@ const HeroSection = () => {
   return (
     <section
       id="hero-section"
-      className="relative flex flex-col items-center px-4 mt-24 lg:mt-2 lg:flex-row lg:px-0 lg:py-0"
+      className="relative flex flex-col items-center px-4 mt-52 lg:mt-2 lg:flex-row lg:px-0 lg:py-0"
     >
       <Blob url="/image/blob-2.png" className="-left-16 -top-40" />
       <Blob url="/image/blob-1.png" className="-right-0 lg:-right-16 -top-32" />

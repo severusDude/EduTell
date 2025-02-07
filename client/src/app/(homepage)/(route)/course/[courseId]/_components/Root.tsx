@@ -45,7 +45,7 @@ const RootCourseDetail = ({
   });
 
   return (
-    <section className="px-4 mt-16 lg:mt-12 lg:px-0">
+    <section className="px-4 mt-36 lg:mt-36 lg:px-0">
       <ButtonBack />
       {isLoadingCourse ? (
         <SkeletonHeaderSectionDetailCourse />

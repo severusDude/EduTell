@@ -56,11 +56,8 @@ const Content = ({
     },
   });
 
-  // console.log("data dari content ", contentCourse);
-  // console.log("content ", contentCourse?.data?.content);
-
   const youtubeLinks = contentCourse?.data.data.attachments.filter(
-    (item: any) => item?.file_name?.includes("https://www.youtu")
+    (item: any) => item?.file_name?.includes("https://www.youtube.com/watch")
   );
 
   return (

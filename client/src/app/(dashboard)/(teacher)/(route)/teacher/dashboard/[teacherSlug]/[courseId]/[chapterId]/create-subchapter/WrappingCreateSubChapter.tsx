@@ -92,7 +92,7 @@ const WrappingSubCreateChapter = ({
   });
 
   return (
-    <div className="border-[0.3px] p-4 rounded-md">
+    <div className="border-[0.3px] mt-28 p-4 rounded-md">
       <div className="flex items-center justify-between">
         <ButtonBack />
         <Button

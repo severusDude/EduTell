@@ -15,7 +15,7 @@ const itemNavbar = [
 const NavigationWrapper = ({ slug, role }: { slug?: string, role?: string }) => {
   return (
     <>
-      <div className="sticky top-0 z-20">
+      <div className="relative">
         <NavigationDekstop role={role} itemNavbar={itemNavbar} slug={slug} />
         <NavigationMobile role={role} itemNavbar={itemNavbar} slug={slug} />
       </div>

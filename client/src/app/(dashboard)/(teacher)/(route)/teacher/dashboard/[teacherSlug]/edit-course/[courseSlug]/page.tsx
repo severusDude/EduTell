@@ -31,7 +31,7 @@ export default async function CreateCousePage({
   }
 
   return (
-    <div className="border-[0.3px] rounded-md p-4">
+    <div className="border-[0.3px] mt-28 rounded-md p-4">
       <WrapperEditCourse slug={params.courseSlug} token={session} slugName={sessionSlug} />
     </div>
   );

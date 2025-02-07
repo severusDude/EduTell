@@ -11,14 +11,13 @@ const HomePageLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Toaster position="bottom-right" />
-      <div>
-        <NavigationWrapper
-          role={roleSession ? roleSession : ""}
-          slug={slugSession ? slugSession : ""}
-        />
-        <div className="lg:px-[64px] lg:py-[34px]">{children}</div>
-        <Footer />
-      </div>
+
+      <NavigationWrapper
+        role={roleSession ? roleSession : ""}
+        slug={slugSession ? slugSession : ""}
+      />
+      <div className="lg:px-[64px] lg:py-[34px]">{children}</div>
+      <Footer />
     </>
   );
 };

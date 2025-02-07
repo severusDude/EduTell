@@ -7,7 +7,7 @@ import FAQ from "../_components/FAQ";
 
 export default function Home() {
   return (
-    <main>
+    <main className="lg:mt-16">
       <HeroSection />
       <ListCard />
       <Overview />

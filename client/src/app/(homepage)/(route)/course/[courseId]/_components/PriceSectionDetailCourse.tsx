@@ -21,7 +21,6 @@ const PriceSectionDetailCourse = ({
   token: string;
   courseId: string;
 }) => {
-  
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -83,7 +82,9 @@ const PriceSectionDetailCourse = ({
 
         <div className="w-full">
           {dataCourse?.purchased ? (
-            <Link href={`/dashboard/${slugSession}/${dataCourse?.slug}`}>
+            <Link
+              href={`/dashboard/${slugSession}/${dataCourse?.slug}?chapter=1&subchapter=1`}
+            >
               <Button className="w-full bg-primary-color hover:bg-primary-color/80">
                 Akses Kelas
               </Button>
@@ -103,9 +104,11 @@ const PriceSectionDetailCourse = ({
 
       <div className="fixed bottom-0 left-0 z-20 flex justify-end w-full px-4 py-2 bg-white border-t border-gray-300 shadow-md lg:hidden">
         {dataCourse?.purchased ? (
-          <Link href={`/dashboard/${slugSession}/${dataCourse?.slug}`}>
+          <Link
+            href={`/dashboard/${slugSession}/${dataCourse?.slug}?chapter=1&subchapter=1`}
+          >
             <Button className="tracking-widest rounded-sm bg-primary-color hover:bg-primary-color/80 border-[0.3px] border-text-primary/70">
-              Lihat Kelas
+              Akses Kelas
             </Button>
           </Link>
         ) : (
