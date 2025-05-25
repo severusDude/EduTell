@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import InputChapterCourse from "./InputChapterCourse";
 import InputImageCourse from "./InputImageCourse";
+import { Loader2 } from "lucide-react";
 
 const EditCourse = ({
   token,
@@ -58,7 +59,11 @@ const EditCourse = ({
     }
   }, [data, refetch]);
 
-  const { mutate: handleUpdateCourse, data: updateCourse } = useMutation({
+  const {
+    mutate: handleUpdateCourse,
+    data: updateCourse,
+    isPending,
+  } = useMutation({
     mutationKey: ["create-course"],
     onError: () => {
       toast.error("Gagal Mengupdate Data");
@@ -68,7 +73,6 @@ const EditCourse = ({
       refetch();
     },
     mutationFn: async () => {
-
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", description);
@@ -76,8 +80,10 @@ const EditCourse = ({
       formData.append("price", price);
       formData.append("difficulty", difficult);
       formData.append("duration", time);
-      formData.append("image", file); // Menambahkan file gambar
       formData.append("is_published", true);
+      if (file) {
+        formData.append("image", file); // Menambahkan file gambar
+      }
       return await axios.post(
         `${BASE_URL}/courses/${slug}?_method=PUT`,
         formData,
@@ -98,8 +104,9 @@ const EditCourse = ({
         <Button
           onClick={() => handleUpdateCourse()}
           className="transition-all ease-in-out bg-primary-color hover:bg-primary-color/80"
+          disabled={isPending}
         >
-          Simpan
+          {isPending ? <Loader2 className="size-4 animate-spin" /> : "Simpan"}
         </Button>
       </div>
 

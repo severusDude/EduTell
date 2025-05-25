@@ -2,13 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatRupiah } from "@/lib/utils";
 import React, { useState } from "react";
+import { useFormContext } from "react-hook-form";
 
 type InputPriceCourseProps = {
-  price: number;
-  setPrice: React.Dispatch<React.SetStateAction<number>>;
+  name: string;
 };
 
-const InputPriceCourse = ({ price, setPrice }: InputPriceCourseProps) => {
+const InputPriceCourse = ({ name }: InputPriceCourseProps) => {
+  const { register, watch, formState } = useFormContext();
+  const price = watch(name);
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <div className="p-4 border-[0.3px] rounded-md bg-primary-color/20 space-y-2">
@@ -20,7 +23,7 @@ const InputPriceCourse = ({ price, setPrice }: InputPriceCourseProps) => {
       </div>
       {isOpen ? (
         <Input
-          onChange={(e) => setPrice(e.target.valueAsNumber)}
+          {...register(name)}
           type="number"
           className="border-[0.3px] border-text-primary"
         />
@@ -29,6 +32,9 @@ const InputPriceCourse = ({ price, setPrice }: InputPriceCourseProps) => {
           {price ? formatRupiah(price) : "Masukan Harga Kursus"}
         </p>
       )}
+      <p className="text-xs text-red-500">
+        {formState.errors && (formState.errors.price?.message as string)}
+      </p>
     </div>
   );
 };

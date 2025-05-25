@@ -14,41 +14,44 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { BASE_URL } from "@/constant/url";
 import { CategoryType } from "@/types/course";
+import { useFormContext } from "react-hook-form";
 
-type InputCategoryCourseProps = {
-  category: string;
-  setCategory: React.Dispatch<React.SetStateAction<string>>;
+const fetchCategories = async () => {
+  const response = await axios.get(`${BASE_URL}/categories`);
+  return response.data;
 };
 
-const InputCategoryCourse = ({
-  category,
-  setCategory,
-}: InputCategoryCourseProps) => {
+const InputCategoryCourse = ({ name }: { name: string }) => {
+  const { setValue, watch } = useFormContext();
+  const selectedCategory = watch(name);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const { data: categoryData } = useQuery({
+  const { data: categoryData, isLoading } = useQuery({
     queryKey: ["category-course"],
-    queryFn: async () => (await axios.get(`${BASE_URL}/categories`)).data,
+    queryFn: fetchCategories,
   });
 
   return (
     <div className="p-4 border-[0.3px] rounded-md bg-primary-color/20 space-y-2">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Kategori Kursus</h2>
-        <Button onClick={() => setIsOpen((prev) => !prev)} variant={"link"}>
+        <Button onClick={() => setIsOpen((prev) => !prev)} variant="link">
           {isOpen ? "Save" : "Edit Kategori"}
         </Button>
       </div>
       {isOpen ? (
         <SelectCategory
-          setCategory={setCategory}
-          categoryData={categoryData?.data}
+          setValue={setValue}
+          name={name}
+          categoryData={categoryData?.data || []}
+          isLoading={isLoading}
+          selectedCategory={selectedCategory}
         />
       ) : (
         <p className="text-base text-text-primary">
-          {category
+          {selectedCategory
             ? categoryData?.data.find(
-                (data: CategoryType) => data.id == category
+                (data: CategoryType) => String(data.id) == selectedCategory
               )?.name || "Nama kategori tidak ditemukan"
             : "Masukan Kategori Kursus"}
         </p>
@@ -60,22 +63,33 @@ const InputCategoryCourse = ({
 export default InputCategoryCourse;
 
 const SelectCategory = ({
-  setCategory,
+  setValue,
+  name,
   categoryData,
+  isLoading,
+  selectedCategory,
 }: {
-  setCategory: React.Dispatch<React.SetStateAction<string>>;
+  setValue: (name: string, value: string) => void;
+  name: string;
   categoryData: CategoryType[];
+  isLoading: boolean;
+  selectedCategory: string;
 }) => {
+  if (isLoading) return <p>Loading kategori...</p>;
+
   return (
-    <Select onValueChange={(value) => setCategory(value)}>
+    <Select
+      value={selectedCategory} // Menampilkan kategori yang telah dipilih
+      onValueChange={(value) => setValue(name, value)}
+    >
       <SelectTrigger className="border-[0.3px] border-text-primary">
         <SelectValue placeholder="Pilih Kategori" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Kategori</SelectLabel>
-          {categoryData?.map((item: CategoryType, index: number) => (
-            <SelectItem key={index} value={item.id}>
+          {categoryData.map((item) => (
+            <SelectItem key={item.id} value={String(item.id)}>
               {item.name}
             </SelectItem>
           ))}

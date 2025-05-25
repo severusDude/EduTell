@@ -6,7 +6,7 @@ import NavigationItem from "./NavigationItem";
 import { Button } from "./ui/button";
 import { NavigationDekstopProps } from "@/types/NavigationTypes";
 import { useWindowScroll } from "react-use";
-import gsap from "gsap"
+import gsap from "gsap";
 
 const NavigationDekstop = ({
   itemNavbar,
@@ -64,7 +64,10 @@ const NavigationDekstop = ({
           <NavigationRoleItemDekstop role={role ? role : ""} slug={slug} />
         ) : (
           <div className="flex gap-4 text-slate-400">
-            <Button variant={"default"} className="text-white bg-primary-color hover:bg-primary-color/80">
+            <Button
+              variant={"default"}
+              className="text-white bg-primary-color hover:bg-primary-color/80"
+            >
               <Link
                 href={"/login"}
                 className="transition-all ease-in-out text-[16px]"

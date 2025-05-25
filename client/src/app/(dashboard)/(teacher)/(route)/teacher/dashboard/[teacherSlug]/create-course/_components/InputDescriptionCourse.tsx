@@ -2,16 +2,16 @@ import { Editor } from "@/components/Editor";
 import { Preview } from "@/components/Preview";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
+import { useFormContext } from "react-hook-form";
 
 type InputDescriptionCourseProps = {
-  description: string;
-  setDescription: (value: string) => void;
+  name: string;
 };
 
-const InputDescriptionCourse = ({
-  description,
-  setDescription,
-}: InputDescriptionCourseProps) => {
+const InputDescriptionCourse = ({ name }: InputDescriptionCourseProps) => {
+  const { register, watch, formState } = useFormContext();
+  const description = watch(name);
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -23,7 +23,7 @@ const InputDescriptionCourse = ({
         </Button>
       </div>
       {isOpen ? (
-        <Editor description={description} setDescription={setDescription} />
+        <Editor />
       ) : description ? (
         <Preview value={description} />
       ) : (

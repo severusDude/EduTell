@@ -1,15 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
+import { useFormContext } from "react-hook-form";
 
 type InputTitleCourseProps = {
-  title: string;
-  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  name: string;
 };
 
-const InputTitleCourse = ({ title, setTitle }: InputTitleCourseProps) => {
+const InputTitleCourse = ({ name }: InputTitleCourseProps) => {
+  const { register, watch, formState } = useFormContext();
+  const title = watch(name);
+  
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
+  
   return (
     <div className="p-4 border-[0.3px] rounded-md bg-primary-color/20 space-y-2">
       <div className="flex items-center justify-between">
@@ -20,8 +23,7 @@ const InputTitleCourse = ({ title, setTitle }: InputTitleCourseProps) => {
       </div>
       {isOpen ? (
         <Input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          {...register(name)}
           className="border-[0.3px] border-text-primary outline-none"
         />
       ) : (
@@ -29,6 +31,9 @@ const InputTitleCourse = ({ title, setTitle }: InputTitleCourseProps) => {
           {title ? title : "Masukan Judul Kursus"}
         </p>
       )}
+      <p className="text-xs text-red-500">
+        {formState.errors && (formState.errors.title?.message as string)}
+      </p>
     </div>
   );
 };
